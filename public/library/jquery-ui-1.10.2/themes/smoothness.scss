@@ -1,0 +1,75 @@
+$iconSize: 16px;
+
+/* Ustawienia czcionki */
+$ffDefault: Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif; /*"helvetica-condensed-light_pRg"*/
+$fwDefault: normal;
+$fsDefault: 1.1em;
+
+/* Zaokrąglenia */
+$cornerRadius: 0px;
+
+/* Nagłówki/paski narzędziowe */
+$bgColorHeader: #f0f0f0;
+$borderColorHeader: #979797;
+$fcHeader: #000000;
+$bgImgUrlHeader: url(images/ui-bg_highlight-soft_75_cccccc_1x100.png);
+$iconsHeader: url(images/ui-icons_222222_256x240.png);
+
+/* Zawartość */
+$bgColorContent: #ffffff;
+$borderColorContent: #aaaaaa;
+$fcContent: #222222;
+$bgImgUrlContent: url(images/ui-bg_flat_75_ffffff_40x100.png);
+$iconsContent: url(images/ui-icons_222222_256x240.png);
+
+/* Klikalne: stan domyślny */
+$bgColorDefault: #e6e6e6;
+$borderColorDefault: #d3d3d3;
+$fcDefault: #000000;
+$bgImgUrlDefault: url(images/ui-bg_glass_75_e6e6e6_1x400.png);
+$iconsDefault: url(images/ui-icons_888888_256x240.png);
+
+/* Klikalne: stan po najechaniu kursorem */
+$bgColorHover: #dadada;
+$borderColorHover: #999999;
+$fcHover: #000000;
+$bgImgUrlHover: url(images/ui-bg_glass_75_dadada_1x400.png);
+$iconsHover: url(images/ui-icons_454545_256x240.png);
+
+/* Klikalne: stan aktywności */
+$bgColorActive: #ffffff;
+$borderColorActive: #aaaaaa;
+$fcActive: #000000;
+$bgImgUrlActive: url(images/ui-bg_glass_65_ffffff_1x400.png);
+$iconsActive: url(images/ui-icons_454545_256x240.png);
+
+/* Zaznaczone */
+$bgColorHighlight: #fbf9ee;
+$borderColorHighlight: #fcefa1;
+$fcHighlight: #363636;
+$bgImgUrlHighlight: url(images/ui-bg_glass_55_fbf9ee_1x400.png);
+$iconsHighlight: url(images/ui-icons_2e83ff_256x240.png);
+
+/* Błędy */
+$bgColorError: #fef1ec;
+$borderColorError: #cd0a0a;
+$fcError: #cd0a0a;
+$bgImgUrlError: url(images/ui-bg_glass_95_fef1ec_1x400.png);
+$iconsError: url(images/ui-icons_cd0a0a_256x240.png);
+
+/* Ekran modalny przesłonięty */
+$bgColorOverlay: #aaaaaa;
+$opacityOverlay: 30;
+$bgImgUrlOverlay: url(images/ui-bg_flat_0_aaaaaa_40x100.png);
+
+/* Efekt cienia */
+$bgColorShadow: #aaaaaa;
+$opacityShadow: 30%;
+$thicknessShadow: 8px;
+$offsetTopShadow: -8px;
+$offsetLeftShadow: -8px;
+$cornerRadiusShadow: 8px;
+$bgImgUrlShadow: url(images/ui-bg_flat_0_aaaaaa_40x100.png);
+
+/* Link */
+$linkColor: #1155CC;

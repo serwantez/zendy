@@ -1,0 +1,29 @@
+.ui-report {
+  font-family: Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11px;
+}
+.ui-report .ui-report-title {
+  text-align: center;
+  vertical-align: middle;
+  font-size: 18px;
+}
+.ui-report .ui-report-subtitle {
+  text-align: center;
+  vertical-align: middle;
+  font-size: 16px;
+}
+.ui-report table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 100%;
+}
+.ui-report table thead th {
+  padding: 2px;
+  font-size: 11px;
+  border: 1px solid black;
+}
+.ui-report table tbody td {
+  padding: 2px;
+  font-size: 11px;
+  border: 1px solid black;
+}

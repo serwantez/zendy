@@ -1,0 +1,139 @@
+.ui-grid {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    .ui-grid-headerbody {
+        overflow-x: auto;
+        overflow-y: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        .ui-grid-header {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            height: 23px;
+            overflow: visible;
+            border-left: 0 none !important;
+            border-top: 0 none !important;
+            border-right: 0 none !important;
+            div {
+                position: relative;
+                overflow: hidden;
+                table {
+                    table-layout: fixed;
+                    thead {
+                        tr {
+                            th {
+                                padding: 0 2px;
+                                height: 22px;
+                                border-left: 0 none;
+                                border-bottom: 0 none;
+                                border-top: 0 none;
+                                overflow: hidden;
+                                text-overflow: clip;
+                                text-align: center;
+                                vertical-align: middle;
+                                white-space: nowrap;
+                                .ui-grid-header-container {
+                                    position: relative;
+                                }
+                            }
+                            .ui-grid-sortable {
+                                cursor: pointer;
+                            }
+                            .ui-grid-header-label {
+                                display: inline-block;
+                                vertical-align: middle;
+                            }
+                            .ui-grid-header-sorticon {
+                                display: inline-block;
+                                vertical-align: middle;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .ui-grid-body {
+            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: absolute;
+            left: 0;
+            top: 24px;
+            bottom: 0;
+            right: 0;
+            div {
+                position: relative;
+                table {
+                    table-layout: fixed;
+                    tbody {
+                        tr {
+                            td {
+                                padding: 0 2px;
+                                border-right-color: inherit;
+                                border-right-style: solid;
+                                border-right-width: 1px;
+                                border-bottom-color: inherit;
+                                border-bottom-style: solid;
+                                border-bottom-width: 1px;
+                                height: 22px;
+                                overflow: hidden;
+                            }
+                        }
+                        tr.ui-grid-firstrow{
+                            height: auto;
+                            td {
+                                border-top: 0 none;
+                                border-bottom: 0 none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .ui-grid-pager {
+        margin: 0 auto;
+        padding: 0;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        height: 25px;
+        overflow: hidden;
+        border-left: 0 none !important;
+        border-bottom: 0 none !important;
+        border-right: 0 none !important;
+        text-align: center;
+        .ui-grid-pager-navi {
+            margin: 0 auto;
+            padding: 2px 0;
+            display: inline-block;
+            .ui-grid-pager-button {
+                height: 19px !important;
+                padding: 1px !important;
+            }
+            .ui-grid-pager-position {
+                display: inline-block;
+                height: 19px !important;
+                padding: 1px;
+                vertical-align: middle;
+                .ui-edit {
+                    padding: 1px !important;
+                }
+            }
+        }
+    }
+}
+
+.ui-grid-withpager {
+    .ui-grid-headerbody {
+        bottom: 26px !important;
+    }
+}

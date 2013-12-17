@@ -1,0 +1,129 @@
+.ui-grid {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+.ui-grid .ui-grid-headerbody {
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-header {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 23px;
+  overflow: visible;
+  border-left: 0 none !important;
+  border-top: 0 none !important;
+  border-right: 0 none !important;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-header div {
+  position: relative;
+  overflow: hidden;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-header div table {
+  table-layout: fixed;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-header div table thead tr th {
+  padding: 0 2px;
+  height: 22px;
+  border-left: 0 none;
+  border-bottom: 0 none;
+  border-top: 0 none;
+  overflow: hidden;
+  text-overflow: clip;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-header div table thead tr th .ui-grid-header-container {
+  position: relative;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-header div table thead tr .ui-grid-sortable {
+  cursor: pointer;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-header div table thead tr .ui-grid-header-label {
+  display: inline-block;
+  vertical-align: middle;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-header div table thead tr .ui-grid-header-sorticon {
+  display: inline-block;
+  vertical-align: middle;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-body {
+  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: absolute;
+  left: 0;
+  top: 24px;
+  bottom: 0;
+  right: 0;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-body div {
+  position: relative;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-body div table {
+  table-layout: fixed;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-body div table tbody tr td {
+  padding: 0 2px;
+  border-right-color: inherit;
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-bottom-color: inherit;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  height: 22px;
+  overflow: hidden;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-body div table tbody tr.ui-grid-firstrow {
+  height: auto;
+}
+.ui-grid .ui-grid-headerbody .ui-grid-body div table tbody tr.ui-grid-firstrow td {
+  border-top: 0 none;
+  border-bottom: 0 none;
+}
+.ui-grid .ui-grid-pager {
+  margin: 0 auto;
+  padding: 0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 25px;
+  overflow: hidden;
+  border-left: 0 none !important;
+  border-bottom: 0 none !important;
+  border-right: 0 none !important;
+  text-align: center;
+}
+.ui-grid .ui-grid-pager .ui-grid-pager-navi {
+  margin: 0 auto;
+  padding: 2px 0;
+  display: inline-block;
+}
+.ui-grid .ui-grid-pager .ui-grid-pager-navi .ui-grid-pager-button {
+  height: 19px !important;
+  padding: 1px !important;
+}
+.ui-grid .ui-grid-pager .ui-grid-pager-navi .ui-grid-pager-position {
+  display: inline-block;
+  height: 19px !important;
+  padding: 1px;
+  vertical-align: middle;
+}
+.ui-grid .ui-grid-pager .ui-grid-pager-navi .ui-grid-pager-position .ui-edit {
+  padding: 1px !important;
+}
+
+.ui-grid-withpager .ui-grid-headerbody {
+  bottom: 26px !important;
+}

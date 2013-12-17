@@ -1,0 +1,30 @@
+.ui-image {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  padding: 3px;
+  vertical-align: middle;
+  text-align: center;
+}
+.ui-image a {
+  text-decoration: none;
+}
+.ui-image a img {
+  border: none;
+  vertical-align: middle;
+}
+
+.ui-image-scrolled {
+  overflow: auto;
+}
+
+.ui-image-upload {
+  width: 1px;
+  height: 1px;
+  visibility: hidden;
+}
+
+.ui-image-fit img {
+  max-height: 100%;
+  max-width: 100%;
+}

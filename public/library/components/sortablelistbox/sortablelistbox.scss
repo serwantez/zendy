@@ -1,0 +1,26 @@
+@import "../../jquery-ui-1.10.2/themes/base/start.scss";
+
+.ui-sortable-listbox {
+    position: relative;
+    display: inline-block;
+    overflow: auto;
+    padding: 0;
+    vertical-align: middle;   
+    ul {
+        list-style-type: none;
+        li {
+            cursor: pointer;
+            padding: 3px;
+            margin: 0px;
+            border: 1px solid transparent;
+            a {
+                display: block;
+                text-decoration: none;
+            }            
+        }
+        .ui-selected {
+            background-color: $bgColorHighlight;
+            border-color: $borderColorHighlight;
+        }
+    }
+}

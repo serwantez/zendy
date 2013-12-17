@@ -1,0 +1,89 @@
+.ui-calendar {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.ui-calendar .ui-calendar-navi {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  vertical-align: middle;
+}
+.ui-calendar .ui-calendar-navi .ui-calendar-range {
+  vertical-align: middle;
+  display: inline-block;
+  overflow: visible;
+  line-height: normal;
+  position: relative;
+}
+.ui-calendar .ui-calendar-navi .ui-calendar-range span {
+  font-size: 12px;
+  padding: 0.4em;
+}
+.ui-calendar .ui-calendar-navi .ui-calendar-navi-left {
+  position: absolute;
+  left: 5px;
+  vertical-align: middle;
+}
+.ui-calendar .ui-calendar-navi .ui-calendar-navi-right {
+  position: absolute;
+  right: 5px;
+  vertical-align: middle;
+}
+.ui-calendar .ui-calendar-daynames {
+  position: absolute;
+  top: 38px;
+  left: 0;
+  height: 24px;
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+.ui-calendar .ui-calendar-daynames thead tr th {
+  font-weight: normal;
+  height: 23px;
+}
+.ui-calendar .ui-calendar-body {
+  position: absolute;
+  left: 0;
+  top: 62px;
+  bottom: 0px;
+  width: 100%;
+  overflow: hidden;
+}
+.ui-calendar .ui-calendar-body table {
+  table-layout: fixed;
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+}
+.ui-calendar .ui-calendar-body table tbody tr td {
+  vertical-align: top;
+  overflow: hidden;
+}
+.ui-calendar .ui-calendar-body table tbody tr td .ui-calendar-day-header {
+  padding: 2px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  background-color: inherit;
+}
+.ui-calendar .ui-calendar-body table tbody tr td .ui-calendar-day {
+  padding: 2px;
+  font-size: 14px;
+}
+.ui-calendar .ui-calendar-body table tbody tr td .ui-calendar-feasts .ui-calendar-feast {
+  white-space: normal;
+  margin-bottom: 3px;
+}
+.ui-calendar .ui-calendar-body table tbody tr .ui-calendar-today {
+  border-color: #F00;
+  border-width: 2px;
+}
+.ui-calendar .ui-calendar-body table tbody tr .ui-calendar-holiday {
+  background-color: #FDD;
+}

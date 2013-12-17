@@ -1,0 +1,72 @@
+<?= $this->doctype(); ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <?= $this->headMeta()->setHttpEquiv('Content-Type', 'text/html;charset=utf-8'); ?>
+        <?php
+        //tytuł strony
+        $appTitle = $this->translate('ZendY');
+        //ustawienia menu głównego
+        $navigation = $this->navigation()->iconMenu()->setIconMenu("nav");
+        //bieżąca strona
+        $request = Zend_Controller_Front::getInstance()->getRequest();
+        $controller = $request->getControllerName();
+        $action = $request->getActionName();
+        $uri = '/' . $controller . '/' . $action;
+        $activePage = $navigation->findByUri($uri);
+        if (isset($activePage)) {
+            $activePage->setActive(true);
+            $activePageLabel = $activePage->getLabel();
+        } else {
+            $activePageLabel = '';
+        }
+        echo $this->headTitle($appTitle . '. ' . $this->translate($activePageLabel));
+        ?>
+
+        <?=
+                $this->headLink()
+                ->prependStylesheet('/application/css/common.css')
+                ->prependStylesheet($this->host . '/library/jquery-ui-1.10.2/themes/base/jquery.ui.all.css')
+        ;
+        ?>
+        <?=
+                $this->jQuery()
+                ->setLocalPath($this->host . '/library/jquery-ui-1.10.2/jquery-1.9.1.js')
+                ->setUiLocalPath($this->host . '/library/jquery-ui-1.10.2/ui/jquery-ui.js')
+                ->addJavascriptFile($this->host . '/library/jquery-ui-1.10.2/globalize-master/lib/globalize.js')
+                ->addJavascriptFile($this->host . '/library/jquery-ui-1.10.2/globalize-master/lib/cultures/globalize.cultures.js')
+                ->addJavascriptFile($this->host . '/library/jquery-ui-1.10.2/ui/i18n/jquery-ui-i18n.js')
+        ;
+        ?>
+    </head>
+    <body class="ui-layout ui-align-client">
+        <?php
+        if (isset($this->dialogMessages)) {
+            echo $this->dialogMessages;
+        }
+        ?>        
+        <div class="ui-align-top" style="height: 25px;">
+            <div class="ui-align-left" style="height: 25px; width: 25px;">
+                <a class="ui-button ui-widget ui-widget-header ui-button-icon-only" 
+                   href="/"
+                   title="<?= $this->translate('Homepage'); ?>">
+                    <span class="ui-icon ui-icon-home"></span>
+                    <span class="ui-button-text">ZendY</span>
+                </a>
+            </div>
+            <div id="nav" class="ui-align-client" style="height: 25px; left: 26px;">
+                <?= $this->navigation()->iconMenu()->setMinDepth(1); ?>
+            </div>
+        </div>
+        <div class="ui-align-bottom" style="top: 25px;">
+            <div class="ui-widget ui-widget-header ui-state-active ui-align-top" style="height: 30px;">
+                <h2 class="ui-padding-all"><?= $this->translate($activePageLabel); ?></h2>
+                <div id="locale"><?php
+                echo $this->localeForm;
+                ?></div>
+            </div>
+            <div class="ui-align-bottom" style="top: 31px">
+                <?= $this->layout()->content; ?>
+            </div>
+        </div>
+    </body>
+</html>

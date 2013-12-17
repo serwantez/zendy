@@ -1,0 +1,20 @@
+.ui-listbox {
+    position: relative;
+    overflow: auto;
+    display: inline-block;
+    padding: 3px;
+    vertical-align: middle;    
+    ul {
+        list-style-type: none;
+        li {
+            cursor: pointer;
+            padding: 3px;
+            margin: 0px;
+            border: 1px solid transparent;
+            a {
+                display: block;
+                text-decoration: none;
+            }
+        }
+    }
+}

@@ -1,0 +1,77 @@
+/*
+Document   : layout
+Created on : 2013-01-05, 17:32:13
+Author     : Piotr Zając
+Description:
+Purpose of the stylesheet follows.
+*/
+
+$headerHeight: 27px;
+$pageTitleHeight: 30px;
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 11px;
+}
+
+h2 {
+    font-size: 14px;
+}
+
+.ui-accordion-header {
+    margin-top: 0 !important;
+}
+
+.ui-tabs {
+    position: absolute !important;
+    padding: 0 !important;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    .ui-tabs-panel {
+        position: absolute;
+        height: auto !important;
+        left: 0;
+        right: 0;
+        top: 33px;
+        bottom: 0;
+    }
+}
+
+#locale {
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: inline-block;
+    width: 200px;
+}
+
+.navigation {
+    //height: 100%;
+}
+
+tr.row-red {
+    td {
+        color: red;
+    }
+}
+
+.row-grey, .row-grey td {
+    color: grey;
+}
+
+.row-italic, .row-italic td {
+    font-style: italic;
+}
+
+.ui-title {
+    background-color: #333;
+    color: #ddd;
+}
+
+.ui-layout {
+    min-width: 800px;
+    min-height: 500px;
+}

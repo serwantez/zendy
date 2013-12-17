@@ -1,0 +1,23 @@
+
+/* Submit */
+.ui-submit {
+    line-height: 1.4;    
+    padding: .4em 1em;    
+    cursor: pointer;    
+}
+
+.ui-submit-icon-primary {
+    background-repeat: no-repeat !important;
+    background-position: 5% 50% !important;
+    padding-left: 24px !important;
+}
+
+.ui-submit-icon-secondary {
+    background-repeat: no-repeat !important;
+    background-position: 95% 50% !important;
+    padding-right: 24px !important;
+}
+
+.ui-submit-open {
+    background-image: url(http://icons.iconseeker.com/png/fullsize/web-development-3/folder-open-sharp-thin.png) !important;
+}

@@ -1,0 +1,61 @@
+.ui-treeview {
+    position: relative;
+    overflow: auto;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 3px;
+    .ui-tree, .ui-tree .ui-tree-node, .ui-tree .ui-tree-leaf {
+        display: block;
+        margin: 0;
+        outline: medium none;
+    }
+    .ui-tree-node-icon {
+        padding-left: 18px !important;
+    }
+    .ui-tree {
+        padding: 2px;
+    }
+    .ui-tree, .ui-tree ul {
+        list-style: none outside none;
+    }
+    .ui-tree .ui-tree-node, .ui-tree .ui-tree-leaf {
+        padding: 0;
+    }
+    .ui-tree, .ui-tree .ui-tree-node ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+    .ui-tree li {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        width: 100%;
+        span.ui-tree-node-handle {
+            cursor: pointer;
+            left: -18px;
+            position: absolute;
+            top: 1px;
+        }
+        
+        a {
+            span.ui-icon {
+                left: 2px;
+                position: absolute;
+                top: 1px;
+            }            
+            display: inline-block;
+            font-weight: normal;
+            line-height: 1.5;
+            min-height: 0;
+            padding: 2px 0.4em;
+            text-decoration: none;
+            white-space: nowrap;
+        }        
+        
+        a.ui-state-focus, a.ui-state-highlight, a.ui-state-hover, a.ui-state-active {
+            font-weight: normal;
+            margin: -1px;
+        }
+        
+    }
+}

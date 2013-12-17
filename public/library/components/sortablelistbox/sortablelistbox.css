@@ -1,0 +1,37 @@
+/* Ustawienia czcionki */
+/* Zaokrąglenia */
+/* Nagłówki/paski narzędziowe */
+/* Zawartość */
+/* Klikalne: stan domyślny */
+/* Klikalne: stan po najechaniu kursorem */
+/* Klikalne: stan aktywności */
+/* Zaznaczone */
+/* Błędy */
+/* Ekran modalny przesłonięty */
+/* Efekt cienia */
+/* Kontrolki edycyjne */
+/* Link */
+.ui-sortable-listbox {
+  position: relative;
+  display: inline-block;
+  overflow: auto;
+  padding: 0;
+  vertical-align: middle;
+}
+.ui-sortable-listbox ul {
+  list-style-type: none;
+}
+.ui-sortable-listbox ul li {
+  cursor: pointer;
+  padding: 3px;
+  margin: 0px;
+  border: 1px solid transparent;
+}
+.ui-sortable-listbox ul li a {
+  display: block;
+  text-decoration: none;
+}
+.ui-sortable-listbox ul .ui-selected {
+  background-color: #fbec88;
+  border-color: #fad42e;
+}

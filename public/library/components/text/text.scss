@@ -1,0 +1,109 @@
+.ui-text {
+    border: none;
+    display: inline-block;
+    overflow: hidden;
+    padding: 3px;
+    vertical-align: middle;
+    height: 15px;
+    span {
+        padding: 0px;
+        white-space: nowrap;
+    }    
+}
+
+.ui-longtext {
+    border: none;
+    display: inline-block;
+    overflow: hidden;
+    padding: 3px;
+    vertical-align: middle;
+    span {
+        padding: 0px;
+    }
+    code {
+        display: block;
+        padding: 5px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        border: 1px solid #DDDDDD;
+        background-color: #EEFFCC; 
+    }
+    
+}
+
+.ui-document {
+    padding: 15px;
+    overflow: auto;
+    * {
+        font-size: 12px;
+    }
+    div {
+        line-height: 170%;
+    }
+    h2, h3 {
+        margin: 10px 0;
+    }
+    p {
+        margin: 7px 0;
+    }
+    ul, ol {
+        margin-left: 25px;
+        li {
+            margin: 5px; 
+        }
+    }
+    
+}
+
+.ui-document-title {
+    font-size: 14px;
+    text-align: center;
+    height: 20px;
+    span {
+        font-size: 14px;
+    }
+}
+
+.ui-textfileview {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    .ui-textfileview-container {
+        width: 100%;
+        overflow: visible;
+    }
+    .ui-textfileview-rownumbers {
+        width: 30px;
+        text-align: right;
+        vertical-align: top;
+        border-width: 0 1px 0 0;
+        line-height: 15px;
+        padding: 5px 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        min-height: 100%;
+    }
+    .ui-textfileview-content {
+        vertical-align: top;
+        border-width: 0 0 0 1px;
+        line-height: 15px;
+        padding: 5px 0;
+        display: inline-block;
+        overflow-x: auto;
+        overflow-y: hidden;
+        position: absolute;
+        left: 31px;
+        top: 0;
+        right: 0;
+        min-height: 100%;
+        code {
+            display: block;
+            white-space: nowrap;
+            padding-left: 10px;
+            span {
+                font-family: Consolas,Courier,monospace;
+                font-size: 12px;
+            }
+        }
+    }
+}

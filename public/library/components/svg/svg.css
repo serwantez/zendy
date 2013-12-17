@@ -1,0 +1,25 @@
+.ui-svg {
+    fill: none;
+    stroke: none;
+    cursor: default;
+    overflow: hidden;
+}
+
+.ui-svg-element {
+    stroke-linecap: "butt";
+    stroke-linejoin: "round";
+    stroke-miterlimit: 8;
+    stroke-width: 762;
+}
+
+.ui-svg-text {
+    text-rendering: "geometricPrecision";
+}
+
+.ui-svg-text-label {
+    font-size: 24px !important;
+}
+
+.ui-svg-text-description {
+    font-size: 19px !important;
+}

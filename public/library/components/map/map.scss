@@ -1,0 +1,37 @@
+.ui-map   {  
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    padding: 3px;
+    vertical-align: middle;
+    .ui-map-header {
+        border-width: 0 0 1px 0;
+        padding: 0;
+        vertical-align: middle;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        height: 18px;
+        input {
+            display: block;
+            position: absolute;
+            left: 1px;
+            top: 1px;
+            right: 1px;
+            bottom: 1px;
+        }
+    }
+    .ui-map-canvas {
+        border: none;
+        background: none;
+        color: inherit;
+        padding: 0;
+        vertical-align: middle;
+        position: absolute;
+        left: 0;
+        top: 18px;
+        right: 0;
+        bottom: 0;
+    }
+}

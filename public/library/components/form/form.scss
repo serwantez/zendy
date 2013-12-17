@@ -1,0 +1,20 @@
+.ui-form {
+    .field-container {
+        padding: 2px;
+        .field-label {
+            display: inline-block;
+            width: 150px;
+        }
+        .field-description {
+            clear: both;
+            display: block;
+            font-style: italic;
+        }
+    }
+    ul.ui-state-error {
+        list-style: none;
+        li {
+            padding: 2px;
+        }
+    }
+}
