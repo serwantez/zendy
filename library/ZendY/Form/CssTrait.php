@@ -73,8 +73,8 @@ trait CssTrait {
      */
     public function removeClass($class) {
         $classes = (array) $this->getAttrib('class');
-        if (in_array($class, $classes)) {
-            unset($classes[$class]);
+        if (false !== $key = array_search($class, $classes)) {
+            unset($classes[$key]);
         }
         $this->setAttrib('class', $classes);
         return $this;
