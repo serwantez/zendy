@@ -156,15 +156,42 @@ class Filter extends Object {
      * Zwraca filtr w postaci części "where" zapytania sql
      * 
      * @param array $columns kolumny z obiektu zapytania sql
+     * 
      * @return string 
      */
-    public function toSelect(array $columns = array()) {
+    public function toSelect(array $columns = array(), $db = null) {
         $res = '1 = 1';
+        $cond = isset($db) && ($db instanceof \Zend_Db_Adapter_Abstract);
+        if (!$cond) {
+            if (\Zend_Registry::isRegistered('db')) {
+                $db = \Zend_Registry::get('db');
+                $cond = isset($db) && ($db instanceof \Zend_Db_Adapter_Abstract);
+            }
+        }
         foreach ($this->_filters as $filter) {
             foreach ($filter as $field => $data) {
                 $searched = $data['value'];
                 $operator = $data['operator'];
                 $connector = $data['connector'];
+
+                if ($operator == DataSet::OPERATOR_BEGIN
+                        || $operator == DataSet::OPERATOR_NOT_BEGIN
+                        || $operator == DataSet::OPERATOR_CONTAIN
+                        || $operator == DataSet::OPERATOR_NOT_CONTAIN) {
+                    $searched .= '%';
+                }
+
+                if ($operator == DataSet::OPERATOR_END
+                        || $operator == DataSet::OPERATOR_NOT_END
+                        || $operator == DataSet::OPERATOR_CONTAIN
+                        || $operator == DataSet::OPERATOR_NOT_CONTAIN) {
+                    $searched = '%' . $searched;
+                }
+
+                if ($cond) {
+                    $searched = $db->quote($searched);
+                }
+
                 if (is_array($searched)) {
                     $searched = implode(',', $searched);
                 }
@@ -191,29 +218,29 @@ class Filter extends Object {
                 }
 
                 if ($operator == DataSet::OPERATOR_EQUAL)
-                    $res .= " " . $connector . " " . $uniqueField . " = '" . $searched . "'";
+                    $res .= " " . $connector . " " . $uniqueField . " = " . $searched;
                 elseif ($operator == DataSet::OPERATOR_NOT_EQUAL)
-                    $res .= " " . $connector . " " . $uniqueField . " <> '" . $searched . "'";
+                    $res .= " " . $connector . " " . $uniqueField . " <> " . $searched;
                 elseif ($operator == DataSet::OPERATOR_GREATER)
-                    $res .= " " . $connector . " " . $uniqueField . " > '" . $searched . "'";
+                    $res .= " " . $connector . " " . $uniqueField . " > " . $searched;
                 elseif ($operator == DataSet::OPERATOR_GREATER_EQUAL)
-                    $res .= " " . $connector . " " . $uniqueField . " >= '" . $searched . "'";
+                    $res .= " " . $connector . " " . $uniqueField . " >= " . $searched;
                 elseif ($operator == DataSet::OPERATOR_LESS)
-                    $res .= " " . $connector . " " . $uniqueField . " < '" . $searched . "'";
+                    $res .= " " . $connector . " " . $uniqueField . " < " . $searched;
                 elseif ($operator == DataSet::OPERATOR_LESS_EQUAL)
-                    $res .= " " . $connector . " " . $uniqueField . " <= '" . $searched . "'";
+                    $res .= " " . $connector . " " . $uniqueField . " <= " . $searched;
                 elseif ($operator == DataSet::OPERATOR_BEGIN)
-                    $res .= " " . $connector . " " . $uniqueField . " like '" . $searched . "%'";
+                    $res .= " " . $connector . " " . $uniqueField . " like " . $searched;
                 elseif ($operator == DataSet::OPERATOR_NOT_BEGIN)
-                    $res .= " " . $connector . " " . $uniqueField . " not like '" . $searched . "%'";
+                    $res .= " " . $connector . " " . $uniqueField . " not like " . $searched;
                 elseif ($operator == DataSet::OPERATOR_END)
-                    $res .= " " . $connector . " " . $uniqueField . " like '%" . $searched . "'";
+                    $res .= " " . $connector . " " . $uniqueField . " like " . $searched;
                 elseif ($operator == DataSet::OPERATOR_NOT_END)
-                    $res .= " " . $connector . " " . $uniqueField . " not like '%" . $searched . "'";
+                    $res .= " " . $connector . " " . $uniqueField . " not like " . $searched;
                 elseif ($operator == DataSet::OPERATOR_CONTAIN)
-                    $res .= " " . $connector . " " . $uniqueField . " like '%" . $searched . "%'";
+                    $res .= " " . $connector . " " . $uniqueField . " like " . $searched;
                 elseif ($operator == DataSet::OPERATOR_NOT_CONTAIN)
-                    $res .= " " . $connector . " " . $uniqueField . " not like '%" . $searched . "%'";
+                    $res .= " " . $connector . " " . $uniqueField . " not like " . $searched;
                 elseif ($operator == DataSet::OPERATOR_IN)
                     $res .= " " . $connector . " " . $uniqueField . " in (" . $searched . ")";
                 elseif ($operator == DataSet::OPERATOR_NOT_IN)
