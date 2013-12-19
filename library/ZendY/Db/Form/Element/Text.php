@@ -17,16 +17,9 @@ use ZendY\Css;
  *
  * @author Piotr Zając
  */
-class Text extends \ZendY\Form\Element\Widget implements CellInterface, PresentationInterface {
+class Text extends \ZendY\Form\Element\Text implements CellInterface, PresentationInterface {
 
     use CellTrait;
-
-    /**
-     * Licznik instancji
-     * 
-     * @var int
-     */
-    static protected $count = 0;
 
     /**
      * Inicjalizacja obiektu
