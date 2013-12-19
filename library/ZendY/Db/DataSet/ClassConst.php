@@ -108,7 +108,7 @@ class ClassConst extends ArraySet {
      * 
      * @return array
      */
-    public function getFields() {
+    public function getColumns() {
         return array(self::COL_NAME, self::COL_VALUE);
     }
 
@@ -119,7 +119,7 @@ class ClassConst extends ArraySet {
      */
     protected function _createRow() {
         $row = array();
-        foreach ($this->getFields() as $field) {
+        foreach ($this->getColumns() as $field) {
             $row[$field] = '';
         }
         return $row;

@@ -118,7 +118,7 @@ class Table extends Editable implements TableInterface {
      * 
      * @param int|null $offset
      * @param int|null $itemCount
-     * @param null|array|string $column
+     * @param null|array|string $columns
      * @param null|array $conditionalFormats
      * @return array
      */
@@ -172,7 +172,7 @@ class Table extends Editable implements TableInterface {
      * 
      * @return array
      */
-    public function getFields() {
+    public function getColumns() {
         $fields = $this->_table->info(\Zend_Db_Table_Abstract::COLS);
         return $fields;
     }

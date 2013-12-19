@@ -33,7 +33,7 @@ abstract class Base extends Component {
     const ACTIONTYPE_SAVE = 'save';
     const ACTIONTYPE_CONFIRM = 'confirm';
     const ACTIONTYPE_GENERATEFILE = 'generateFile';
-    const ACTIONTYPE_REPORT = 'report';
+    const ACTIONTYPE_GENERATEWEBPAGE = 'generateWebpage';
 
     /**
      * Typy uprawnień powiązane z akcjami
@@ -417,7 +417,7 @@ abstract class Base extends Component {
         );
         $this->_registerAction(
                 self::ACTION_PRINT
-                , self::ACTIONTYPE_REPORT
+                , self::ACTIONTYPE_GENERATEWEBPAGE
                 , array('primary' => Css::ICON_PRINT)
                 , 'Print'
         );
@@ -763,7 +763,7 @@ abstract class Base extends Component {
     public function getPrimary() {
         $primary = $this->_primary;
         if (!isset($primary)) {
-            $primary = $this->getFields();
+            $primary = $this->getColumns();
         }
         return $primary;
     }
@@ -903,7 +903,7 @@ abstract class Base extends Component {
      * 
      * @param int $offset
      * @param int $itemCount
-     * @param null|array|string $column
+     * @param null|array|string $columns
      * @param null|array $conditionalFormats
      * @return array
      */
@@ -921,7 +921,7 @@ abstract class Base extends Component {
      * 
      * @return array
      */
-    abstract public function getFields();
+    abstract public function getColumns();
 
     /** AKCJE */
 
@@ -1375,7 +1375,7 @@ abstract class Base extends Component {
             //parametry są przekazywane w adresie, dlatego tablice trzeba obsłużyć ręcznie
             $fields = explode(',', $params['fields']);
         } else {
-            $fields = $this->getFields();
+            $fields = $this->getColumns();
         }
         $styleArray = array(
             'font' => array(

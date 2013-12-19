@@ -168,7 +168,7 @@ class ArraySet extends Base {
      * 
      * @param int $offset
      * @param int $itemCount
-     * @param null|array|string $column
+     * @param null|array|string $columns
      * @param null|array $conditionalFormats
      * @return array
      */
@@ -215,7 +215,7 @@ class ArraySet extends Base {
      * 
      * @return array
      */
-    public function getFields() {
+    public function getColumns() {
         $fields = array();
         if (isset($this->_data) && count($this->_data)) {
             $fields = array_keys($this->_data[0]);

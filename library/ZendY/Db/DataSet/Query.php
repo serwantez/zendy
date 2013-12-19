@@ -126,7 +126,7 @@ class Query extends Base {
             $select->order($this->_order->toSelect($columnPart));
         }
 
-        $fields = $this->getFields();
+        $fields = $this->getColumns();
         if ($columns <> '*' && !in_array('*', $fields)) {
             /**
              * @todo zrobić osobną funkcję do szukania kolumn
@@ -249,7 +249,7 @@ class Query extends Base {
      * @param bool $full czy metoda ma zwracać pełne nazwy kolumn wraz z definicjami aliasów
      * @return array
      */
-    public function getFields($full = false) {
+    public function getColumns($full = false) {
         $fields = array();
         $columns = $this->_select->getPart(\Zend_Db_Select::COLUMNS);
         foreach ($columns as $column) {
@@ -273,7 +273,7 @@ class Query extends Base {
      */
     public function createRow() {
         $ret = array();
-        $fields = $this->getFields();
+        $fields = $this->getColumns();
         foreach ($fields as $field) {
             $ret[$field] = '';
         }
