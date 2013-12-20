@@ -382,9 +382,57 @@ class FilesTree extends ArraySet implements TreeSetInterface {
      * @param int $left
      * @return int
      */
-    protected function rec_scandir($dir, $depth = 0, $left = 1) {
+    protected function rec_scandir_old($dir, $depth = 0, $left = 1) {
         if ($handle = opendir($dir)) {
             while (($file = readdir($handle)) !== false) {
+                if ($file != ".." && $file != ".") {
+                    if (is_dir($dir . "/" . $file)) {
+                        $i = count($this->_data);
+                        $this->_data[] = array(
+                            self::COL_ID => $this->pathToId($dir . "/" . $file),
+                            self::COL_NAME => $file,
+                            self::COL_FILEPATH => $dir . "/" . $file,
+                            self::COL_DEPTH => $depth,
+                            self::COL_LFT => $left
+                        );
+                        $left++;
+                        $depth++;
+                        $left = $this->rec_scandir_old($dir . "/" . $file, $depth, $left);
+                        $depth--;
+                        $this->_data[$i][self::COL_RGT] = $left;
+                        $left++;
+                    } else {
+                        $i = count($this->_data);
+                        $this->_data[] = array(
+                            self::COL_ID => $this->pathToId($dir . "/" . $file),
+                            self::COL_NAME => $file,
+                            self::COL_FILEPATH => $dir . "/" . $file,
+                            self::COL_DEPTH => $depth,
+                            self::COL_LFT => $left,
+                            self::COL_RGT => $left + 1
+                        );
+                        $left += 2;
+                    }
+                }
+            }
+            closedir($handle);
+            return $left;
+        }
+    }
+
+    /**
+     * Znajduje w podanym katalogu pliki i podkatalogi
+     * i zapisuje do zmiennej tablicowej
+     * 
+     * @param string $dir
+     * @param int $depth
+     * @param int $left
+     * @return int
+     */
+    protected function rec_scandir($dir, $depth = 0, $left = 1) {
+        if (is_dir($dir)) {
+            $files = scandir($dir);
+            foreach ($files as $file) {
                 if ($file != ".." && $file != ".") {
                     if (is_dir($dir . "/" . $file)) {
                         $i = count($this->_data);
@@ -415,7 +463,6 @@ class FilesTree extends ArraySet implements TreeSetInterface {
                     }
                 }
             }
-            closedir($handle);
             return $left;
         }
     }
