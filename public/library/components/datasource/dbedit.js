@@ -12,7 +12,7 @@ dbEdit = function(id, params) {
     
     this.setData = function(value) {
         //console.log(this.id+' '+value);
-        if($('#'+this.id).attr('texttype')=='textView'){
+        if($('#'+this.id).attr('texttype')=='textView') {
             $('#'+this.id).val(value);
             $('#'+this.id).trigger('change');
         } else if (params.type == 'ra' || params.type == 'rb') {
@@ -31,8 +31,21 @@ dbEdit = function(id, params) {
                 if (params.type == 'tx') {
                     $('#'+this.id).html(value);
                 } else {
-                    $('#'+this.id).val(value);
-                    $('#'+this.id).trigger('change');
+                    if (params.type == 'tfv') {
+                        $('#'+this.id).html(value);
+                        $('#'+this.id+'RowNumbers').empty();
+                        var rn = $('<pre></pre>');
+                        var rowCount = value.split('<br />').length;
+                        var s = '';
+                        for (var i = 0; i<rowCount; i++) {
+                            s = s + (i+1) + '<br />';
+                            }
+                        rn.html(s);
+                        $('#'+this.id+'RowNumbers').append(rn);
+                    } else {
+                        $('#'+this.id).val(value);
+                        $('#'+this.id).trigger('change');
+                    }
                 }
             }
         }

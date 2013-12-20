@@ -12,10 +12,8 @@
 }
 
 .ui-longtext {
-  border: none;
   display: inline-block;
   overflow: hidden;
-  padding: 3px;
   vertical-align: middle;
 }
 .ui-longtext span {
