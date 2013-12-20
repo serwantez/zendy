@@ -35,13 +35,22 @@ class TextFileView extends Widget {
         $container = '<div'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s</div>';
+
+        $rowCount = substr_count($value, '<br />');
+        if ($rowCount > 0) {
+            $numbers = '';
+            for ($i = 0; $i <= $rowCount; $i++) {
+                $numbers .= ($i + 1) . '<br />';
+            }
+        }
         $viewer = sprintf('<div class="%s">
-            <div class="%s" id="%s"></div>
-            <div class="%s %s" id="%s">%s</div>
+            <div class="%s" id="%s"><pre>%s</pre></div>
+            <div class="%s %s" id="%s"><pre>%s</pre></div>
             </div>'
                 , Css::TEXTFILEVIEW_CONTAINER
                 , Css::TEXTFILEVIEW_ROWNUMBERS
                 , $id . 'RowNumbers'
+                , $numbers
                 , Css::WIDGET_CONTENT
                 , Css::TEXTFILEVIEW_CONTENT
                 , $id

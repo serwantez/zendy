@@ -125,7 +125,7 @@ class Navigator extends Container implements DataInterface {
      */
     public function init() {
         parent::init();
-        $this->setHeight(40);
+        $this->setHeight(32);
         $this->addClass(Css::WIDGET_HEADER);
         $this->addClass(Css::SCROLL_DISABLE);
     }

@@ -40,6 +40,18 @@ class TextFileView extends Text {
     }
 
     /**
+     * Zwraca tablicę parametrów edycyjnych przekazywanych do przeglądarki
+     * 
+     * @return array
+     */
+    public function getFrontEditParams() {
+        $this->setFrontEditParam('type', 'tfv');
+        $this->setFrontEditParam('dataField', $this->getDataField());        
+        $this->setFrontEditParam('attribs', $this->getAttribs());
+        return $this->_frontEditParams;        
+    }
+
+    /**
      * Formatuje wartość wyświetlaną przez kontrolkę
      * 
      * @param string $value

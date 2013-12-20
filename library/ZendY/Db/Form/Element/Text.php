@@ -31,7 +31,6 @@ class Text extends \ZendY\Form\Element\Text implements CellInterface, Presentati
         $this->addClasses(array(
             Css::TEXT,
             Css::WIDGET,
-            Css::WIDGET_CONTENT,
             Css::CORNER_ALL
         ));
     }
