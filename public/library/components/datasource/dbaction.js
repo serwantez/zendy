@@ -36,12 +36,20 @@ dbAction = function(id, params) {
     
     this.setEvents = function(actionFunction) {
         if (this.params.dataAction) {
-            $('#'+this.id).click(
-                this.params, function(event) {
-                    if (params.type=='bt' || params.type=='mi' && !$('#'+self.id).parent().hasClass('ui-state-disabled')) {
-                        actionFunction(event);
+            $('#'+this.id).click(function(event) {
+                var newparams = {};
+                for(var i in self.params) {
+                    if (self.params[i].func) {
+                        newparams[i] = $('#'+self.params[i].control).val();
+                    } else {
+                        newparams[i] = self.params[i];
                     }
-                });
+                }
+                event.data = newparams;
+                if (params.type=='bt' || params.type=='mi' && !$('#'+self.id).parent().hasClass('ui-state-disabled')) {
+                    actionFunction(event);
+                }
+            });
         }
     
     }

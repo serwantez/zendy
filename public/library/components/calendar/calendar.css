@@ -86,4 +86,5 @@
 }
 .ui-calendar .ui-calendar-body table tbody tr .ui-calendar-holiday {
   background-color: #FDD;
+  background-image: none;
 }

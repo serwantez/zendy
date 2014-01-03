@@ -36,9 +36,13 @@ class Icon extends Custom {
             $icon = $this->_options['icons'][$icon];
         }
 
-        return sprintf('<span class="%s %s" style="display: inline-block;"></span>'
-                        , \ZendY\Css::ICON
-                        , $icon);
+        if (isset($icon) && $icon <> '') {
+            return sprintf('<span class="%s %s" style="display: inline-block;"></span>'
+                            , \ZendY\Css::ICON
+                            , $icon);
+        } else {
+            return sprintf('<span class="" style="display: inline-block;"></span>');
+        }
     }
 
 }

@@ -87,7 +87,7 @@ class RadioButton extends Radio {
     }
 
     /**
-     * Ustawia czy przycisk ma wyglądać jak przycisk paska narzędziowego
+     * Ustawia wygląd przycisków paska narzędziowego
      * 
      * @param bool $isToolButton
      * @return \ZendY\Form\Element\RadioButton
@@ -96,6 +96,14 @@ class RadioButton extends Radio {
         $this->isToolButton = $isToolButton;
         $this->loadDecorators();
         return $this;
+    }
+    
+    /**
+     * Zwraca informację, czy przyciski mają wyglądać jak przyciski paska narzędziowego
+     * @return bool
+     */
+    public function getToolButton() {
+        return $this->isToolButton;
     }
 
     /**

@@ -30,7 +30,7 @@ class IconCombobox extends Combobox {
      * @return void
      */
     public function init() {
-        $this->helper = 'iconcombobox';
+        $this->helper = 'iconCombobox';
         $this->addClasses(array(
             Css::ICONEDIT,
             Css::WIDGET,
@@ -43,23 +43,23 @@ class IconCombobox extends Combobox {
     }
 
     /**
-     * Ustawia klasę ikony
+     * Ustawia klasę ikony rozwijania listy
      * 
      * @param string $icon
      * @return \ZendY\Db\Form\Element\IconCombobox
      */
     public function setIcon($icon) {
-        $this->jQueryParams[self::PARAM_ICON] = $icon;
+        $this->setJQueryParam(self::PARAM_ICON, $icon);
         return $this;
     }
 
     /**
-     * Zwraca klasę ikony
+     * Zwraca klasę ikony rozwijania listy
      * 
      * @return string
      */
     public function getIcon() {
-        return $this->jQueryParams[self::PARAM_ICON];
+        return $this->getJQueryParam(self::PARAM_ICON);
     }
 
 }

@@ -47,7 +47,22 @@ calendar = function(id, options) {
     
     }
     
+    this.disable = function() {
+        $('#'+this.id).attr('disabled','disabled');
+        $('#'+this.id).parent().addClass('ui-state-disabled');        
+    }
+
+    this.enable = function() {
+        $('#'+this.id).removeAttr('disabled');
+        $('#'+this.id).parent().removeClass('ui-state-disabled');
+    }
+    
     this.readonly = function(ro) {
+        if (ro) {
+            $('#'+this.id).attr('readonly','readonly');
+        } else {
+            $('#'+this.id).removeAttr('readonly');
+        }        
     }
     
     this.setNavigating = function(ds, form) {

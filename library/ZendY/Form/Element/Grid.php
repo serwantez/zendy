@@ -99,15 +99,6 @@ class Grid extends CustomList {
     }
 
     /**
-     * Zwraca wszystkie kolumny
-     * 
-     * @return array 
-     */
-    public function getColumns() {
-        return $this->getAttrib('columns');
-    }
-
-    /**
      * Zwraca kolumnę o podanym identyfikatorze
      * 
      * @param string $columnId
@@ -116,6 +107,15 @@ class Grid extends CustomList {
     public function getColumn($columnId) {
         $columns = $this->getAttrib('columns');
         return $columns[$columnId];
+    }
+    
+    /**
+     * Zwraca wszystkie kolumny
+     * 
+     * @return array 
+     */
+    public function getColumns() {
+        return $this->getAttrib('columns');
     }
 
     /**

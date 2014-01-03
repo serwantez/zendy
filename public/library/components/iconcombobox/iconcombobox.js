@@ -197,17 +197,26 @@ iconComboBox = function(id, options) {
             for(var i in params.listField) {
                 listValues[i] = value[params.listField[i]];
             }
+            
+            var li = $("<li></li>")
+            .attr('key', keyValues.join(';'))
+            .addClass('ui-menu-item')
+            .append($("<a href='#'></a>")
+                .addClass('ui-corner-all')
+                .text(listValues.join(params.columnSpace))
+                .append($('<span></span>')
+                    .addClass('ui-icon '+keyValues.join(';'))
+                    )
+                );
+
+            //formatowanie warunkowe
+            if (value['_format']) {
+                li.addClass(value['_format']);
+            }
+            
             self.widgetUl
-            .append($("<li></li>")
-                .attr('key', keyValues.join(';'))
-                .addClass('ui-menu-item')
-                .append($("<a href='#'></a>")
-                    .addClass('ui-corner-all')
-                    .text(listValues.join(params.columnSpace))
-                    .append($('<span></span>')
-                        .addClass('ui-icon '+keyValues.join(';'))
-                        )
-                    ));
+            .append(li);
+            
         });
         this.refresh();
     };

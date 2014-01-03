@@ -28,23 +28,27 @@ dbEdit = function(id, params) {
                     $('#'+this.id+'-img').attr('src',params.attribs.src + '?' + d.getTime());
                 }
             } else {
-                if (params.type == 'tx') {
-                    $('#'+this.id).html(value);
+                if (params.type == 'iv') {
+                    dc[params.type][this.id].setData(value);
                 } else {
-                    if (params.type == 'tfv') {
+                    if (params.type == 'tx') {
                         $('#'+this.id).html(value);
-                        $('#'+this.id+'RowNumbers').empty();
-                        var rn = $('<pre></pre>');
-                        var rowCount = value.split('<br />').length;
-                        var s = '';
-                        for (var i = 0; i<rowCount; i++) {
-                            s = s + (i+1) + '<br />';
-                            }
-                        rn.html(s);
-                        $('#'+this.id+'RowNumbers').append(rn);
                     } else {
-                        $('#'+this.id).val(value);
-                        $('#'+this.id).trigger('change');
+                        if (params.type == 'tfv') {
+                            $('#'+this.id).html(value);
+                            $('#'+this.id+'RowNumbers').empty();
+                            var rn = $('<pre></pre>');
+                            var rowCount = value.split('<br />').length;
+                            var s = '';
+                            for (var i = 0; i<rowCount; i++) {
+                                s = s + (i+1) + '<br />';
+                            }
+                            rn.html(s);
+                            $('#'+this.id+'RowNumbers').append(rn);
+                        } else {
+                            $('#'+this.id).val(value);
+                            $('#'+this.id).trigger('change');
+                        }
                     }
                 }
             }
@@ -55,10 +59,9 @@ dbEdit = function(id, params) {
     
     this.getValue = function() {
         //zwraca wartość dla poszczególnych typów kontrolek
-        if ($('#'+this.id)[0].nodeName=='INPUT' && $('#'+this.id).attr('type')=='radio') {
-            //console.log(value);
+        if (params.type == 'ra' || params.type == 'rb') {
             val = $('input:'+$('#'+this.id).attr('type')+'[name='+this.id+']:checked').val();
-        } else if ($('#'+this.id)[0].nodeName=='INPUT' && $('#'+this.id).attr('type')=='checkbox') {
+        } else if (params.type == 'ch') {
             val = $('input:'+$('#'+this.id).attr('type')+'[name='+this.id+']:checked').val();
             //wartość dla niezaznaczonego checkboxa pobierana jest z ukrytego pola
             if (!val) val = $('input:hidden'+'[name='+this.id+']').val();
@@ -85,6 +88,7 @@ dbEdit = function(id, params) {
     }
 
     this.enable = function() {
+        //console.log(params.type);
         if (params.type !== 'tx' && dc[params.type][this.id]) {
             dc[params.type][this.id].enable();
         }

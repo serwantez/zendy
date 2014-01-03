@@ -8,9 +8,7 @@
 
 namespace ZendY\Db\Form\Element;
 
-use ZendY\Db\DataSource;
 use ZendY\Db\Form\Element\CellInterface;
-use ZendY\Exception;
 
 /**
  * Kontrolka adresu strony internetowej

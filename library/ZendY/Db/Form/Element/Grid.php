@@ -13,7 +13,7 @@ use ZendY\Exception;
 use ZendY\Form\Element\Grid\Column;
 
 /**
- * Kontrolka bazodanowa prezentująca dane w postaci struktury drzewiastej
+ * Kontrolka bazodanowa prezentująca dane w postaci siatki
  *
  * @author Piotr Zając
  */

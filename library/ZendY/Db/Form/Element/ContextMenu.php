@@ -47,6 +47,7 @@ class ContextMenu extends \ZendY\Form\Element\ContextMenu {
      * @return \ZendY\Db\Form\Element\ContextMenu
      */
     public function setDataActions(array $dataActions) {
+        $this->_dataActions = $dataActions;
         foreach ($dataActions as $key => $value) {
             if (!is_array($value)) {
                 $nvalue['action'] = $value;
@@ -71,6 +72,15 @@ class ContextMenu extends \ZendY\Form\Element\ContextMenu {
             }
         }
         return $this;
+    }
+    
+    /**
+     * Zwraca akcje elementów menu
+     * 
+     * @return array
+     */
+    public function getDataActions() {
+        return $this->_dataActions;
     }
 
     /**

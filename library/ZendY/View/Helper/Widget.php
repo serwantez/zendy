@@ -10,6 +10,8 @@ namespace ZendY\View\Helper;
 
 require_once 'ZendX/JQuery/View/Helper/UiWidget.php';
 
+use ZendY\Form\Element;
+
 /**
  * Bazowy pomocnik do wygenerowania pól formularza
  * 
@@ -85,24 +87,39 @@ abstract class Widget extends \ZendX_JQuery_View_Helper_UiWidget {
      * @return array
      */
     protected function _prepareParams($id, array $params) {
-        if (array_key_exists('tooltip', $params)) {
-            $jqh = \ZendX_JQuery_View_Helper_JQuery::getJQueryHandler();
-            if (count($params['tooltip'])) {
-                $params['tooltip'] = \ZendY\JQuery::encodeJson($params['tooltip']);
+        $jqh = \ZendX_JQuery_View_Helper_JQuery::getJQueryHandler();
+        
+        //tooltip
+        if (array_key_exists(Element\Widget::PARAM_TOOLTIP, $params)) {
+            if (count($params[Element\Widget::PARAM_TOOLTIP])) {
+                $params[Element\Widget::PARAM_TOOLTIP] = \ZendY\JQuery::encodeJson($params[Element\Widget::PARAM_TOOLTIP]);
             } else {
-                $params['tooltip'] = '{}';
+                $params[Element\Widget::PARAM_TOOLTIP] = '{}';
             }
-            $js = sprintf('%s("#%s").tooltip(%s);', $jqh, $id, $params['tooltip']);
+            $js = sprintf('%s("#%s").tooltip(%s);', $jqh, $id, $params[Element\Widget::PARAM_TOOLTIP]);
             $this->view->headLink()->appendStylesheet($this->view->host . '/library/components/tooltip/jquery.ui.tooltip.css');
             $this->jquery->addOnLoad($js);
-            unset($params['tooltip']);
+            unset($params[Element\Widget::PARAM_TOOLTIP]);
         }
+
+        //focus
+        if (array_key_exists(Element\Widget::PARAM_FOCUS, $params)) {
+            $js = sprintf('%s("#%s").focus();', $jqh, $id);
+            $this->jquery->addOnLoad($js);
+            unset($params[Element\Widget::PARAM_FOCUS]);
+        }
+
+        //width
         if (array_key_exists('width', $params) && is_array($params['width'])) {
             $params['width'] = self::implodeArrayProperty($params['width']);
         }
+
+        //height
         if (array_key_exists('height', $params) && is_array($params['height'])) {
             $params['height'] = self::implodeArrayProperty($params['height']);
         }
+
+        //label
         if (array_key_exists('label', $params)) {
             $params['label'] = $this->view->translate($params['label']);
         }

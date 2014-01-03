@@ -17,7 +17,7 @@ use ZendY\Form\Container\Base as Container;
 use ZendY\Form\Element;
 
 /**
- * Formularz
+ * Formularz standardowy
  *
  * @author Piotr Zając
  */

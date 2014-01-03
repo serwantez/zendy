@@ -41,8 +41,9 @@ dataSource = function(id, url, formClass, formId, dialog) {
         var i;
         var ret = {};
         for(i in this.de) {
-            if (!this.de[i].presentation)
+            if (!this.de[i].presentation) {
                 ret[this.de[i].dataField] = this.de[i].getValue();
+            }
         }
         return ret;
     }
@@ -152,11 +153,11 @@ dataSource = function(id, url, formClass, formId, dialog) {
         params.id = self.id;
         params.formId = self.formId;
         params.form = self.formClass;
-        //console.log(params.actionType);
+        //console.log(params);
             
         if (actionType == 'save') {
             params.fieldsValues = self.getFieldsValues();
-            params.elementsValues = self.getElementsValues();                
+            params.elementsValues = self.getElementsValues(); 
         }
         
         if (actionType == 'filter') {

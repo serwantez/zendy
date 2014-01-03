@@ -11,8 +11,43 @@ radio = function(id, options) {
     
     options =  $.extend(defaults, options);
     
-    this.init = function() {
+    this.refresh = function() {
     }
+    
+    this.setData = function(data, params) {
+        //this.widget.empty();
+        if (params.emptyValue) {
+            //this.widgetUl.append($("<li><a href='#'></a></li>"));
+        }            
+        $.each(data['rows'], function(key, value) {  
+                
+            var keyValues = new Array();
+            for(var k in params.keyField) {
+                keyValues[k] = value[params.keyField[k]];
+            }
+            
+            var listValues = new Array();
+            for(var i in params.listField) {
+                listValues[i] = value[params.listField[i]];
+            }
+            
+            /*var li = $("<li></li>")
+            .attr('key', keyValues.join(';'))
+            //.addClass('ui-state-default')
+            .append($("<a href='#'></a>")
+                .text(listValues.join(params.columnSpace)));
+
+            //formatowanie warunkowe
+            if (value['_format']) {
+                li.addClass(value['_format']);
+            }
+            
+            self.widgetUl
+            .append(li);
+              */      
+        });
+        this.refresh();
+    }    
     
     this.disable = function() {
         $('input[name="'+this.id+'"]').attr('disabled','disabled');
@@ -32,5 +67,5 @@ radio = function(id, options) {
         }        
     }
     
-    this.init();
+    this.refresh();
 }

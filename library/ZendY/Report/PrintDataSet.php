@@ -36,7 +36,7 @@ class PrintDataSet extends Report {
         $subtitle->setValue($this->_dataSource->getDataSet()->getId());
 
         $band = new Band('main');
-        $fields = $this->_dataSource->getDataSet()->getFields();
+        $fields = $this->_dataSource->getDataSet()->getColumns();
         foreach ($fields as $key => $field) {
             $band->addColumn(new Column(
                             $field

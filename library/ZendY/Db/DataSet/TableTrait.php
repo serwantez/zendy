@@ -307,7 +307,7 @@ trait TableTrait {
 
                 $primaryKey = $this->getPrimary();
                 foreach ($primaryKey as $key) {
-                    $searchValues[$key] = is_array($ret) ? $ret[$key] : $ret;
+                    $searchValues[$key] = is_array($ret) && array_key_exists($key, $ret) ? $ret[$key] : $ret;
                 }
                 $result = array_merge($result, $this->searchAction(array('searchValues' => $searchValues), true));
                 if (!$compositePart) {

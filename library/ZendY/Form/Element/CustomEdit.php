@@ -33,6 +33,26 @@ abstract class CustomEdit extends Widget {
     }
 
     /**
+     * Ogranicza liczbę wprowadzanych znaków (tylko przeglądarki obsługujące HTML5)
+     * 
+     * @param int $maxlength
+     * @return \ZendY\Form\Element\CustomEdit
+     */
+    public function setMaxLength($maxlength) {
+        $this->setAttrib('maxlength', $maxlength);
+        return $this;
+    }
+    
+    /**
+     * Zwraca maksymalną liczbę wprowadzanych znaków (tylko przeglądarki obsługujące HTML5)
+     * 
+     * @return int
+     */
+    public function getMaxLength() {
+        return $this->getAttrib('maxlength');
+    }
+    
+    /**
      * Ustawia podpowiedź w polu, ukrywaną przy uzyskaniu fokusu (tylko przeglądarki obsługujące HTML5)
      * 
      * @param string $placeHolder
@@ -44,14 +64,12 @@ abstract class CustomEdit extends Widget {
     }
 
     /**
-     * Ogranicza liczbę wprowadzanych znaków (tylko przeglądarki obsługujące HTML5)
+     * Zwraca treść podpowiedzi w polu (tylko przeglądarki obsługujące HTML5)
      * 
-     * @param int $maxlength
-     * @return \ZendY\Form\Element\CustomEdit
+     * @return string
      */
-    public function setMaxLength($maxlength) {
-        $this->setAttrib('maxlength', $maxlength);
-        return $this;
+    public function getPlaceHolder() {
+        return $this->getAttrib('placeholder');
     }
 
 }

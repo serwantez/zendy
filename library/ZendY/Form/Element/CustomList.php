@@ -115,7 +115,7 @@ abstract class CustomList extends Widget {
     }
 
     /**
-     * Ustawia możliwość wyświetlania pustego pola option
+     * Ustawia możliwość wyboru pustego pola
      * 
      * @param bool|null $empty
      * @return \ZendY\Form\Element\CustomList
@@ -126,7 +126,7 @@ abstract class CustomList extends Widget {
     }
 
     /**
-     * Zwraca informację o wyświetlaniu pustego pola option
+     * Zwraca informację o wyświetlaniu pustego pola
      * 
      * @return bool
      */
@@ -148,7 +148,7 @@ abstract class CustomList extends Widget {
     }
 
     /**
-     * Dodaje opcję
+     * Dodaje do listy jeden element
      *
      * @param  string $option
      * @param  string|null $value
@@ -165,7 +165,7 @@ abstract class CustomList extends Widget {
     }
 
     /**
-     * Dodaje wiele opcji na raz
+     * Dodaje do listy wiele elementów na raz
      *
      * @param  array $options
      * @return \ZendY\Form\Element\CustomList
@@ -185,7 +185,7 @@ abstract class CustomList extends Widget {
     }
 
     /**
-     * Ustawia opcje
+     * Ustawia elementy listy
      *
      * @param  array $options
      * @return \ZendY\Form\Element\CustomList
@@ -196,7 +196,7 @@ abstract class CustomList extends Widget {
     }
 
     /**
-     * Zwraca pojedynczą opcję
+     * Zwraca pojedynczy element listy
      *
      * @param  string $option
      * @return mixed
@@ -213,7 +213,7 @@ abstract class CustomList extends Widget {
     }
 
     /**
-     * Zwraca wszystkie opcje
+     * Zwraca wszystkie elementy listy
      *
      * @return array
      */
@@ -226,7 +226,7 @@ abstract class CustomList extends Widget {
     }
 
     /**
-     * Usuwa pojedynczą opcję
+     * Usuwa pojedynczy element listy
      *
      * @param  string $option
      * @return bool
@@ -246,7 +246,7 @@ abstract class CustomList extends Widget {
     }
 
     /**
-     * Usuwa wszystkie opcje
+     * Usuwa wszystkie elementy listy
      *
      * @return \ZendY\Form\Element\CustomList
      */

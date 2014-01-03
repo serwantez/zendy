@@ -153,6 +153,23 @@ class Filter extends Object {
     }
 
     /**
+     * Zwraca pierwszą znalezioną wartość filtra dla podanego pola
+     * 
+     * @param string $field
+     * @return mixed|null
+     */
+    public function getFieldValue($field) {
+        foreach ($this->_filters as $filter) {
+            foreach ($filter as $f => $data) {
+                if ($f == $field) {
+                    return $data['value'];
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Zwraca filtr w postaci części "where" zapytania sql
      * 
      * @param array $columns kolumny z obiektu zapytania sql
@@ -206,8 +223,10 @@ class Filter extends Object {
                     $uniqueField = '`' . $field . '`';
                 }
 
+                //sprawdzenie czy kolumna jest aliasem lub występuje z domeną
                 foreach ($columns as $columnData) {
-                    if ($columnData[2] == $field) {
+                    if ($columnData[2] == $field 
+                            || ($field == $columnData[1] && is_null($columnData[2]))) {
                         if ($columnData[1] instanceof \Zend_Db_Expr) {
                             $uniqueField = $columnData[1];
                         } else {

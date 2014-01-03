@@ -16,6 +16,11 @@ use ZendY\Css;
  * @author Piotr Zając
  */
 class DocFileView extends Widget {
+    /**
+     * Parametry
+     */
+
+    const PARAM_CODE_HIGHLIGHT = 'codeHighlight';
 
     /**
      * Licznik instancji
@@ -45,6 +50,29 @@ class DocFileView extends Widget {
             Css::CORNER_ALL,
             Css::DOCUMENT
         ));
+        $this->setCodeHighlight(true);
+    }
+
+    /**
+     * Ustawia parametr informujący, czy kod zawarty w pliku 
+     * pomiędzy znacznikami [code] i [/code] ma być kolorowany
+     * 
+     * @param bool $highlight
+     * @return \ZendY\Form\Element\DocFileView
+     */
+    public function setCodeHighlight($highlight = true) {
+        $this->setJQueryParam(self::PARAM_CODE_HIGHLIGHT, $highlight);
+        return $this;
+    }
+
+    /**
+     * Informuje, czy kod zawarty w pliku 
+     * pomiędzy znacznikami [code] i [/code] ma być kolorowany
+     * 
+     * @return bool
+     */
+    public function getCodeHighlight() {
+        return $this->getJQueryParam(self::PARAM_CODE_HIGHLIGHT);
     }
 
     /**
@@ -70,12 +98,14 @@ class DocFileView extends Widget {
                 }
             }
             //podświetlanie kodu
-            $codeStart = '[code]';
-            $codeEnd = '[/code]';
-            while (($posStart = strpos($value, $codeStart)) !== false) {
-                $posEnd = strpos($value, $codeEnd, $posStart);
-                $code = substr($value, $posStart + strlen($codeStart), ($posEnd - $posStart - strlen($codeStart)));
-                $value = substr_replace($value, highlight_string($code, true), $posStart, ($posEnd - $posStart + strlen($codeEnd)));
+            if ($this->getCodeHighlight()) {
+                $codeStart = '[code]';
+                $codeEnd = '[/code]';
+                while (($posStart = strpos($value, $codeStart)) !== false) {
+                    $posEnd = strpos($value, $codeEnd, $posStart);
+                    $code = substr($value, $posStart + strlen($codeStart), ($posEnd - $posStart - strlen($codeStart)));
+                    $value = substr_replace($value, highlight_string($code, true), $posStart, ($posEnd - $posStart + strlen($codeEnd)));
+                }
             }
         } else {
             $value = '';

@@ -43,7 +43,7 @@ class Button extends IconButton implements ActionInterface {
     protected $_frontActionParams = array();
 
     /**
-     * Ustawia akcję przycisku
+     * Ustawia akcję przypisaną przycisku
      * 
      * @param string $dataAction
      * @return \ZendY\Db\Form\Element\Button
@@ -75,7 +75,7 @@ class Button extends IconButton implements ActionInterface {
      * Dodaje parametr przekazywany do przeglądarki
      * 
      * @param string $paramName
-     * @param string $paramValue
+     * @param string|\Zend_Json_Expr $paramValue
      * @return \ZendY\Db\Form\Element\Button
      */
     public function setFrontActionParam($paramName, $paramValue) {
@@ -107,6 +107,15 @@ class Button extends IconButton implements ActionInterface {
         return $this;
     }
 
+    /**
+     * Zwraca wartość podanego parametru przekazywanego do przeglądarki
+     * 
+     * @return array
+     */
+    public function getFrontActionParam($paramName) {
+        return $this->_frontActionParams[$paramName];
+    }
+    
     /**
      * Zwraca tablicę parametrów przekazywanych do przeglądarki
      * 

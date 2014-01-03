@@ -456,7 +456,7 @@ final class ActionManager {
             //zapisuje obiekt
             $dataSource->saveObject();
         }
-        Msg::add('ACTION MANAGER -> ' . __FUNCTION__ . ' Koniec');
+        //Msg::add('ACTION MANAGER -> ' . __FUNCTION__ . ' Koniec');
         //$this->_resultData['msg'] = Msg::getMessages();
         return $this->_resultData;
     }

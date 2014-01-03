@@ -24,11 +24,12 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
     use \ZendY\Form\CssTrait;
 
     /**
-     * Parametry
+     * Parametry i metody jQuery
      */
 
     const PARAM_CREATE = 'create';
     const PARAM_TOOLTIP = 'tooltip';
+    const PARAM_FOCUS = 'focus';
 
     /**
      * Strony modelu pudełkowego obiektów
@@ -153,7 +154,7 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
     }
 
     /**
-     * Dodaje parametr przekazywany do przeglądarki
+     * Ustawia parametr przekazywany do przeglądarki
      * 
      * @param string $paramName
      * @param string $paramValue
@@ -197,7 +198,16 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
     }
 
     /**
-     * Ustawia informację o podpowiedzi w dymku
+     * Zwraca atrybut tytuł
+     * 
+     * @return string
+     */
+    public function getTitle() {
+        return $this->getAttrib('title');
+    }
+
+    /**
+     * Ustawia parametry podpowiedzi w tzw. dymku
      * 
      * @param array|null|bool $params
      * @return \ZendY\Form\Element\Widget
@@ -210,6 +220,15 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
             $this->removeJQueryParam(self::PARAM_TOOLTIP);
         }
         return $this;
+    }
+
+    /**
+     * Zwraca parametry podpowiedzi w tzw. dymku
+     * 
+     * @return array|null|bool
+     */
+    public function getTooltip() {
+        return $this->getJQueryParam(self::PARAM_TOOLTIP);
     }
 
     /**
@@ -283,12 +302,22 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
      * 
      * @return \ZendY\Form\Element\Widget
      */
-    public function setFocus() {
-        $js = sprintf('%s("#%s").focus();'
-                , \ZendX_JQuery_View_Helper_JQuery::getJQueryHandler()
-                , $this->_name);
-        $this->getView()->jQuery()->addOnLoad($js);
+    public function setFocus($focus = null) {
+        if ($focus !== false) {
+            $this->setJQueryParam(self::PARAM_FOCUS, true);
+        } else {
+            $this->removeJQueryParam(self::PARAM_FOCUS);
+        }
         return $this;
+    }
+
+    /**
+     * Zwraca informację o fokusie na kontrolce
+     * 
+     * @return null|bool
+     */
+    public function getFocus() {
+        return $this->getJQueryParam(self::PARAM_FOCUS);
     }
 
     /**

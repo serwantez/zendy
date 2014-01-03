@@ -53,7 +53,7 @@ trait CellTrait {
      */
     public function renderDbCell() {
         $params = $this->getFrontEditParams();
-        if ($this instanceof Element\PresentationInterface) {
+        if ($this instanceof PresentationInterface) {
             $params['presentation'] = true;
         } else {
             $params['presentation'] = false;

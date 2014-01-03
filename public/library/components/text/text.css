@@ -50,6 +50,13 @@
 .ui-document ul li, .ui-document ol li {
   margin: 5px;
 }
+.ui-document dl {
+  margin-left: 25px;
+}
+.ui-document dl dt {
+  font-size: 18px;
+  margin: 8px 0;
+}
 
 .ui-document-title {
   font-size: 14px;

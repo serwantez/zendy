@@ -35,7 +35,7 @@ class ContextMenu extends CustomList {
             Css::WIDGET,
             Css::WIDGET_CONTENT,
             Css::CORNER_ALL
-        ));        
+        ));
         $this->setRegisterInArrayValidator(false);
         $this->setJQueryParam(self::PARAM_MENU, '#' . $this->getId());
     }
@@ -83,6 +83,15 @@ class ContextMenu extends CustomList {
     }
 
     /**
+     * Zwraca id powiązanej kontrolki
+     * 
+     * @return string
+     */
+    public function getContext() {
+        return $this->getJQueryParam(self::PARAM_CONTEXT);
+    }
+
+    /**
      * Przydziela menu do elementu strony (ustawia "delegata")
      * 
      * @param string $delegate
@@ -92,5 +101,5 @@ class ContextMenu extends CustomList {
         $this->setJQueryParam(self::PARAM_DELEGATE, $delegate);
         return $this;
     }
-    
+
 }

@@ -29,7 +29,7 @@ class IconCombobox extends Widget {
      * @param string|null $listsep
      * @return string
      */
-    public function iconcombobox($name, $value = null, $params = null, $attribs = null, $options = null, $listsep = "<br />\n") {
+    public function iconCombobox($name, $value = null, $params = null, $attribs = null, $options = null, $listsep = "<br />\n") {
 
         $attribs = $this->_prepareAttributes($name, $value, $attribs);
         $info = $this->_getInfo($name, $value, $attribs, $options, $listsep);

@@ -16,16 +16,22 @@ var dc = new Array();
 dc["ca"] = new Array();
 //combobox
 dc["cb"] = new Array();
+//checkbox
+dc["ch"] = new Array();
 //datepicker
 dc["dp"] = new Array();
 //edit, iconedit
 dc["ed"] = new Array();
 //grid
 dc["gr"] = new Array();
+//hidden
+dc["hd"] = new Array();
 //iconcombobox
 dc["ic"] = new Array();
 //image
 dc["im"] = new Array();
+//imageview
+dc["iv"] = new Array();
 //linkedit
 dc["le"] = new Array();
 //listbox

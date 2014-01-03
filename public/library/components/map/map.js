@@ -27,27 +27,27 @@
             }
             
             this.disable = function() {
-                valuer.attr('disabled','disabled');
-                valuer.parent().addClass('ui-state-disabled');        
+                $('#'+options.id).attr('disabled','disabled');
+                $('#'+options.id).parent().addClass('ui-state-disabled');        
             }
 
             this.enable = function() {
-                valuer.removeAttr('disabled');
-                valuer.parent().removeClass('ui-state-disabled');
+                $('#'+options.id).removeAttr('disabled');
+                $('#'+options.id).parent().removeClass('ui-state-disabled');
             }
     
             this.readonly = function(ro) {
                 if (ro) {
-                    valuer.attr('readonly','readonly');
+                    $('#'+options.id).attr('readonly','readonly');
                 } else {
-                    valuer.removeAttr('readonly');
+                    $('#'+options.id).removeAttr('readonly');
                 }        
             }
             
 
             valuer.change(function() {
-                if(valuer.val()) {
-                    var c = valuer.val().split(',');
+                if($('#'+options.id).val()) {
+                    var c = $('#'+options.id).val().split(',');
                     var p = new google.maps.LatLng(c[0],c[1]);
                     map.setCenter(p);
                     marker.setPosition(p);
@@ -57,9 +57,9 @@
             });
 
             google.maps.event.addListener(map, 'click', function(event) {
-                var attrRo = valuer.attr('readonly');
-                if (valuer.is(':disabled') == false && typeof attrRO !== 'undefined' && attrRO !== false) {
-                    valuer.val(event.latLng.lat()+','+event.latLng.lng());
+                var attrRO = $('#'+options.id).attr('readonly');
+                if ($('#'+options.id).is(':disabled') == false && (typeof attrRO == 'undefined' || attrRO == false)) {
+                    $('#'+options.id).val(event.latLng.lat()+','+event.latLng.lng());
                     map.setCenter(event.latLng);
                     marker.setPosition(event.latLng);
                     marker.setMap(map);
@@ -90,6 +90,24 @@
                 google.maps.event.trigger(map, "resize");        
                 map.setCenter(center);
             }
+            
+            this.disable = function() {
+                $('#'+options.id).attr('disabled','disabled');
+                $('#'+options.id).parent().addClass('ui-state-disabled');        
+            }
+
+            this.enable = function() {
+                $('#'+options.id).removeAttr('disabled');
+                $('#'+options.id).parent().removeClass('ui-state-disabled');
+            }
+    
+            this.readonly = function(ro) {
+                if (ro) {
+                    $('#'+options.id).attr('readonly','readonly');
+                } else {
+                    $('#'+options.id).removeAttr('readonly');
+                }        
+            }            
             
             valuer.change(function() {
                 if(valuer.val()) {
@@ -151,6 +169,24 @@
                 google.maps.event.trigger(map, "resize");        
                 map.setCenter(center);
             }
+            
+            this.disable = function() {
+                $('#'+options.id).attr('disabled','disabled');
+                $('#'+options.id).parent().addClass('ui-state-disabled');        
+            }
+
+            this.enable = function() {
+                $('#'+options.id).removeAttr('disabled');
+                $('#'+options.id).parent().removeClass('ui-state-disabled');
+            }
+    
+            this.readonly = function(ro) {
+                if (ro) {
+                    $('#'+options.id).attr('readonly','readonly');
+                } else {
+                    $('#'+options.id).removeAttr('readonly');
+                }        
+            }            
             
             addLine = function(id, name, coords) {
                 if(coords) {

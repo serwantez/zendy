@@ -109,7 +109,7 @@ class Calendar extends \ZendY\Form\Element\Calendar implements ColumnInterface, 
     }
 
     /**
-     * Ustawia pole dnia wolnego
+     * Ustawia pole dnia wolnego od pracy
      * 
      * @param string $name
      * @return \ZendY\Db\Form\Element\Calendar
@@ -120,7 +120,7 @@ class Calendar extends \ZendY\Form\Element\Calendar implements ColumnInterface, 
     }
 
     /**
-     * Zwraca pole dnia wolnego
+     * Zwraca pole dnia wolnego od pracy
      * 
      * @return string
      */

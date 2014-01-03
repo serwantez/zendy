@@ -86,7 +86,7 @@ class DatePicker extends IconEdit {
     }
 
     /**
-     * Zwraca format daty w kontrolce
+     * Zwraca format daty wyświetlanej w kontrolce
      * 
      * @return string
      */

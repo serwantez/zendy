@@ -67,17 +67,26 @@ listBox = function(id, options) {
             for(var k in params.keyField) {
                 keyValues[k] = value[params.keyField[k]];
             }
-                
+            
             var listValues = new Array();
             for(var i in params.listField) {
                 listValues[i] = value[params.listField[i]];
             }
+            
+            var li = $("<li></li>")
+            .attr('key', keyValues.join(';'))
+            //.addClass('ui-state-default')
+            .append($("<a href='#'></a>")
+                .text(listValues.join(params.columnSpace)));
+
+            //formatowanie warunkowe
+            if (value['_format']) {
+                li.addClass(value['_format']);
+            }
+            
             self.widgetUl
-            .append($("<li></li>")
-                .attr('key', keyValues.join(';'))
-                //.addClass('ui-state-default')
-                .append($("<a href='#'></a>")
-                    .text(listValues.join(params.columnSpace))));
+            .append(li);
+                    
         });
         this.refresh();
     }

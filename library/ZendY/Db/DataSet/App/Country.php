@@ -22,7 +22,7 @@ class Country extends EditableQuery {
      */
 
     const COL_ID = 'country_id';
-    const COL_NAME = 'name';
+    const COL_NAME = 'name_en';
     const COL_NAME_PL = 'name_pl';
     const COL_ALFA2 = 'alfa2';
     const COL_ALFA3 = 'alfa3';

@@ -34,7 +34,7 @@ class IconButton extends Button {
     }
 
     /**
-     * Ustawia ikony przycisku
+     * Ustawia klasy ikon
      * 
      * @param array|string $icons
      * @return \ZendY\Form\Element\IconButton
@@ -49,7 +49,7 @@ class IconButton extends Button {
     }
 
     /**
-     * Zwraca ikony
+     * Zwraca klasy ikon
      * 
      * @return array
      */

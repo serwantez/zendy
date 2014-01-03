@@ -63,7 +63,7 @@ class Calendar extends CustomList {
     }
 
     /**
-     * Ustawia zakres dat kalendarza
+     * Ustawia zakres kalendarza
      * 
      * @param string $range
      * @return \ZendY\Form\Element\Calendar
@@ -74,7 +74,7 @@ class Calendar extends CustomList {
     }
 
     /**
-     * Zwraca zakres dat kalendarza
+     * Zwraca zakres kalendarza
      * 
      * @return string
      */
@@ -83,7 +83,7 @@ class Calendar extends CustomList {
     }
 
     /**
-     * Ustawia datę bieżącą kalendarza
+     * Ustawia bieżącą datę kalendarza
      * (nie musi być datą dnia dzisiejszego)
      * 
      * @param \Zend_Date|string $date
@@ -95,7 +95,7 @@ class Calendar extends CustomList {
     }
 
     /**
-     * Zwraca datę bieżącą kalendarza
+     * Zwraca bieżącą datę kalendarza
      * 
      * @return \Zend_Date
      */

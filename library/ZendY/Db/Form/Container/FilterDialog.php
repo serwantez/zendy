@@ -11,7 +11,6 @@ namespace ZendY\Db\Form\Container;
 use ZendY\Db\DataSet\Base as DataSet;
 use ZendY\Form\Container\Dialog;
 use ZendY\Css;
-use ZendY\Db\DataSource;
 use ZendY\Db\DataInterface;
 use ZendY\Db\Form\Container\Navigator;
 use ZendY\Form\Element;
@@ -131,11 +130,7 @@ class FilterDialog extends Dialog implements DataInterface {
 
         if (isset($btnFilter)) {
             $this->addCloser($btnFilter);
-            $createEvent = sprintf('$("%s").keypress({
-                dataAction: "filterSeekAction",
-                actionType: "filter",
-                offset: 0
-            }, function(event) {
+            $createEvent = sprintf('$("%s").keypress(function(event) {
                 if(event.keyCode==$.ui.keyCode.ENTER){
                     $("#%s").click();
                     return false;

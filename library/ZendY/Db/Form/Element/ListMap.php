@@ -96,7 +96,7 @@ abstract class ListMap extends \ZendY\Form\Element\ListMap implements ColumnInte
     }
 
     /**
-     * Dodaje warunek formatujący wiersze
+     * Dodaje warunek formatujący wyświetlane rekordy
      * 
      * @param Filter|array $condition
      * @param string $rowFormat
@@ -110,7 +110,7 @@ abstract class ListMap extends \ZendY\Form\Element\ListMap implements ColumnInte
     }
 
     /**
-     * Zwraca warunki formatujące wiersze
+     * Zwraca warunki formatujące wyświetlane rekordy
      * 
      * @return array
      */

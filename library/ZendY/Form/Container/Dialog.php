@@ -124,7 +124,7 @@ class Dialog extends Base {
         foreach ($elements as $element) {
             if ($element instanceof Element\CustomMap) {
                 $this->setJQueryParam(self::PARAM_EVENT_OPEN
-                        , sprintf('dn["mp"]["%s"].refresh();'
+                        , sprintf('dc["mp"]["%s"].refresh();'
                                 , $element->getId()));
             }
         }

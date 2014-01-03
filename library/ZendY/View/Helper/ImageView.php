@@ -11,14 +11,14 @@ namespace ZendY\View\Helper;
 use ZendY\Db\DataSource;
 
 /**
- * Pomocnik do wygenerowania kontrolki graficznej DbImage
+ * Pomocnik do wygenerowania kontrolki graficznej ImageView
  *
  * @author Piotr Zając
  */
-class DbImage extends Widget {
+class ImageView extends Widget {
 
     /**
-     * Generuje kod kontrolki DbImage
+     * Generuje kod kontrolki ImageView
      * 
      * @param string $id
      * @param string|null $value
@@ -26,7 +26,7 @@ class DbImage extends Widget {
      * @param array|null $attribs
      * @return string
      */
-    public function dbImage($id, $value = null, array $params = array(), array $attribs = array()) {
+    public function imageView($id, $value = null, array $params = array(), array $attribs = array()) {
         $attribs = $this->_prepareAttributes($id, $value, $attribs);
         $params = $this->_prepareParams($id, $params);
         $uploadDirectory = $params['uploadDirectory'];
@@ -36,7 +36,7 @@ class DbImage extends Widget {
             $params = '{}';
         }
 
-        $js = sprintf('dc["im"]["%s"] = new image("%s",%s);', $id, $id, $params);
+        $js = sprintf('dc["iv"]["%s"] = new imageview("%s",%s);', $id, $id, $params);
 
         unset($attribs['id']);
         unset($attribs['name']);
@@ -48,15 +48,16 @@ class DbImage extends Widget {
                 . '&datasource=' . $attribs['options']['datasource']
                 . '&datafield=' . $attribs['options']['datafield'];
         unset($attribs['options']);
+        $hiddenAttribs = array();
         if (array_key_exists('disabled', $attribs)) {
-            $fileAttribs['disabled'] = $attribs['disabled'];
+            $hiddenAttribs['disabled'] = $attribs['disabled'];
             unset($attribs['disabled']);
         }
 
         $attribs = $this->_extractAttributes($attribs);
         $container = '<div'
                 . $this->_htmlAttribs($attribs['outer'])
-                . '><a id="%s" href="#">%s%s</a></div>';
+                . '><a id="%s" href="#">%s%s%s</a></div>';
 
         $image = '<img id="' . $id . '-img"';
         $image .= $this->_htmlAttribs($attribs['inner']);
@@ -66,14 +67,17 @@ class DbImage extends Widget {
         $fileAttribs['value'] = $value;
         //$fileAttribs['multi'] = 'multi';
 
+        $hidden = $this->view->formHidden($id, $value, $hiddenAttribs);
+
         $html = sprintf($container, $id . '-img-a'
+                , $hidden
                 , $image
                 , $this->view->formFile($id . "-uploader", $fileAttribs));
 
         $this->view->headLink()->appendStylesheet($this->view->host . '/library/components/image/image.css');
 
         $this->jquery->addJavascriptFile($this->view->host . '/library/components/fileupload/js/jquery.fileupload.js');
-        $this->jquery->addJavascriptFile($this->view->host . '/library/components/image/image.js');
+        $this->jquery->addJavascriptFile($this->view->host . '/library/components/image/imageview.js');
         if (\Zend_Controller_Front::getInstance()->getRequest()->isXmlHttpRequest()) {
             $html .= '<script>' . $js . '</script>';
         } else {

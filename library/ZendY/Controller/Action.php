@@ -154,13 +154,10 @@ abstract class Action extends \Zend_Controller_Action {
         $options = array(
             'param_name' => $param['name']
         );
+        \Blueimp\Upload\Handler::$uploadDir = urldecode($param['uploaddir']);
         $upload_handler = new \Blueimp\Upload\Handler($options);
-        if ($dataSet->getState() && $dataSet->getRecordCount()) {
-            //nazwa pliku zbudowana z identyfikatora zbioru danych, nazwy pola i wartości klucza
-            $upload_handler->changed_name = $param['datasource'] . '_' . $param['datafield'] . '_' . implode('-', $dataSet->getPrimaryValue());
-        } else {
-            $upload_handler->changed_name = $param['datasource'] . '_' . $param['datafield'] . '_' . time();
-        }
+        //nazwa pliku zbudowana z identyfikatora zbioru danych, nazwy pola i czasu
+        $upload_handler->changed_name = $param['datasource'] . '_' . $param['datafield'] . '_' . time();
 
         header('Pragma: no-cache');
         header('Cache-Control: no-store, no-cache, must-revalidate');
