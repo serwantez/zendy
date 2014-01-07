@@ -321,7 +321,7 @@ class NestedTree extends Table implements TreeSetInterface {
      * @param array|null $columns
      * @return \Zend_Db_Select
      */
-    protected function _getTreeSelect($root = null, $columns = array()) {
+    protected function _getTreeSelect($root = null, $columns = array(), $details = true) {
         $getDepth = false;
         $getParent = false;
 
@@ -338,6 +338,11 @@ class NestedTree extends Table implements TreeSetInterface {
             $getParent = TRUE;
             unset($columns[array_search($this->_parentField, $columns)]);
             //$columns[$this->_parentField] = $this->_parentField;
+        }
+        
+        if (!$details) {
+            $getParent = false;
+            $getDepth = false;
         }
 
         if ($getDepth) {
@@ -435,10 +440,13 @@ class NestedTree extends Table implements TreeSetInterface {
     public function getCurrent($filterBlobs = false) {
         Msg::add($this->getId() . '->' . __FUNCTION__);
         if ($this->_state && $this->_offset >= 0) {
-            $select = $this->_getTreeSelect();
+            $select = $this->_getTreeSelect(null, array('*'));
             $select->limit(1, $this->_offset);
             //exit($select);
-            $row = $this->_db->fetchRow($select);
+            $q = $select->query();
+            Msg::add($this->getId() . '->' . __FUNCTION__.' after query');
+            $row = $q->fetch(\PDO::FETCH_ASSOC);
+            //$row = $this->_db->fetchRow($select);
             //return $this->getAdapter()->fetchRow($select);
         } else {
             $row = $this->_table->createRow()->toArray();
@@ -1070,6 +1078,63 @@ class NestedTree extends Table implements TreeSetInterface {
         } catch (Exception $e) {
             $this->_db->rollBack();
             $result[] = $e;
+        }
+        return $result;
+    }
+
+    /**
+     * Przechodzi do pierwszego rekordu pasującego do podanych kryteriów
+     * 
+     * @param array $params
+     * @param bool $compositePart
+     * @return array
+     */
+    public function searchAction($params = array(), $compositePart = false) {
+        Msg::add($this->getId() . '->' . __FUNCTION__);
+        $result = array();
+        if (isset($params['searchValues'])) {
+            $select = $this->_getTreeSelect(null, null, FALSE);
+            $select2 = clone $select;
+            $filter = new \ZendY\Db\Filter();
+            foreach ($params['searchValues'] as $field => $fieldValue) {
+                if (is_array($fieldValue)) {
+                    $searched = $fieldValue['value'];
+                    $operator = $fieldValue['equalization'];
+                } else {
+                    $searched = $fieldValue;
+                    $operator = self::OPERATOR_EQUAL;
+                }
+                $filter->addFilter('node.' . $field, $searched, $operator);
+            }
+            $select->where($filter->toSelect());
+
+            try {
+                //print($select);
+                $q = $select->query();
+                $array = $q->fetchAll();
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+                exit($select);
+            }
+            if (!is_array($array)) {
+                $array = $array->toArray();
+            }
+            $where = "node." . $this->_leftField . " <= '" . $array[0][$this->_leftField] . "'";
+            $select2->reset(\ZendY\Db\Select::COLUMNS);
+            $select2->columns("count(*)-1")
+                    ->where($where);
+            try {
+                //print($select2);
+                $q = $select2->query();
+                $key = $q->fetchColumn();
+                $result = array_merge($result, $this->seekAction(array('offset' => $key), true));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+                exit($select2);
+            }
+        }
+        if (!$compositePart) {
+            $this->_setActionState($params);
         }
         return $result;
     }

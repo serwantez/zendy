@@ -63,7 +63,7 @@ class Query extends Base {
      * @param bool $compositePart
      * @return array
      */
-    public function searchAction($params = array(), $compositePart = false) {
+    public function searchAction1($params = array(), $compositePart = false) {
         Msg::add($this->getId() . '->' . __FUNCTION__);
         $result = array();
         if (isset($params['searchValues'])) {
@@ -88,10 +88,10 @@ class Query extends Base {
                 $filter->addFilter($field, $searched, $operator);
             }
             $select->where($filter->toSelect($columnPart));
-            /*if ($this->getId() == 'line_point') {
-                print_r($columnPart);
-                exit;
-            }*/
+            /* if ($this->getId() == 'rule') {
+              print($select);
+              exit;
+              } */
             try {
                 $q = $select->query();
                 $array = $q->fetchAll();
@@ -108,37 +108,45 @@ class Query extends Base {
                 foreach ($sorts as $sort) {
                     //sprawdzenie czy kolumna nie jest aliasem
                     foreach ($columnPart as $columnData) {
-                        if ($sort['field'] == $columnData[2]) {
+                        $fullField = $sort['field'];
+                        if ($sort['field'] == $columnData[2]
+                                || ($sort['field'] == $columnData[1] && is_null($columnData[2]))) {
                             if ($columnData[1] instanceof \Zend_Db_Expr) {
-                                $sort['field'] = $columnData[1];
+                                $fullField = $columnData[1];
                             } else {
-                                $sort['field'] = $columnData[0] . '.' . $columnData[1];
+                                $fullField = $columnData[0] . '.' . $columnData[1];
                             }
                             break;
                         }
                     }
-                    $where .= " and " . $sort['field'] . (strtoupper($sort['direction']) == 'DESC' ? " >= '" : " <= '") . $array[0][$sort['field']] . "'";
+                    $where .= " and " . $fullField . (strtoupper($sort['direction']) == 'DESC' ? " >= '" : " <= '") . $array[0][$sort['field']] . "'";
                 }
-            } else {
-                $primary = $this->getPrimary();
-                foreach ($primary as $field) {
-                    //sprawdzenie czy kolumna nie jest aliasem
-                    foreach ($columnPart as $columnData) {
-                        if ($columnData[2] == $field) {
-                            if ($columnData[1] instanceof \Zend_Db_Expr) {
-                                $field = $columnData[1];
-                            } else {
-                                $field = $columnData[0] . '.' . $columnData[1];
-                            }
-                            break;
-                        }
-                    }
-                    $where .= " and " . $field . " <= '" . $array[0][$field] . "'";
-                }
-            }
+            } /* else {
+              $primary = $this->getPrimary();
+              foreach ($primary as $field) {
+              $fullField = $field;
+              //sprawdzenie czy kolumna nie jest aliasem
+              foreach ($columnPart as $columnData) {
+              if ($columnData[2] == $field
+              || ($field == $columnData[1] && is_null($columnData[2]))) {
+              if ($columnData[1] instanceof \Zend_Db_Expr) {
+              $fullField = $columnData[1];
+              } else {
+              $fullField = $columnData[0] . '.' . $columnData[1];
+              }
+              break;
+              }
+              }
+              $where .= " and " . $fullField . " <= '" . $array[0][$field] . "'";
+              }
+              } */
             $select2->reset(\ZendY\Db\Select::COLUMNS);
             $select2->columns("count(*)-1")
                     ->where($where);
+            if ($this->getId() == 'rule') {
+                print($select2);
+                exit;
+            }
             try {
                 $q = $select2->query();
                 $key = $q->fetchColumn();
@@ -146,6 +154,62 @@ class Query extends Base {
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
                 exit($select2);
+            }
+        }
+        if (!$compositePart) {
+            $this->_setActionState($params);
+        }
+        return $result;
+    }
+
+    /**
+     * Przechodzi do pierwszego rekordu pasującego do podanych kryteriów
+     * 
+     * @param array $params
+     * @param bool $compositePart
+     * @return array
+     */
+    public function searchAction($params = array(), $compositePart = false) {
+        Msg::add($this->getId() . '->' . __FUNCTION__);
+        $result = array();
+        if (isset($params['searchValues'])) {
+            $select1 = clone $this->_select;
+            $columnPart = $select1->getPart(\ZendY\Db\Select::COLUMNS);
+            if (count($this->_filter->getFilters())) {
+                $select1->where($this->_filter->toSelect($columnPart));
+            }
+            if (count($this->_order->getSorts())) {
+                $select1->order($this->_order->toSelect($columnPart));
+            }
+            $filter = new \ZendY\Db\Filter();
+            foreach ($params['searchValues'] as $field => $fieldValue) {
+                if (is_array($fieldValue)) {
+                    $searched = $fieldValue['value'];
+                    $operator = $fieldValue['equalization'];
+                } else {
+                    $searched = $fieldValue;
+                    $operator = self::OPERATOR_EQUAL;
+                }
+                $filter->addFilter($field, $searched, $operator);
+            }
+
+            $select2 = $this->_db->select()
+                    ->from(array('s1' => new \Zend_Db_Expr('(' . $select1 . ')')), array(
+                '*',
+                'row' => new \Zend_Db_Expr('@row:=@row+1')
+                    ));
+            $select3 = $this->_db->select()
+                    ->from(array('s2' => new \Zend_Db_Expr('(' . $select2 . ')')), 'row')
+                    ->where($filter->toSelect())
+            ;
+            try {
+                $this->_db->query("set @row:=-1");
+                //exit($select3);
+                $q = $select3->query();
+                $offset = $q->fetchColumn();
+                $result = array_merge($result, $this->seekAction(array('offset' => $offset), true));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
             }
         }
         if (!$compositePart) {

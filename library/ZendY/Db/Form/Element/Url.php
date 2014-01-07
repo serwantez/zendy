@@ -32,7 +32,7 @@ class Url extends \ZendY\Form\Element\Url implements CellInterface {
      * @return array
      */
     public function getFrontEditParams() {
-        $this->setFrontEditParam('type', 'em');
+        $this->setFrontEditParam('type', 'le');
         $this->setFrontEditParam('dataField', $this->getDataField());
         return parent::getFrontEditParams();
     }

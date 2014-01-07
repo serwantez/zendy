@@ -5,7 +5,7 @@
 image = function(id, options) {
     var self = this;
     this.id = id;
-    this.widget = $("#"+this.id);
+    this.widget = $("#"+this.id+'-uploader');
     this.widgetImage = $("#"+this.id+"-img");
     this.widgetLink = $("#"+this.id+"-img-a");
     var defaults = {
@@ -39,29 +39,29 @@ image = function(id, options) {
     }
     
     this.load = function() {
-        var attrRO = this.widget.attr('readonly');
-        if ($("#"+this.id).is(":disabled") == false && (typeof attrRO == 'undefined' || attrRO == false)) {
-            $("#"+this.id).click();
+        var attrRO = $("#"+this.id+'-uploader').attr('readonly');
+        if ($("#"+this.id+'-uploader').is(":disabled") == false && (typeof attrRO == 'undefined' || attrRO == false)) {
+            $("#"+this.id+'-uploader').click();
         }
     }
     
     this.disable = function() {
-        $("#"+this.id).attr('disabled','disabled');
-        $("#"+this.id).parent().addClass('ui-state-disabled');        
+        $("#"+this.id+'-uploader').attr('disabled','disabled');
+        $("#"+this.id+'-uploader').parent().addClass('ui-state-disabled');        
     }
 
     this.enable = function() {
-        $("#"+this.id).removeAttr('disabled');
-        $("#"+this.id).parent().removeClass('ui-state-disabled');
+        $("#"+this.id+'-uploader').removeAttr('disabled');
+        $("#"+this.id+'-uploader').parent().removeClass('ui-state-disabled');
     }
     
     this.readonly = function(ro) {
         if (ro) {
             //this.disable();
-            $("#"+this.id).attr('readonly','readonly');
+            $("#"+this.id+'-uploader').attr('readonly','readonly');
         } else {
             //this.enable();
-            $("#"+this.id).removeAttr('readonly');
+            $("#"+this.id+'-uploader').removeAttr('readonly');
         }        
     }    
     

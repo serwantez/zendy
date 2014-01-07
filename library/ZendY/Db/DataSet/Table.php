@@ -399,4 +399,58 @@ class Table extends Editable implements TableInterface {
         return $this;
     }
 
+    /**
+     * Przechodzi do pierwszego rekordu pasującego do podanych kryteriów
+     * 
+     * @param array $params
+     * @param bool $compositePart
+     * @return array
+     */
+    public function searchAction($params = array(), $compositePart = false) {
+        Msg::add($this->getId() . '->' . __FUNCTION__);
+        $result = array();
+        if (isset($params['searchValues'])) {
+            $select1 = $this->_table->select(true);
+            if (count($this->_filter->getFilters())) {
+                $select1->where($this->_filter->toSelect());
+            }
+            if (count($this->_order->getSorts())) {
+                $select1->order($this->_order->toSelect());
+            }
+            $filter = new \ZendY\Db\Filter();
+            foreach ($params['searchValues'] as $field => $fieldValue) {
+                if (is_array($fieldValue)) {
+                    $searched = $fieldValue['value'];
+                    $operator = $fieldValue['equalization'];
+                } else {
+                    $searched = $fieldValue;
+                    $operator = self::OPERATOR_EQUAL;
+                }
+                $filter->addFilter($field, $searched, $operator);
+            }
+            $select2 = $this->_db->select()
+                    ->from(array('s1' => new \Zend_Db_Expr('(' . $select1 . ')')), array(
+                '*',
+                'row' => new \Zend_Db_Expr('@row:=@row+1')
+                    ));
+            $select3 = $this->_db->select()
+                    ->from(array('s2' => new \Zend_Db_Expr('(' . $select2 . ')')), 'row')
+                    ->where($filter->toSelect())
+            ;
+
+            try {
+                $this->_db->query("set @row:=-1");
+                $q = $select3->query();
+                $offset = $q->fetchColumn();
+                $result = array_merge($result, $this->seekAction(array('offset' => $offset), true));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        if (!$compositePart) {
+            $this->_setActionState($params);
+        }
+        return $result;
+    }
+
 }

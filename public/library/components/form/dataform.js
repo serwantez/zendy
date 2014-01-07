@@ -46,6 +46,8 @@ dc["rb"] = new Array();
 dc["se"] = new Array();
 //sortablelistbox
 dc["sl"] = new Array();
+//textarea
+dc["ta"] = new Array();
 //textfileview
 dc["tfv"] = new Array();
 //treeview

@@ -135,7 +135,8 @@ class Sort extends Object {
         foreach ($this->_sorts as $sort) {
             //sprawdzenie czy kolumna nie jest aliasem
             foreach ($columns as $columnData) {
-                if ($columnData[2] == $sort['field']) {
+                if ($columnData[2] == $sort['field']
+                        || ($sort['field'] == $columnData[1] && is_null($columnData[2]))) {
                     if ($columnData[1] instanceof \Zend_Db_Expr) {
                         $sort['field'] = $columnData[1];
                     } else {

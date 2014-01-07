@@ -101,18 +101,21 @@ class Rule extends EditableQuery {
                 ))
                 ->joinLeft(array('ro' => Role::TABLE_NAME)
                         , "`ru`.`" . self::COL_ROLE_ID . "` = `ro`.`" . Role::COL_ID . "`"
-                        , array(self::COL_ROLE_NAME))
+                        , array(self::COL_ROLE_NAME, 'role_left' => Role::COL_LFT))
                 ->joinLeft(array('p' => Page::TABLE_NAME)
                         , "`ru`.`" . self::COL_PAGE_ID . "` = `p`.`" . Page::COL_ID . "`"
-                        , array(self::COL_RESOURCE, self::COL_PRIVILEGE))
-                ->order(array(
-                    "ro." . Role::COL_LFT,
-                    "p." . Page::COL_LFT,
-                    "ru." . self::COL_ID))
+                        , array(self::COL_RESOURCE, self::COL_PRIVILEGE, 'page_left' => Page::COL_LFT))
+        /* ->order(array(
+          "ro." . Role::COL_LFT,
+          "p." . Page::COL_LFT,
+          "ru." . self::COL_ID)) */
         ;
+        $this->sortAction(array('field' => "role_left"), false);
+        $this->sortAction(array('field' => "page_left"), false);
+        $this->sortAction(array('field' => self::COL_ID), false);
         $this->setPrimary(self::COL_ID);
     }
-    
+
     /**
      * Zwraca rekordy startowe (domyślne)
      * 
