@@ -47,7 +47,7 @@ class Sortable extends Widget {
         $hidden = $this->view->formHidden($id) . self::EOL;
         $serializer = $this->view->formHidden($id . '-serializer') . self::EOL;
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $container = '<span'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s%s%s</span>';

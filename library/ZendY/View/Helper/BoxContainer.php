@@ -46,9 +46,10 @@ class BoxContainer extends \ZendX_JQuery_View_Helper_UiWidget {
                 . $params['title']
                 . '</span>
                     </div>'
-                . sprintf('<div class="%s %s">'
+                . sprintf('<div class="%s %s %s" style="top: 30px; bottom: 1px;">'
                         , Css::DIALOG_CONTENT
-                        , Css::WIDGET_CONTENT)
+                        , Css::WIDGET_CONTENT
+                        , Css::ALIGN_CLIENT)
                 . $content
                 . '</div>
                     </div>';

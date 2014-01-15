@@ -146,7 +146,8 @@ abstract class Base extends Component {
      * 
      * @var array
      */
-    protected $_primary;    
+    protected $_primary;
+
     /**
      * Nadrzędne źródło danych w relacji master-detail
      * 
@@ -636,7 +637,7 @@ abstract class Base extends Component {
      * Ustawia pole w bieżącym zbiorze danych 
      * powiązane relacją master-detail ze zbiorem nadrzędnym
      * 
-     * @param string $field
+     * @param string|array $field
      * @return \ZendY\Db\DataSet\Base
      */
     public function setIndexField($field) {
@@ -648,7 +649,7 @@ abstract class Base extends Component {
      * Zwraca pole w bieżącym zbiorze danych
      * powiązane relacją master-detail ze zbiorem nadrzędnym
      * 
-     * @return string|null
+     * @return string|array|null
      */
     public function getIndexField() {
         return $this->_indexField;
@@ -941,6 +942,11 @@ abstract class Base extends Component {
         if ($this->hasMaster()) {
             Msg::add($this->getId() . ' ma mastera');
             $masterSet = $this->_masterSource->getDataSet();
+            $indexField = $this->_indexField;
+            //pole przekazane jako tablica: domena,nazwa pola,alias
+            if (is_array($indexField)) {
+                $indexField = $indexField[2];
+            }
             //zbiór nadrzędny master jest otwarty
             if ($masterSet->getState()) {
                 if ($this->_state)
@@ -948,13 +954,13 @@ abstract class Base extends Component {
                 $cur = $masterSet->getCurrent();
                 if (array_key_exists($this->_masterField, $cur)) {
                     Msg::add($this->getId() . ' będzie przefiltrowany');
-                    $this->_filter->setFilter('master', array($this->_indexField => $cur[$this->_masterField]));
+                    $this->_filter->setFilter('master', array($indexField => $cur[$this->_masterField]));
                 }
             }
             //zbiór master jest zamknięty
             else {
                 $result = $this->closeAction(null, true);
-                $this->_filter->setFilter('master', array($this->_indexField => ''));
+                $this->_filter->setFilter('master', array($indexField => ''));
             }
         }
 

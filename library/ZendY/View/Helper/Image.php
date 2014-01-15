@@ -28,7 +28,7 @@ class Image extends Widget {
         $attribs = $this->_prepareAttributes($id, $value, $attribs);
         $params = $this->_prepareParams($id, $params);
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $container = '<a'
                 . ' href = "#"'
                 . $this->_htmlAttribs($attribs['outer'])

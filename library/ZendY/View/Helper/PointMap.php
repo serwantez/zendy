@@ -49,7 +49,7 @@ class PointMap extends Map {
         unset($attribs['value']);
         unset($attribs['options']);
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $attribs['inner']['class'] = Css::MAP_CANVAS;
         $container = '<div'
                 . $this->_htmlAttribs($attribs['outer'])
@@ -61,12 +61,12 @@ class PointMap extends Map {
         $hidden = $this->view->formText($id, $value, $inputAttribs);
 
         $html = sprintf($container, Css::WIDGET_HEADER, Css::MAP_HEADER, $hidden, $div);
-        
+
         if (\Zend_Controller_Front::getInstance()->getRequest()->isXmlHttpRequest()) {
-            $html .= '<script>'. $js . '</script>';
+            $html .= '<script>' . $js . '</script>';
         } else {
             $this->jquery->addOnLoad($js);
-        }        
+        }
 
         return $html;
     }

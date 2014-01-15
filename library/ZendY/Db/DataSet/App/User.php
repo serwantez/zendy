@@ -144,7 +144,7 @@ class User extends Table {
             array(
                 self::COL_ID => 1,
                 self::COL_USERNAME => 'admin',
-                self::COL_PASSWORD => $call('admin'. self::$_passString),
+                self::COL_PASSWORD => $call('admin' . self::$_passString),
                 self::COL_ACTIVE => 1,
                 self::COL_FIRSTNAME => 'Administrator',
                 self::COL_SURNAME => '',
@@ -265,7 +265,8 @@ class User extends Table {
      * @return \ZendY\Db\DataSet\App\User
      */
     public function newPassword($newPassword, $hashedLogin) {
-        $sql = $this->_table->select()->where(self::$_cryptographicFunction . '(' . self::COL_USERNAME . ') = ?', $hashedLogin);
+        $sql = $this->_table->select()
+                ->where(self::$_cryptographicFunction . '(' . self::COL_USERNAME . ') = ?', $hashedLogin);
         $id = $this->_db->fetchOne($sql);
 
         if ($id) {

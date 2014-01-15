@@ -309,7 +309,7 @@ class Form extends \ZendY\Form {
     protected function _renderDialogContent() {
         return sprintf('<img src="%s/library/components/dialog/ajax-loader.gif" /> <span>%s</span>'
                         , $this->getView()->host
-                        , $this->getView()->translate('Loading data')
+                        , $this->getView()->translate(Msg::MSG_DATA_LOADING)
         );
     }
 
@@ -354,7 +354,12 @@ class Form extends \ZendY\Form {
             $formClass = \ZendY\JQuery::encodeJson(explode('\\', get_class($this)));
 
 //otwarcie formularza po stronie przeglądarki
-            $js[] = sprintf('df["%s"] = new dataForm("%s",%s,"%s");', $this->getId(), $this->getId(), $formClass, DataSource::$controller . DataSource::$dataAction);
+            $js[] = sprintf('df["%s"] = new dataForm("%s",%s,"%s","%s");'
+                    , $this->getId()
+                    , $this->getId()
+                    , $formClass
+                    , DataSource::$controller . DataSource::$dataAction
+                    , $this->getView()->translate(Msg::MSG_FORM_VALIDATION_ERRORS));
             if (\Zend_Controller_Front::getInstance()->getRequest()->isXmlHttpRequest()) {
                 $result .= '<script>' . implode("\n", $js) . '</script>';
             } else {

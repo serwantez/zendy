@@ -57,6 +57,12 @@
   font-size: 18px;
   margin: 8px 0;
 }
+.ui-document blockquote {
+  margin: 5px 25px;
+}
+.ui-document blockquote p {
+  font-size: 11px;
+}
 
 .ui-document-title {
   font-size: 14px;

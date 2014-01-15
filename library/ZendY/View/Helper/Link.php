@@ -29,15 +29,18 @@ class Link extends Widget {
         $params = $this->_prepareParams($id, $params);
 
         $this->view->headLink()->appendStylesheet($this->view->host . '/library/components/link/link.css');
-        $xhtml = $this->view->formHidden('_' . $attribs['name'], $attribs['value']);
-        $xhtml .= '<a'
+        $container = '<span'
+                . ' id="' . $this->view->escape($id) . '-container"'
+                . '>%s%s</span>';        
+        $hidden = $this->view->formHidden('_' . $attribs['name'], $attribs['value']);
+        $a = '<a'
                 . ' id="' . $this->view->escape($id) . '"'
                 . $this->_htmlAttribs($attribs)
                 . '>'
                 . $value
                 . '</a>';
 
-        return $xhtml;
+        return sprintf($container, $hidden, $a);
     }
 
 }

@@ -5,7 +5,7 @@
  * @author Piotr Zając
  */
 
-dataSource = function(id, url, formClass, formId, dialog) {
+dataSource = function(id, url, formClass, formId, dialog, confirmText) {
     
     var self = this;
 
@@ -145,8 +145,7 @@ dataSource = function(id, url, formClass, formId, dialog) {
     /**
      * wykonanie akcji na zbiorze danych i pobranie bieżącego rekordu (strony rekordów)
      */
-    this.executeAction = function(event) {
-  
+    this.executeAction = function(event) {  
         var params = event.data;
         var action = params.dataAction;
         var actionType = params.actionType;
@@ -182,7 +181,7 @@ dataSource = function(id, url, formClass, formId, dialog) {
             afterAction();
         } else {
             if (actionType == 'confirm') {
-                if (confirm("Czy na pewno wykonać tą akcję? Operacja jest nieodwracalna.") == false) {
+                if (confirm(confirmText) == false) {
                     action = 'cancelAction';
                     params.dataAction = action;                    
                 }

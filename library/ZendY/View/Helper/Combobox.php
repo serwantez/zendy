@@ -81,7 +81,7 @@ class Combobox extends Widget {
         $this->jquery->addOnLoad(implode("\n", $js));
 
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $container = '<div'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s</div>';

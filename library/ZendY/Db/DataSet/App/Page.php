@@ -106,6 +106,12 @@ class Page extends NestedTree {
                 'type' => Mysql::FIELD_TYPE_INT,
                 'length' => 11,
                 'null' => false
+            ),
+            array(
+                'name' => self::COL_PARENT,
+                'type' => Mysql::FIELD_TYPE_INT,
+                'length' => 11,
+                'null' => true
             )
         ),
         'primaryKey' => array(self::COL_ID),
@@ -241,7 +247,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => 'ui-icon-home',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 1,
-                self::COL_RGT => 28
+                self::COL_RGT => 28,
+                self::COL_PARENT => null
             ),
             array(
                 self::COL_ID => 2,
@@ -252,7 +259,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => '',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 2,
-                self::COL_RGT => 15
+                self::COL_RGT => 15,
+                self::COL_PARENT => 1
             ),
             array(
                 self::COL_ID => 3,
@@ -263,7 +271,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => '',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 3,
-                self::COL_RGT => 4
+                self::COL_RGT => 4,
+                self::COL_PARENT => 2
             ),
             array(
                 self::COL_ID => 10,
@@ -274,7 +283,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => '',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 5,
-                self::COL_RGT => 14
+                self::COL_RGT => 14,
+                self::COL_PARENT => 2
             ),
             array(
                 self::COL_ID => 11,
@@ -285,7 +295,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => 'ui-icon-person',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 6,
-                self::COL_RGT => 7
+                self::COL_RGT => 7,
+                self::COL_PARENT => 10
             ),
             array(
                 self::COL_ID => 12,
@@ -296,7 +307,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => '',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 8,
-                self::COL_RGT => 9
+                self::COL_RGT => 9,
+                self::COL_PARENT => 10
             ),
             array(
                 self::COL_ID => 13,
@@ -307,7 +319,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => '',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 10,
-                self::COL_RGT => 11
+                self::COL_RGT => 11,
+                self::COL_PARENT => 10
             ),
             array(
                 self::COL_ID => 14,
@@ -318,7 +331,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => '',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 12,
-                self::COL_RGT => 13
+                self::COL_RGT => 13,
+                self::COL_PARENT => 10
             ),
             array(
                 self::COL_ID => 4,
@@ -329,7 +343,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => '',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 16,
-                self::COL_RGT => 27
+                self::COL_RGT => 27,
+                self::COL_PARENT => 1
             ),
             array(
                 self::COL_ID => 5,
@@ -340,7 +355,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => '',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 17,
-                self::COL_RGT => 18
+                self::COL_RGT => 18,
+                self::COL_PARENT => 4
             ),
             array(
                 self::COL_ID => 6,
@@ -351,7 +367,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => 'ui-icon-key',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 19,
-                self::COL_RGT => 20
+                self::COL_RGT => 20,
+                self::COL_PARENT => 4
             ),
             array(
                 self::COL_ID => 7,
@@ -362,7 +379,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => '',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 21,
-                self::COL_RGT => 22
+                self::COL_RGT => 22,
+                self::COL_PARENT => 4
             ),
             array(
                 self::COL_ID => 8,
@@ -373,7 +391,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => '',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 23,
-                self::COL_RGT => 24
+                self::COL_RGT => 24,
+                self::COL_PARENT => 4
             ),
             array(
                 self::COL_ID => 9,
@@ -384,7 +403,8 @@ class Page extends NestedTree {
                 self::COL_CLASS => '',
                 self::COL_VISIBLE => 1,
                 self::COL_LFT => 25,
-                self::COL_RGT => 26
+                self::COL_RGT => 26,
+                self::COL_PARENT => 4
             )
         );
     }

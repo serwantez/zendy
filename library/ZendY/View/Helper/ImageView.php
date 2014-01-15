@@ -54,7 +54,7 @@ class ImageView extends Widget {
             unset($attribs['disabled']);
         }
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $container = '<div'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '><a id="%s" href="#">%s%s%s</a></div>';

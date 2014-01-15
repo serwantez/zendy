@@ -37,8 +37,7 @@ class Calendar extends Widget {
             unset($attribs['listSource']);
         }
 
-        $attribs = $this->_extractAttributes($attribs);
-        $attribs['outer']['id'] = $id . '-container';
+        $attribs = $this->_extractAttributes($id, $attribs);
         $container = '<span'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s%s</span>';

@@ -53,7 +53,7 @@ dc["tfv"] = new Array();
 //treeview
 dc["tv"] = new Array();
 
-dataForm = function(id, className, url) {
+dataForm = function(id, className, url, message) {
     
     var self = this;
 
@@ -76,18 +76,59 @@ dataForm = function(id, className, url) {
     this.getDataSources = function() {
         return ds;
     }
+    
+    this.clearErrors = function(d) {
+        var elements = this.getDataSource(d).de;
+        for (var i in elements) {
+            $("#"+i+"-container").removeClass("ui-state-error");
+        }
+    }
+    
+    this.addErrorTooltip = function(id, errors) {
+        $("#"+id+"-container").tooltip({
+            items: "#"+id+"-container",
+            tooltipClass: "ui-state-error",
+            content: function() {
+                var errorsjoined = "";
+                for (var j in errors) {
+                    errorsjoined += errors[j]+"<br />";
+                }
+                return errorsjoined;  
+            },
+            position: {
+                my: 'left+10 center', 
+                at: 'right center'
+            }
+        });
+    }
+    
+    this.showErrors = function(d, errors) {
+        var elements = this.getDataSource(d).de;
+        for (var i in elements) {
+            if (errors[i]) {
+                $("#"+i+"-container").addClass("ui-state-error");
+                this.addErrorTooltip(i, errors[i]);
+            }
+        }
+    }
  
     this.refreshControls = function(data, action) {
         /*if('errors' in data) {
             alert('Action error');
         }*/
+        //komunikaty systemowe
+        if('msg' in data) {
+            data.splice('msg', 1);
+        }        
         for(var d in data) {
             if (ds[d]) {
-                //komunikaty dla zbioru głównego
+                this.clearErrors(d);
+                //komunikaty błędów dla zbioru głównego
                 //ds[d].formId == self.id && action == 'saveAction' && 
-                if (data[d]['messages']) {
-                    var msg = data[d]['messages'];
-                    var s = 'Validation errors: ';
+                if (data[d]['errors']) {
+                    this.showErrors(d, data[d]['errors']);
+                    /*var msg = data[d]['errors'];
+                    var s = message+': ';
                     if (typeof msg === 'object') {
                         for (var i in msg) {
                             s += i+' - ';
@@ -101,9 +142,31 @@ dataForm = function(id, className, url) {
                         }
                     } else {
                         s = msg;
+                    }*/
+                    alert(message);
+                }
+                //powiadomienia
+                if (data[d]['messages']) {
+                    msg = data[d]['messages'];
+                    s = '';
+                    if (typeof msg === 'object') {
+                        for (var i in msg) {
+                            if (i>0) {
+                                s += ' ';
+                            }
+                            if (typeof msg[i] === 'object') {
+                                for (var j in msg[i]) {
+                                    s += msg[i][j]+'. ';
+                                }
+                            } else {
+                                s += msg[i];
+                            }
+                        }
+                    } else {
+                        s = msg;
                     }
                     alert(s);
-                }
+                }                
                 //kontrolki nawigacyjne
                 var cdata = new Array();
                 for(var n in ds[d].dn) {
@@ -130,7 +193,7 @@ dataForm = function(id, className, url) {
             if (ds[d]) {
                 //kontrolki edycyjne
                 for(var j in ds[d].de) { 
-                    if (!(action == 'saveAction' && data[d]['messages'])) {
+                    if (!(action == 'saveAction' && data[d]['errors'])) {
                         if (ds[d].de[j].id in data[d]['data']) {
                             ds[d].de[j].setData(data[d]['data'][ds[d].de[j].id]);
                         }
@@ -146,7 +209,7 @@ dataForm = function(id, className, url) {
                                 ds[d].de[j].readonly(false);
                             } else {
                                 ds[d].de[j].readonly(true);
-                            } 
+                            }
                         }
                     }
                 }

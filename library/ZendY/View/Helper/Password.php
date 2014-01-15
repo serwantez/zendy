@@ -28,7 +28,7 @@ class Password extends Widget {
         $attribs = $this->_prepareAttributes($id, $value, $attribs);
         $params = $this->_prepareParams($id, $params);
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $container = '<span'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s</span>';

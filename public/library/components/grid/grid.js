@@ -6,7 +6,8 @@ grid = function(id, options) {
     var self = this;
     this.id = id;
     this.widget = $('#'+this.id);
-    this.widgetGrid = $("#"+this.id+"-grid");
+    var container = "#"+this.id+"-container";
+    this.widgetGrid = $("#"+this.id+"-container");
     var sorting = false;
     var defaults = {
         icon: {
@@ -20,12 +21,12 @@ grid = function(id, options) {
     options =  $.extend(defaults, options);
    
     this.showValue = function(value) {
-        $("#"+this.id+"-grid .ui-grid-body tr").removeClass("ui-state-highlight");
-        $("#"+this.id+"-grid .ui-grid-body tr td:first-child")
+        $(container+" .ui-grid-body tr").removeClass("ui-state-highlight");
+        $(container+" .ui-grid-body tr td:first-child")
         .html("");
-        $("#"+this.id+"-grid .ui-grid-body tr[key='"+value+"']")
+        $(container+" .ui-grid-body tr[key='"+value+"']")
         .addClass("ui-state-highlight");
-        $("#"+this.id+"-grid .ui-grid-body tr[key='"+value+"'] td:first-child")
+        $(container+" .ui-grid-body tr[key='"+value+"'] td:first-child")
         .append($("<span></span>")
             .addClass('ui-icon '+options.icon.selected)
             );
@@ -33,7 +34,7 @@ grid = function(id, options) {
     
     this.getFieldValue = function(fieldIndex) {
         var value = this.widget.val();
-        var fieldValue = $("#"+this.id+"-grid .ui-grid-body tr[key='"+value+"']")
+        var fieldValue = $(container+" .ui-grid-body tr[key='"+value+"']")
         .children('td')
         .eq(fieldIndex)
         .html();
@@ -46,7 +47,7 @@ grid = function(id, options) {
     
     this.setData = function(data, params) {
         this.widget.empty();
-        var widgetGridBody = $('#'+this.id+'-grid .ui-grid-body table tbody');
+        var widgetGridBody = $(container+" .ui-grid-body table tbody");
         widgetGridBody.empty();
         
         var trf = $("<tr></tr>")
@@ -58,7 +59,7 @@ grid = function(id, options) {
             )
         ;
         for(var i in params.listField) {
-            var width = $('#'+this.id+'-grid .ui-grid-header colgroup').find('col').eq(i).attr('width');
+            var width = $(container+" .ui-grid-header colgroup").find('col').eq(i).attr('width');
             trf.append($("<td></td>")
                 .css('height','0px')
                 .css('width',width)
@@ -97,8 +98,8 @@ grid = function(id, options) {
             widgetGridBody.append(tr);
         });
         if (sorting) {
-            $("#"+this.id+"-grid .ui-grid-header th div .ui-grid-header-sorticon").empty();
-            $("#"+this.id+"-grid .ui-grid-header th").attr('sort', 'clear');
+            $(container+" .ui-grid-header th div .ui-grid-header-sorticon").empty();
+            $(container+" .ui-grid-header th").attr('sort', 'clear');
             $.each(data['sort'], function(key, value) {
                 $("#"+self.id+"_"+value.field).attr('sort', value.direction);
                 var ths = $("#"+self.id+"_"+value.field+" div .ui-grid-header-sorticon");
@@ -115,22 +116,22 @@ grid = function(id, options) {
 
     this.refresh = function() {
         //wiersze        
-        $("#"+this.id+"-grid .ui-grid-body tr").bind("click", function(e, ui){
+        $(container+" .ui-grid-body tr").bind("click", function(e, ui){
             if ($(this).attr("key") != self.widget.val()) {
                 self.widget.val($(this).attr("key"));
                 self.widget.trigger("change");
             }
         });
         
-        $("#"+this.id+"-grid .ui-grid-body tr").bind("dblclick", function(e, ui){
+        $(container+" .ui-grid-body tr").bind("dblclick", function(e, ui){
             options.dblClickRow();
         });
         
-        $("#"+this.id+"-grid .ui-grid-body tr").bind("mouseover", function(e, ui){
+        $(container+" .ui-grid-body tr").bind("mouseover", function(e, ui){
             $(this).addClass("ui-state-hover");
         });
         
-        $("#"+this.id+"-grid .ui-grid-body tr").bind("mouseout", function(e, ui){
+        $(container+" .ui-grid-body tr").bind("mouseout", function(e, ui){
             $(this).removeClass("ui-state-hover");
         });
         

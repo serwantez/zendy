@@ -48,9 +48,8 @@ class Treeview extends Widget {
 
         $hidden = $this->view->formHidden($id) . self::EOL;
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $container = '<div'
-                . ' id="' . $this->view->escape($id) . '-container"'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s%s</div>';
 

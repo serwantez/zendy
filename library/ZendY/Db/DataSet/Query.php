@@ -63,112 +63,6 @@ class Query extends Base {
      * @param bool $compositePart
      * @return array
      */
-    public function searchAction1($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
-        $result = array();
-        if (isset($params['searchValues'])) {
-            $select = clone $this->_select;
-            $columnPart = $select->getPart(\ZendY\Db\Select::COLUMNS);
-            if (count($this->_filter->getFilters())) {
-                $select->where($this->_filter->toSelect($columnPart));
-            }
-            if (count($this->_order->getSorts())) {
-                $select->order($this->_order->toSelect($columnPart));
-            }
-            $select2 = clone $select;
-            $filter = new \ZendY\Db\Filter();
-            foreach ($params['searchValues'] as $field => $fieldValue) {
-                if (is_array($fieldValue)) {
-                    $searched = $fieldValue['value'];
-                    $operator = $fieldValue['equalization'];
-                } else {
-                    $searched = $fieldValue;
-                    $operator = self::OPERATOR_EQUAL;
-                }
-                $filter->addFilter($field, $searched, $operator);
-            }
-            $select->where($filter->toSelect($columnPart));
-            /* if ($this->getId() == 'rule') {
-              print($select);
-              exit;
-              } */
-            try {
-                $q = $select->query();
-                $array = $q->fetchAll();
-            } catch (Exception $exc) {
-                echo $exc->getTraceAsString();
-                exit($select);
-            }
-            if (!is_array($array)) {
-                $array = $array->toArray();
-            }
-            $where = '1=1';
-            if (count($this->_order->getSorts())) {
-                $sorts = $this->_order->getSorts();
-                foreach ($sorts as $sort) {
-                    //sprawdzenie czy kolumna nie jest aliasem
-                    foreach ($columnPart as $columnData) {
-                        $fullField = $sort['field'];
-                        if ($sort['field'] == $columnData[2]
-                                || ($sort['field'] == $columnData[1] && is_null($columnData[2]))) {
-                            if ($columnData[1] instanceof \Zend_Db_Expr) {
-                                $fullField = $columnData[1];
-                            } else {
-                                $fullField = $columnData[0] . '.' . $columnData[1];
-                            }
-                            break;
-                        }
-                    }
-                    $where .= " and " . $fullField . (strtoupper($sort['direction']) == 'DESC' ? " >= '" : " <= '") . $array[0][$sort['field']] . "'";
-                }
-            } /* else {
-              $primary = $this->getPrimary();
-              foreach ($primary as $field) {
-              $fullField = $field;
-              //sprawdzenie czy kolumna nie jest aliasem
-              foreach ($columnPart as $columnData) {
-              if ($columnData[2] == $field
-              || ($field == $columnData[1] && is_null($columnData[2]))) {
-              if ($columnData[1] instanceof \Zend_Db_Expr) {
-              $fullField = $columnData[1];
-              } else {
-              $fullField = $columnData[0] . '.' . $columnData[1];
-              }
-              break;
-              }
-              }
-              $where .= " and " . $fullField . " <= '" . $array[0][$field] . "'";
-              }
-              } */
-            $select2->reset(\ZendY\Db\Select::COLUMNS);
-            $select2->columns("count(*)-1")
-                    ->where($where);
-            if ($this->getId() == 'rule') {
-                print($select2);
-                exit;
-            }
-            try {
-                $q = $select2->query();
-                $key = $q->fetchColumn();
-                $result = array_merge($result, $this->seekAction(array('offset' => $key), true));
-            } catch (Exception $exc) {
-                echo $exc->getTraceAsString();
-                exit($select2);
-            }
-        }
-        if (!$compositePart) {
-            $this->_setActionState($params);
-        }
-        return $result;
-    }
-
-    /**
-     * Przechodzi do pierwszego rekordu pasującego do podanych kryteriów
-     * 
-     * @param array $params
-     * @param bool $compositePart
-     * @return array
-     */
     public function searchAction($params = array(), $compositePart = false) {
         Msg::add($this->getId() . '->' . __FUNCTION__);
         $result = array();
@@ -403,12 +297,10 @@ class Query extends Base {
 
         try {
             $q = $select->query();
-            Msg::add($this->getId() . '->' . __FUNCTION__ . ' after query');
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
             echo 'Id: ' . $this->getId() . ' function ' . __FUNCTION__;
             print($select);
-            exit;
         }
         return $q->fetchColumn();
     }

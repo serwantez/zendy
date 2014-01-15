@@ -371,7 +371,7 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
                 array('UiWidgetElement'),
                 array('Errors', array(
                         'tag' => 'ul',
-                        'class' => Css::STATE_ERROR . ' ' . Css::CORNER_ALL
+                        'class' => Css::STATE_ERROR . ' ' . Css::CORNER_ALL . ' ' . Css::INVISIBLE
                 )),
                 array('Description', array('tag' => 'span', 'class' => 'field-description')),
                 array(array('Section' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field-container'))
@@ -390,13 +390,42 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
             array('UiWidgetElement'),
             array('Errors', array(
                     'tag' => 'ul',
-                    'class' => Css::STATE_ERROR . ' ' . Css::CORNER_ALL
+                    'class' => Css::STATE_ERROR . ' ' . Css::CORNER_ALL . ' ' . Css::INVISIBLE
             )),
             array('Description', array('tag' => 'span', 'class' => 'field-description')),
             array('Label', $this->_labelOptions),
             array(array('Section' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field-container'))
         ));
         return $this;
+    }
+
+    /**
+     * Validate element value
+     * 
+     * @param mixed $value
+     * @param mixed $context
+     * @return bool
+     */
+    public function isValid($value, $context = null) {
+        $valid = parent::isValid($value, $context);
+        if (!$valid) {
+            $this->addClass(Css::STATE_ERROR);
+            $errors = \ZendY\JQuery::encodeJson($this->getMessages());
+            $params = array(
+                'items' => '.' . Css::STATE_ERROR,
+                'content' => new \Zend_Json_Expr(sprintf('function() {
+                    var errors = %s;
+                    var errorsjoined = "";
+                    for (var i in errors) {
+                    errorsjoined += errors[i]+"<br />";
+                    }
+                    return errorsjoined;
+                    }', $errors)),
+                'tooltipClass' => Css::STATE_ERROR,
+                'position' => array('my' => 'left+10 center', 'at' => 'right center'));
+            $this->setTooltip($params);
+        }
+        return $valid;
     }
 
     /**

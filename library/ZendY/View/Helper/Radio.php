@@ -51,7 +51,7 @@ class Radio extends Widget {
         $info = $this->_getInfo($name, $value, $attribs, $options, $listsep);
         extract($info); // name, value, attribs, options, listsep, disable
         // retrieve attributes for labels (prefixed with 'label_' or 'label')
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $label_attribs = array();
         foreach ($attribs['inner'] as $key => $val) {
             $tmp = false;
@@ -163,31 +163,29 @@ class Radio extends Widget {
         // done!
         $xhtml .= implode($listsep, $list);
 
-        $attribs['outer']['id'] = $id . '-container';
-
         $container = '<div'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s</div>';
-        
+
         $this->view->headLink()->appendStylesheet($this->view->host . '/library/components/radio/radio.css');
 
         $xhtml = sprintf($container, $xhtml);
-        
+
         if (count($params) > 0) {
             $params = \ZendY\JQuery::encodeJson($params);
         } else {
             $params = '{}';
         }
 
-        $js = sprintf('dc["ra"]["%s"] = new radio("%s",%s);', $id, $id, $params);        
-        
+        $js = sprintf('dc["ra"]["%s"] = new radio("%s",%s);', $id, $id, $params);
+
         $this->jquery->addJavascriptFile($this->view->host .
                 '/library/components/radio/radio.js');
         if (\Zend_Controller_Front::getInstance()->getRequest()->isXmlHttpRequest()) {
-            $xhtml .= '<script>'. $js . '</script>';
+            $xhtml .= '<script>' . $js . '</script>';
         } else {
             $this->jquery->addOnLoad($js);
-        }        
+        }
 
         return $xhtml;
     }

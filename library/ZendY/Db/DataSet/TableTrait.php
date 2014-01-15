@@ -315,7 +315,7 @@ trait TableTrait {
                 }
             }
         } else {
-            $result['messages'] = $messages;
+            $result['errors'] = $messages;
         }
         return $result;
     }

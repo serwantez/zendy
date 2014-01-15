@@ -34,10 +34,6 @@ class SpinEdit extends Widget {
             $params = '{}';
         }
 
-        $js[] = sprintf('%s("#%s").spinner(%s);'
-                , \ZendX_JQuery_View_Helper_JQuery::getJQueryHandler()
-                , $attribs['id'], $params
-        );
         $js[] = sprintf('dc["se"]["%s"] = new spinedit("%s",%s);', $id, $id, $params);
 
         $html = $this->view->formText($id, $value, $attribs);

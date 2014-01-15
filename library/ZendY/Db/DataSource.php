@@ -608,12 +608,14 @@ class DataSource extends Component {
 
             Msg::add(strtoupper('rozpoczynam renderowanie ' . $id));
             $result = '';
-            $js[] = sprintf('var ds = new dataSource("%s","%s",%s,"%s","%s");'
+            $js[] = sprintf('var ds = new dataSource("%s","%s",%s,"%s","%s","%s");'
                     , $this->getId()
                     , self::$controller . self::$dataAction
                     , $formClass
                     , $formId
-                    , $this->getDialog());
+                    , $this->getDialog()
+                    , $this->getView()->translate(Msg::MSG_ACTION_CONFIRM)
+            );
 
             /**
              * okno dialogowe
@@ -621,7 +623,7 @@ class DataSource extends Component {
             if ($this->_dialog) {
                 $text = sprintf('<img src="%s/library/components/dialog/ajax-loader.gif" /> <span>%s</span>'
                         , $this->getView()->host
-                        , $this->getView()->translate('Loading data')
+                        , $this->getView()->translate(Msg::MSG_DATA_LOADING)
                 );
                 $params = array(
                     Dialog::PARAM_AUTOOPEN => false,
@@ -650,13 +652,6 @@ class DataSource extends Component {
             foreach ($this->_editControls as $control) {
                 if ($control instanceof Element\CellInterface) {
                     $js[] = $control->renderDbCell();
-                } else {
-                    //nieznana kontrolka
-                    $js[] = sprintf(
-                            'alert("Unknown control %s of class %s");'
-                            , $this->getId()
-                            , get_class($this)
-                    );
                 }
             }
 

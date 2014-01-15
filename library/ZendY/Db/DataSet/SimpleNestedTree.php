@@ -13,11 +13,12 @@ use ZendY\Exception;
 use ZendY\Css;
 
 /**
- * Zbiór danych przechowujący struktury drzewiaste (Nested Set)
+ * Zbiór danych przechowujący struktury drzewiaste (Nested Set), 
+ * kolumna rodzica jest wyliczana
  *
  * @author Piotr Zając
  */
-class NestedTree extends Table implements TreeSetInterface {
+class SimpleNestedTree extends Table implements TreeSetInterface {
     /**
      * Kolumny zbioru
      */
@@ -25,7 +26,7 @@ class NestedTree extends Table implements TreeSetInterface {
     const COL_LFT = 'lft';
     const COL_RGT = 'rgt';
     const COL_DEPTH = 'depth';
-    const COL_PARENT = 'parent_id';
+    const COL_PARENT = 'parent_';
 
     /**
      * Tryby dodawania rekordu
@@ -48,7 +49,6 @@ class NestedTree extends Table implements TreeSetInterface {
     const ACTION_PASTEBEFORE = 'pasteBeforeAction';
     const ACTION_PASTEUNDER = 'pasteUnderAction';
     const ACTION_PASTEAFTER = 'pasteAfterAction';
-    const ACTION_CALCULATEPARENT = 'calculateParentAction';
 
     /**
      * Nazwa pola przechowującego wartość "z lewej"
@@ -175,16 +175,6 @@ class NestedTree extends Table implements TreeSetInterface {
                 , true
                 , self::ACTION_PRIVILEGE_EDIT
         );
-        $this->_registerAction(
-                self::ACTION_CALCULATEPARENT
-                , self::ACTIONTYPE_STANDARD
-                , array('primary' => Css::ICON_CALCULATOR)
-                , 'Calculate parent'
-                , null
-                , true
-                , self::ACTION_PRIVILEGE_EDIT
-        );
-
         return $this;
     }
 
@@ -225,9 +215,6 @@ class NestedTree extends Table implements TreeSetInterface {
                 && !$this->_readOnly
                 && isset($this->_cutRecord)
                 );
-        $this->_navigator[self::ACTION_CALCULATEPARENT] = ($this->_state == self::STATE_VIEW
-                && !$this->_readOnly
-                && $this->_recordCount > 0);
         return $this;
     }
 
@@ -312,12 +299,30 @@ class NestedTree extends Table implements TreeSetInterface {
     }
 
     /**
+     * Zwraca nazwę pola rodzica dla zapytania sql
+     * 
+     * @return array
+     * @throws Exception
+     */
+    protected function _getParentField() {
+        $parentField = array();
+        $primary = $this->getPrimary();
+        if (is_array($primary) && count($primary) > 1) {
+            throw new Exception('NestedTree only accepts single primary key');
+        } else {
+            $parentField[$this->_parentField . $primary[0]] = $primary[0];
+        }
+        return $parentField;
+    }
+
+    /**
      * Zwraca nazwę pola rodzica
      * 
-     * @return string
+     * @return array domain, field, alias
      */
     public function getParentField() {
-        return $this->_parentField;
+        $primary = $this->getPrimary();
+        return array('p', $primary[0], $this->_parentField . $primary[0]);
     }
 
     /**
@@ -329,17 +334,25 @@ class NestedTree extends Table implements TreeSetInterface {
      */
     protected function _getTreeSelect($root = null, $columns = array(), $details = true) {
         $getDepth = false;
+        $getParent = true;
 
         if (!isset($columns) || !count($columns)) {
             $columns = $this->getColumns();
             $getDepth = TRUE;
+            //$getParent = TRUE;
         }
         if (in_array($this->_depthField, $columns)) {
             $getDepth = TRUE;
             unset($columns[array_search($this->_depthField, $columns)]);
         }
+        if (in_array($this->_parentField, $columns)) {
+            //$getParent = TRUE;
+            unset($columns[array_search($this->_parentField, $columns)]);
+            //$columns[$this->_parentField] = $this->_parentField;
+        }
 
         if (!$details) {
+            $getParent = false;
             $getDepth = false;
         }
 
@@ -350,6 +363,29 @@ class NestedTree extends Table implements TreeSetInterface {
                                     ->where("node.$this->_leftField BETWEEN d.$this->_leftField AND d.$this->_rightField") . ')');
 
             $columns[$this->_depthField] = $depthSubq;
+        }
+
+        /* $q1 = $this->_db->select()
+          ->from(array("node" => $this->_name), $this->getColumns())
+          ; */
+
+        //dodaje pola rodzica
+        if ($getParent) {
+            $primary = $this->getPrimary();
+            //podzapytanie obliczające id rodzica
+            $parentSubq1 = new \Zend_Db_Expr('(' . $this->_db->select()
+                                    ->from(array("sp" => $this->_name), $primary[0])
+                                    ->where("sp.$this->_leftField < node.$this->_leftField AND sp.$this->_rightField > node.$this->_rightField")
+                                    ->order(new \Zend_Db_Expr("sp.$this->_rightField - node.$this->_rightField"))
+                                    ->limit(1) . ')');
+            $parentSubq2 = new \Zend_Db_Expr('(' . $this->_db->select()
+                                    ->from(array("p" => $this->_name), $this->_getParentField())
+                                    ->where($parentSubq1 . " = `p`.`" . $primary[0] . "`")
+                            . ')'
+            );
+            $columns[$this->_parentField . $primary[0]] = $parentSubq2;
+            //$q->joinLeft(array('p' => $this->_name), $cond, $this->_getParentField());
+            //$q1->joinLeft(array('p' => $this->_name), $cond, $this->_getParentField());
         }
 
         $q = $this->_db->select()
@@ -621,24 +657,20 @@ class NestedTree extends Table implements TreeSetInterface {
      * key is compound, or a scalar if the key is single-column.
      */
     protected function _insert($data, $insertType = self::INSERT_AFTER) {
-        $primary = $this->getPrimary();
         //dane nowego rekordu
         switch ($insertType) {
             case self::INSERT_BEFORE:
                 $data[$this->_leftField] = $this->_insertRecord[$this->_leftField];
                 $data[$this->_rightField] = $this->_insertRecord[$this->_leftField] + 1;
-                $data[$this->_parentField] = $this->_insertRecord[$this->_parentField];
                 break;
             case self::INSERT_UNDER:
                 $data[$this->_leftField] = $this->_insertRecord[$this->_leftField] + 1;
                 $data[$this->_rightField] = $this->_insertRecord[$this->_leftField] + 2;
-                $data[$this->_parentField] = $this->_insertRecord[$primary[0]];
                 break;
             case self::INSERT_AFTER:
             default:
                 $data[$this->_leftField] = $this->_insertRecord[$this->_rightField] + 1;
                 $data[$this->_rightField] = $this->_insertRecord[$this->_rightField] + 2;
-                $data[$this->_parentField] = $this->_insertRecord[$this->_parentField];
                 break;
         }
         $this->_db->beginTransaction();
@@ -686,7 +718,6 @@ class NestedTree extends Table implements TreeSetInterface {
     protected function _insertRoot($data) {
         $data[$this->_leftField] = 1;
         $data[$this->_rightField] = 2;
-        $data[$this->_parentField] = null;
         return $this->_table->createRow($data)->save();
     }
 
@@ -915,7 +946,6 @@ class NestedTree extends Table implements TreeSetInterface {
         $c = $this->_cutRecord;
         //rekord bieżący przy wklejaniu
         $p = $this->getCurrent();
-        $primary = $this->getPrimary();
         $this->_db->beginTransaction();
         try {
             switch ($this->_pasteType) {
@@ -978,7 +1008,6 @@ class NestedTree extends Table implements TreeSetInterface {
                                 $this->_rightField . ' between ' . $p[$this->_rightField] . ' and ' . $c[$this->_rightField]
                         );
                     }
-                    $this->_table->update(array($this->_parentField => $p[$primary[0]]), $primary[0] . '=' . $c[$primary[0]]);
                     break;
                 //wkleja przed bieżącym rekordem
                 case self::PASTE_BEFORE:
@@ -1039,7 +1068,6 @@ class NestedTree extends Table implements TreeSetInterface {
                                 $this->_rightField . ' between ' . $p[$this->_leftField] . ' and ' . $c[$this->_rightField]
                         );
                     }
-                    $this->_table->update(array($this->_parentField => $p[$this->_parentField]), $primary[0] . '=' . $c[$primary[0]]);
                     break;
                 //wkleja po bieżącym rekordzie
                 case self::PASTE_AFTER:
@@ -1100,7 +1128,6 @@ class NestedTree extends Table implements TreeSetInterface {
                                 $this->_rightField . ' between ' . $p[$this->_leftField] . ' and ' . $c[$this->_rightField]
                         );
                     }
-                    $this->_table->update(array($this->_parentField => $p[$this->_parentField]), $primary[0] . '=' . $c[$primary[0]]);
                     break;
             }
             $this->_db->commit();
@@ -1110,16 +1137,6 @@ class NestedTree extends Table implements TreeSetInterface {
             $result[] = $e;
         }
         return $result;
-    }
-
-    /**
-     * Zwraca część warunku odpowiedzialnego za obliczenie pozycji offsetu przy wyszukiwaniu
-     * 
-     * @param array $record
-     * @return string
-     */
-    protected function _getOffsetWhere($record) {
-        return "node." . $this->_leftField . " <= '" . $record[$this->_leftField] . "'";
     }
 
     /**
@@ -1149,6 +1166,7 @@ class NestedTree extends Table implements TreeSetInterface {
             $select->where($filter->toSelect());
 
             try {
+                //print($select);
                 $q = $select->query();
                 $array = $q->fetchAll();
             } catch (Exception $exc) {
@@ -1158,10 +1176,12 @@ class NestedTree extends Table implements TreeSetInterface {
             if (!is_array($array)) {
                 $array = $array->toArray();
             }
+            $where = "node." . $this->_leftField . " <= '" . $array[0][$this->_leftField] . "'";
             $select2->reset(\ZendY\Db\Select::COLUMNS);
             $select2->columns("count(*)-1")
-                    ->where($this->_getOffsetWhere($array[0]));
+                    ->where($where);
             try {
+                //print($select2);
                 $q = $select2->query();
                 $key = $q->fetchColumn();
                 $result = array_merge($result, $this->seekAction(array('offset' => $key), true));

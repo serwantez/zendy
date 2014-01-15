@@ -308,6 +308,11 @@ class Css {
     const IMAGE_UPLOAD = 'ui-image-upload';
 
     /**
+     * Style dotyczące widoczności
+     */
+    const INVISIBLE = 'ui-invisible';
+
+    /**
      * Style dotyczące linku
      */
     const LINK = 'ui-link';

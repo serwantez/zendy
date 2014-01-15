@@ -45,9 +45,9 @@ class Listbox extends Widget {
 
         $js = sprintf('dc["lb"]["%s"] = new listBox("%s",%s);', $id, $id, $params);
 
-        $hidden = $this->view->formHidden($id) . self::EOL;
+        $hidden = $this->view->formHidden($id, implode(',', $value)) . self::EOL;
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $container = '<span'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s%s</span>';
@@ -65,7 +65,7 @@ class Listbox extends Widget {
 
         $this->view->headLink()->appendStylesheet($this->view->host . '/library/components/listbox/listbox.css');
         $this->jquery->addJavascriptFile($this->view->host . '/library/components/listbox/listbox.js');
-        
+
         if (\Zend_Controller_Front::getInstance()->getRequest()->isXmlHttpRequest()) {
             $html .= '<script>' . $js . '</script>';
         } else {
@@ -90,7 +90,7 @@ class Listbox extends Widget {
         ;
         // selected?
         if (in_array((string) $value, $selected)) {
-            $li .= ' ' . Css::STATE_ACTIVE;
+            $li .= ' ' . Css::STATE_HIGHLIGHT;
         }
 
         $li .= '"><a href="#">' . $this->view->escape($label) . '</a></li>';

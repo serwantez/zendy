@@ -36,7 +36,7 @@ class Edit extends Widget {
 
         $js = sprintf('dc["ed"]["%s"] = new edit("%s",%s);', $id, $id, $params);
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $container = '<span'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s</span>';

@@ -58,9 +58,8 @@ class ContextMenu extends Widget {
         $this->jquery->addJavascriptFile($this->view->host . '/library/components/jquery-ui-contextmenu-master/jquery.ui-contextmenu.min.js');
         $this->jquery->addOnLoad(implode(self::EOL, $js));
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $container = '<div'
-                . ' id="' . $this->view->escape($id) . '-container"'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s</div>';
 

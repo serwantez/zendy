@@ -495,4 +495,26 @@ class Calendar extends DataSet\Query {
     END";
     }
 
+    /**
+     * Zwraca zapytanie tworzące w bazie MySQL 
+     * funkcję obliczającą datę drugiej niedzieli Bożego Narodzenia.
+     * Jeśli w ogóle występuje jest niedzielą w nowym roku kalendarzowym
+     * 
+     * @return string
+     */
+    public static function createFunctionSecondChristmasSunday() {
+        return "CREATE FUNCTION `secondChristmasSunday`(`inYear` YEAR, `param` INT) RETURNS date
+    DETERMINISTIC
+BEGIN
+DECLARE d DATE;
+DECLARE w TINYINT;
+SET d = CONCAT_WS('-', inYear-1, '12', '25');
+SET w = WEEKDAY(d);
+IF w BETWEEN 2 AND 5 THEN
+RETURN DATE_ADD(d, INTERVAL 13-w+param DAY);
+ELSE 
+RETURN NULL;
+END IF;
+END";
+    }    
 }

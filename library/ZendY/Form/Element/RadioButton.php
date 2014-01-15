@@ -97,7 +97,7 @@ class RadioButton extends Radio {
         $this->loadDecorators();
         return $this;
     }
-    
+
     /**
      * Zwraca informację, czy przyciski mają wyglądać jak przyciski paska narzędziowego
      * @return bool
@@ -128,7 +128,10 @@ class RadioButton extends Radio {
             $this->_labelOptions['id'] = $this->getName() . '_label';
             $this->setDecorators(array(
                 array('UiWidgetMultiElement'),
-                array('Errors', array('tag' => 'ul', 'class' => Css::WIDGET . ' ' . Css::STATE_ERROR . ' ' . Css::CORNER_ALL)),
+                array('Errors', array(
+                        'tag' => 'ul',
+                        'class' => Css::WIDGET . ' ' . Css::STATE_ERROR . ' ' . Css::CORNER_ALL . ' ' . Css::INVISIBLE
+                )),
                 array('Description', array('tag' => 'span', 'class' => 'field-description')),
                 array('Label', $this->_labelOptions),
                 array(array('Section' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field-container'))

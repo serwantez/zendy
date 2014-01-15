@@ -1,9 +1,28 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-function validate(formClass, id, url) {
+addErrorTooltip = function(id, errors) {
+    $("#"+id+"-container").tooltip({
+        items: "#"+id+"-container",
+        tooltipClass: "ui-state-error",
+        content: function() {
+            var errorsjoined = "";
+            for (var j in errors) {
+                errorsjoined += errors[j]+"<br />";
+            }
+            return errorsjoined;  
+        },
+        position: {
+            my: 'left+10 center', 
+            at: 'right center'
+        }
+    });
+}
+
+disableTooltip = function(id) {
+    if ($("#"+id+"-container").tooltip())
+        $("#"+id+"-container").tooltip('disable');
+}
+
+validate = function (formClass, id, url) {
     var data = {
         form: formClass.join('\\')
     };
@@ -42,34 +61,23 @@ function validate(formClass, id, url) {
             if (id.indexOf('[]')>-1) {
                 id = id.substring(0,id.indexOf('[]'))
             }
-            //console.log(resp);
-            $("#"+id).parent().parent().find(".ui-state-error").remove();
-            $("#"+id).parent().parent().append(getErrorHtml(resp[id],id));
-            
-            /*var widget = $("#"+id).parent().parent();
-            widget.find(".ui-state-error").removeClass('ui-state-error');
-            if (widget.tooltip())
-                widget.tooltip("destroy");*/
-        /*if (resp[id] && Object.keys(resp[id]).length>0) {
-                $("#"+id).parent().addClass('ui-state-error');
-                widget.tooltip({
-                    tooltipClass: "ui-tooltip ui-state-error",
-                    items: "#"+id,
-                    content: function() {
-                        return getErrorHtml(resp[id],id);
-                    }
-                });
-            }*/
+            if (resp[id] && Object.keys(resp[id]).length>0) {
+                $("#"+id+"-container").addClass('ui-state-error');
+                addErrorTooltip(id, resp[id]);
+            } else {
+                $("#"+id+"-container").removeClass('ui-state-error');
+                disableTooltip(id);
+            }
         }
     },'json');
     return ret;
 }
     
-function getErrorHtml(formErrors, id) {
+getErrorHtml = function (formErrors, id) {
     var o = '';
     if (formErrors && Object.keys(formErrors).length>0) {
         // style="list-style: none;"
-        o = '<ul id="errors-'+id+'" class="ui-state-error ui-corner-all">';
+        o = '<ul id="errors-'+id+'" class="ui-corner-all">';
         for(errorKey in formErrors) {
             o += '<li>' + formErrors[errorKey]+ '</li>';
         }

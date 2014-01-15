@@ -43,7 +43,7 @@ class IconEdit extends Widget {
         }
         $attribs = $this->_prepareAttributes($id, $value, $attribs);
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $attribs['inner']['style'] = 'width: ' . $inputWidth['value'] . $inputWidth['unit'] . ';';
 
         $params = $this->_prepareParams($id, $params);

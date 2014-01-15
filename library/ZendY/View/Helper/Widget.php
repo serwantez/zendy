@@ -88,7 +88,7 @@ abstract class Widget extends \ZendX_JQuery_View_Helper_UiWidget {
      */
     protected function _prepareParams($id, array $params) {
         $jqh = \ZendX_JQuery_View_Helper_JQuery::getJQueryHandler();
-        
+
         //tooltip
         if (array_key_exists(Element\Widget::PARAM_TOOLTIP, $params)) {
             if (count($params[Element\Widget::PARAM_TOOLTIP])) {
@@ -96,8 +96,9 @@ abstract class Widget extends \ZendX_JQuery_View_Helper_UiWidget {
             } else {
                 $params[Element\Widget::PARAM_TOOLTIP] = '{}';
             }
-            $js = sprintf('%s("#%s").tooltip(%s);', $jqh, $id, $params[Element\Widget::PARAM_TOOLTIP]);
-            $this->view->headLink()->appendStylesheet($this->view->host . '/library/components/tooltip/jquery.ui.tooltip.css');
+            $js = sprintf('%s("#%s").tooltip(%s);', $jqh, $id . '-container'
+                    , $params[Element\Widget::PARAM_TOOLTIP]);
+            //$this->view->headLink()->appendStylesheet($this->view->host . '/library/components/tooltip/jquery.ui.tooltip.css');
             $this->jquery->addOnLoad($js);
             unset($params[Element\Widget::PARAM_TOOLTIP]);
         }
@@ -145,7 +146,7 @@ abstract class Widget extends \ZendX_JQuery_View_Helper_UiWidget {
      * @param array $attribs
      * @return array
      */
-    protected function _extractAttributes($attribs) {
+    protected function _extractAttributes($id, $attribs) {
         $a = array(
             'outer' => array(),
             'inner' => array()
@@ -158,6 +159,7 @@ abstract class Widget extends \ZendX_JQuery_View_Helper_UiWidget {
             $a['outer']['style'] = $attribs['style'];
             unset($attribs['style']);
         }
+        $a['outer']['id'] = $this->view->escape($id) . '-container';
         $a['inner'] = $attribs;
         return $a;
     }

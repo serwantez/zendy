@@ -50,7 +50,7 @@ class IconCombobox extends Widget {
 
         $js[] = sprintf('dc["ic"]["%s"] = new iconComboBox("%s",%s);', $id, $id, $params);
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
 
         //pole ukryte
         $hidden = $this->view->formHidden($id) . self::EOL;

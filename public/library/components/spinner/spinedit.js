@@ -12,6 +12,8 @@ spinedit = function(id, options) {
     options =  $.extend(defaults, options);
     
     this.init = function() {
+        this.widget.spinner(options);
+        this.widget.parent().attr("id",this.id+"-container");
         this.widget.spinner("option", "start", function(event, ui) {
             var attrRO = self.widget.attr('readonly');
             if (typeof attrRO !== 'undefined' && attrRO !== false) {

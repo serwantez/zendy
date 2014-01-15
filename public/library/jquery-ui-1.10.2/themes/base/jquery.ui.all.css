@@ -1,4 +1,5 @@
 @import url(../../../components/button/jquery.ui.button.css);
+@import url(../../../components/tooltip/jquery.ui.tooltip.css);
 /* Ustawienia czcionki */
 /* Zaokrąglenia */
 /* Nagłówki/paski narzędziowe */
@@ -1469,33 +1470,33 @@ otherwise color shifts while dragging when bar can't keep up with mouse */
 }
 
 .ui-padding-all {
-  padding: 7px;
+  padding: 4px;
 }
 
 .ui-padding-left {
-  padding-left: 7px;
+  padding-left: 4px;
 }
 
 .ui-padding-right {
-  padding-top: 7px;
+  padding-top: 4px;
 }
 
 .ui-padding-top {
-  padding-top: 7px;
+  padding-top: 4px;
 }
 
 .ui-padding-bottom {
-  padding-bottom: 7px;
+  padding-bottom: 4px;
 }
 
 .ui-padding-vertical {
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 .ui-padding-horizontal {
-  padding-left: 7px;
-  padding-right: 7px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .ui-text-center, .ui-text-center input {
@@ -1512,4 +1513,8 @@ otherwise color shifts while dragging when bar can't keep up with mouse */
 
 .ui-text-justify, .ui-text-justify input {
   text-align: justify;
+}
+
+.ui-invisible {
+  display: none;
 }

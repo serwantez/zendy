@@ -29,8 +29,8 @@ class Textarea extends Widget {
         extract($info); // name, value, attribs, options, listsep, disable        
         $attribs = $this->_prepareAttributes($name, $value, $attribs);
         $params = $this->_prepareParams($name, $params);
-        $attribs = $this->_extractAttributes($attribs);
-        
+        $attribs = $this->_extractAttributes($id, $attribs);
+
         if (count($params) > 0) {
             $params = \ZendY\JQuery::encodeJson($params);
         } else {
@@ -38,7 +38,7 @@ class Textarea extends Widget {
         }
 
         $js = sprintf('dc["ta"]["%s"] = new edit("%s",%s);', $name, $name, $params);
-        
+
         $container = '<span'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s</span>';

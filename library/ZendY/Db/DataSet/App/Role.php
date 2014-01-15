@@ -70,6 +70,12 @@ class Role extends NestedTree {
                 'type' => Mysql::FIELD_TYPE_INT,
                 'length' => 11,
                 'null' => false
+            ),
+            array(
+                'name' => self::COL_PARENT,
+                'type' => Mysql::FIELD_TYPE_INT,
+                'length' => 11,
+                'null' => null
             )
         ),
         'primaryKey' => array(self::COL_ID),
@@ -88,7 +94,7 @@ class Role extends NestedTree {
         $this->setTableName(self::TABLE_NAME);
         $this->setPrimary(self::COL_ID);
     }
-    
+
     /**
      * Zwraca rekordy startowe (domyślne)
      * 
@@ -101,31 +107,34 @@ class Role extends NestedTree {
                 self::COL_NAME => 'Everybody',
                 self::COL_CLASS => '',
                 self::COL_LFT => 1,
-                self::COL_RGT => 8
+                self::COL_RGT => 8,
+                self::COL_PARENT => null
             ),
             array(
                 self::COL_ID => 2,
                 self::COL_NAME => 'Guest',
                 self::COL_CLASS => '',
                 self::COL_LFT => 2,
-                self::COL_RGT => 3
+                self::COL_RGT => 3,
+                self::COL_PARENT => 1
             ),
             array(
                 self::COL_ID => 3,
                 self::COL_NAME => 'Member',
                 self::COL_CLASS => '',
                 self::COL_LFT => 4,
-                self::COL_RGT => 7
+                self::COL_RGT => 7,
+                self::COL_PARENT => 1
             ),
             array(
                 self::COL_ID => 4,
                 self::COL_NAME => 'Administrator',
                 self::COL_CLASS => '',
                 self::COL_LFT => 5,
-                self::COL_RGT => 6
+                self::COL_RGT => 6,
+                self::COL_PARENT => 3
             )
         );
     }
-    
 
 }

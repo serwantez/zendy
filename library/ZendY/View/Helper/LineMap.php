@@ -50,7 +50,7 @@ class LineMap extends Map {
         unset($attribs['value']);
         unset($attribs['options']);
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $attribs['inner']['class'] = Css::MAP_CANVAS;
         $container = '<span'
                 . $this->_htmlAttribs($attribs['outer'])
@@ -60,12 +60,12 @@ class LineMap extends Map {
         $hidden = $this->view->formHidden($id, $value);
 
         $html = sprintf($container, $div, $hidden);
-        
+
         if (\Zend_Controller_Front::getInstance()->getRequest()->isXmlHttpRequest()) {
-            $html .= '<script>'. $js . '</script>';
+            $html .= '<script>' . $js . '</script>';
         } else {
             $this->jquery->addOnLoad($js);
-        }         
+        }
 
         return $html;
     }

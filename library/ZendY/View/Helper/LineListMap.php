@@ -52,7 +52,7 @@ class LineListMap extends Map {
         unset($attribs['value']);
         unset($attribs['options']);
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $attribs['inner']['class'] = Css::MAP_CANVAS;
         $container = '<span'
                 . $this->_htmlAttribs($attribs['outer'])

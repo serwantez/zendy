@@ -83,7 +83,7 @@ final class ActionManager {
      * @return void
      */
     private function __clone() {
-        die(__CLASS__ . ' class cannot be instantiated. Please use the method called getInstance.');
+        die(sprintf(Msg::MSG_SINGLETON_CLONE, __CLASS__));
     }
 
     /**
@@ -313,12 +313,16 @@ final class ActionManager {
                             $this->_resultData[$this->_dataSourceId]['messages'] = $result['messages'];
                             unset($result['messages']);
                         }
+                        if (array_key_exists('errors', $result)) {
+                            $this->_resultData[$this->_dataSourceId]['errors'] = $result['errors'];
+                            unset($result['errors']);
+                        }
                         $this->_refilterDetail($this->_dataSources[$this->_dataSourceId]);
                     } else {
-                        $this->_resultData[$this->_dataSourceId]['messages'][] = sprintf('Action %s is not registered', $dataAction);
+                        $this->_resultData[$this->_dataSourceId]['errors'][] = sprintf(Msg::MSG_ACTION_NO_ACTION, $dataAction);
                     }
                 } else {
-                    $this->_resultData[$this->_dataSourceId]['messages'][] = sprintf('You have not permissions to execute action %s', $action);
+                    $this->_resultData[$this->_dataSourceId]['errors'][] = sprintf(Msg::MSG_ACTION_NO_PERMISSION, $dataAction);
                 }
             }
         } elseif ($this->_dataAction == 'init') {
@@ -357,9 +361,6 @@ final class ActionManager {
                 } else {
                     $editDataValues[$name] = $record[$dataField];
                 }
-            } else {
-                print('Brak pola: ' . $dataField . ' ');
-                print_r($record);
             }
         }
         return $editDataValues;

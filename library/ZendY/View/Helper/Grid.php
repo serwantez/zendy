@@ -52,10 +52,9 @@ class Grid extends Widget {
 
         $columns = $attribs['columns'];
         unset($attribs['columns']);
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
 
         $container = '<div '
-                . ' id="' . $this->view->escape($id) . '-grid"'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s%s</div>';
 

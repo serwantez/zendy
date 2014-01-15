@@ -9,6 +9,8 @@
   clear: both;
   display: block;
   font-style: italic;
+  color: #888;
+  margin-bottom: 5px;
 }
 .ui-form ul.ui-state-error {
   list-style: none;

@@ -367,7 +367,10 @@ abstract class CustomList extends Widget {
         if (empty($decorators)) {
             $this->setDecorators(array(
                 array('UiWidgetMultiElement'),
-                array('Errors', array('tag' => 'ul', 'class' => Css::WIDGET . ' ' . Css::STATE_ERROR . ' ' . Css::CORNER_ALL)),
+                array('Errors', array(
+                        'tag' => 'ul',
+                        'class' => Css::WIDGET . ' ' . Css::STATE_ERROR . ' ' . Css::CORNER_ALL . ' ' . Css::INVISIBLE
+                )),
                 array('Description', array('tag' => 'span', 'class' => 'field-description')),
                 array(array('Section' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field-container'))
             ))
@@ -384,8 +387,11 @@ abstract class CustomList extends Widget {
         $this->_labelOptions['id'] = $this->getName();
         $this->setDecorators(array(
             array('UiWidgetMultiElement'),
-            array('Errors', array('tag' => 'ul', 'class' => Css::WIDGET . ' ' . Css::STATE_ERROR . ' ' . Css::CORNER_ALL)),
-            array('Description', array('tag' => 'span', 'class' => 'field-description')),
+            array('Errors', array(
+                    'tag' => 'ul',
+                    'class' => Css::WIDGET . ' ' . Css::STATE_ERROR . ' ' . Css::CORNER_ALL . ' ' . Css::INVISIBLE
+            )),
+            array('Description', array('escape' => false, 'tag' => 'span', 'class' => 'field-description')),
             array('Label', $this->_labelOptions),
             array(array('Section' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field-container'))
         ));
