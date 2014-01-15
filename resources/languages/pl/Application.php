@@ -6,11 +6,8 @@
  */
 
 return array(
-    "A confirmation link has been sent to your e-mail address" => "Link potwierdzający został wysłany na Twój adres mailowy",
-    "A recovery link has been sent to your e-mail address" => "Link do odzyskania hasła został wysłany na Twój adres mailowy",
     "Account" => "Konto",
     "Account name" => "Nazwa konta",
-    "Activation was successful" => "Aktywacja przebiegła pomyślnie",
     "Address" => "Adres",
     "Administration" => "Administracja",
     "Airports" => "Porty lotnicze",
@@ -23,15 +20,15 @@ return array(
     "Clear data session" => "Czyść dane sesji",
     "Code" => "Kod",
     "Companies" => "Firmy",
-    "Confirmation of registration" => "Potwierdzenie rejestracji",
     "Coordinates" => "Współrzędne",
     "Country" => "Państwo",
     "Countries" => "Państwa",
     "Currency" => "Waluta",
     "Description" => "Opis",
+    "Download" => "Pobieranie",
     "End" => "Koniec",
     "Entities" => "Jednostki organizacyjne",
-    "Entity" => "Jednostka organizacyjna",    
+    "Entity" => "Jednostka organizacyjna",
     "female" => "kobieta",
     "Firstname" => "Imię",
     "Flag" => "Flaga",
@@ -43,7 +40,6 @@ return array(
     "I don't remember my password" => "Nie pamiętam swojego hasła",
     "Icon" => "Ikona",
     "Length" => "Długość",
-    "Library" => "Biblioteka",
     "Line" => "Linia",
     "Line data" => "Dane linii",
     "Line number" => "Numer linii",
@@ -80,6 +76,7 @@ return array(
     "Recover password" => "Odzyskaj hasło",
     "Recovery password" => "Odzyskiwanie hasła",
     "Registers" => "Rejestry",
+    "Registrator" => "Rejestrator",
     "Repeat e-mail" => "Powtórz e-mail",
     "Repeat new password" => "Powtórz nowe hasło",
     "Repeat password" => "Powtórz hasło",
@@ -94,15 +91,14 @@ return array(
     "Toolbar" => "Pasek narzędzi",
     "Tools" => "Narzędzia",
     "Type" => "Typ",
-    "You have successfully logged out" => "Wylogowanie przebiegło poprawnie",
     "Unit code" => "Kod jednostki",
-    "Unknown e-mail" => "Nieznany e-mail",
     "Update date" => "Data modyfikacji",
     "User" => "Użytkownik",
     "User roles" => "Role użytkowników",
     "Users" => "Użytkownicy",
     "User name" => "Nazwa użytkownika",
     "View" => "Widok",
-    "Week" => "Tydzień"
+    "Week" => "Tydzień",
+    "Workers registry" => "Rejestr pracowników"
 );
 ?>
