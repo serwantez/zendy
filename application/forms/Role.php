@@ -3,7 +3,7 @@
 namespace Application\Form;
 
 use ZendY\Db\Form;
-use ZendY\Form\Container\Panel;
+use ZendY\Form\Container;
 use ZendY\Db\Form\Container\Navigator;
 use ZendY\Css;
 use ZendY\Db\DataSource;
@@ -16,8 +16,6 @@ class Role extends Form {
     public function init() {
         //ustawienie identyfikatora formularza
         $this->setAttrib('id', 'roleForm');
-        //wyrównanie do wszystkich krawędzi
-        $this->setAlign(Css::ALIGN_CLIENT);
         //ustawienie akcji formularza na stronę bieżącą        
         $this->setAjaxValidator(false);
 
@@ -37,10 +35,11 @@ class Role extends Form {
         ;
 
         //panel wyrównany do lewej, będący kontenerem dla drzewa ról
-        $panelLeft = new Panel();
+        $panelLeft = new Container\Panel();
         $panelLeft->addElement($roleList)
                 ->setAlign(Css::ALIGN_LEFT)
                 ->setWidth(300)
+                ->setSpace()
         ;
         //menu podręczne drzewa ról
         $contextMenu = new DbElement\ContextMenu('rolemenu');
@@ -94,9 +93,12 @@ class Role extends Form {
 
         //panel wyrównany do wszystkich krawędzi na pozostałej wolnej powierzchni,
         //będący kontenerem dla kontrolki nazwy roli i listy wyboru ikony
-        $panelRight = new Panel();
-        $panelRight->addElements($elements)
+        $panelRight = new Container\Box();
+        $panelRight
+                ->setTitle('Role data')
+                ->addElements($elements)
                 ->setAlign(Css::ALIGN_CLIENT)
+                ->setSpace()
         ;
         //dodanie panelu do formularza
         $this->addContainer($panelRight);
@@ -121,8 +123,7 @@ class Role extends Form {
         $nav
                 ->setActions($actions)
                 ->setDataSource($roleSource)
-                ->setHeight(40)
-                ->setAlign(Css::ALIGN_BOTTOM)
+                ->setSpace()
         ;
 
         //dodanie nawigatora do formularza

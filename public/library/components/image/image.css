@@ -5,11 +5,9 @@
   padding: 3px;
   vertical-align: middle;
   text-align: center;
-}
-.ui-image a {
   text-decoration: none;
 }
-.ui-image a img {
+.ui-image img {
   border: none;
   vertical-align: middle;
 }

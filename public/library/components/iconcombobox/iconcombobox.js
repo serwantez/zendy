@@ -21,8 +21,8 @@ iconComboBox = function(id, options) {
     
    
     this.showValue = function(value) {
-        $("#"+self.id+"-list li a").removeClass("ui-state-highlight");
-        $("#"+self.id+"-list li[key='"+value+"'] a").addClass("ui-state-highlight");
+        $("#"+self.id+"-list li a").removeClass("ui-state-active");
+        $("#"+self.id+"-list li[key='"+value+"'] a").addClass("ui-state-active");
         this.widgetText.val($("#"+self.id+"-list li[key='"+value+"']").text());
     }
     

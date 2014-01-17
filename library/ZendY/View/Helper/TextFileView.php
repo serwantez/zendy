@@ -37,8 +37,8 @@ class TextFileView extends Widget {
                 . '>%s</div>';
 
         $rowCount = substr_count($value, '<br />');
+        $numbers = '';
         if ($rowCount > 0) {
-            $numbers = '';
             for ($i = 0; $i <= $rowCount; $i++) {
                 $numbers .= ($i + 1) . '<br />';
             }
@@ -48,7 +48,7 @@ class TextFileView extends Widget {
             <div class="%s %s" id="%s"><pre>%s</pre></div>
             </div>'
                 , Css::TEXTFILEVIEW_CONTAINER
-                , Css::TEXTFILEVIEW_ROWNUMBERS
+                , Css::WIDGET_HEADER . ' ' . Css::TEXTFILEVIEW_ROWNUMBERS
                 , $id . 'RowNumbers'
                 , $numbers
                 , Css::WIDGET_CONTENT

@@ -253,8 +253,6 @@ class Country extends Form {
                 ->addElement($btnOpenFilter)
                 ->addElement($btnAdd)
                 ->addElement($btnEdit)
-                ->setHeight(40)
-                ->setAlign(Css::ALIGN_BOTTOM)
         ;
 
         $this->addContainer($nav);

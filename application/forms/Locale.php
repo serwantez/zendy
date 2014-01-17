@@ -7,6 +7,7 @@ use ZendY\Db\Form;
 use ZendY\Db\DataSource;
 use ZendY\Db\DataSet\App;
 use ZendY\Db\Form\Element;
+use ZendY\Css;
 
 class Locale extends Form {
 

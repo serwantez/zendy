@@ -84,7 +84,7 @@
         overflow: visible;
     }
     .ui-textfileview-rownumbers {
-        width: 30px;
+        width: 32px;
         text-align: right;
         vertical-align: top;
         border-width: 0 1px 0 0;
@@ -94,6 +94,9 @@
         left: 0;
         top: 0;
         min-height: 100%;
+        pre {
+            padding-right: 2px;
+        }
     }
     .ui-textfileview-content {
         vertical-align: top;
@@ -104,7 +107,7 @@
         overflow-x: auto;
         overflow-y: hidden;
         position: absolute;
-        left: 31px;
+        left: 33px;
         top: 0;
         right: 0;
         min-height: 100%;

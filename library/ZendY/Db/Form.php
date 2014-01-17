@@ -259,7 +259,6 @@ class Form extends \ZendY\Form {
         foreach ($this->getElements() as $key => $element) {
             if ($element instanceof Element\CellInterface
                     && (!$element instanceof Element\PresentationInterface)) {
-//echo(get_class($element).' ');
                 $ds = $element->getDataSource();
                 if (isset($ds) && $ds->getId() == $dataSourceId) {
                     if (null !== $translator && $this->hasTranslator()

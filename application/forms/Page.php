@@ -3,16 +3,12 @@
 namespace Application\Form;
 
 use ZendY\Db\Form;
-use ZendY\Form\Container\Panel;
+use ZendY\Form\Container;
 use ZendY\Db\Form\Container\Navigator;
 use ZendY\Css;
 use ZendY\Db\DataSource;
 use ZendY\Db\Filter;
-use ZendY\Db\DataSet\Base as DataSet;
-use ZendY\Db\DataSet\Editable;
-use ZendY\Db\DataSet\NestedTree;
-use ZendY\Db\DataSet\ClassConst;
-use ZendY\Db\DataSet\ArraySet;
+use ZendY\Db\DataSet;
 use ZendY\Db\DataSet\App\Page as DbPage;
 use ZendY\Db\Form\Element as DbElement;
 
@@ -24,20 +20,21 @@ class Page extends Form {
         $this->setAjaxValidator(false);
 
         $actions = array(
-            DataSet::ACTION_REFRESH,
-            DataSet::ACTION_EXPORTEXCEL,
-            Editable::ACTION_EDIT,
-            Editable::ACTION_SAVE,
-            Editable::ACTION_DELETE,
-            Editable::ACTION_CANCEL,
-            DbPage::ACTION_CREATEPAGE
+            DataSet\Base::ACTION_REFRESH,
+            DataSet\Base::ACTION_EXPORTEXCEL,
+            DataSet\Editable::ACTION_EDIT,
+            DataSet\Editable::ACTION_SAVE,
+            DataSet\Editable::ACTION_DELETE,
+            DataSet\Editable::ACTION_CANCEL,
+            DbPage::ACTION_CREATEPAGE,
+            DataSet\NestedTree::ACTION_CALCULATEPARENT
         );
 
 
         $table = new DbPage('page');
         $dataSources[0] = new DataSource('menuSource', $table);
 
-        $dataSet = new ArraySet('visibility');
+        $dataSet = new DataSet\ArraySet('visibility');
         $dataSet->setData(array(
                     array('id' => 0, 'flag' => 'no'),
                     array('id' => 1, 'flag' => 'yes')
@@ -54,23 +51,24 @@ class Page extends Form {
                 ->addClass(Css::ALIGN_CLIENT)
         ;
 
-        $panel1 = new Panel();
+        $panel1 = new Container\Panel();
         $panel1->addElement($listElement[0])
                 ->setAlign(Css::ALIGN_LEFT)
                 ->setWidth(300)
+                ->setSpace()
         ;
         $contextMenu = new DbElement\ContextMenu('treemenu');
         $contextMenu
                 ->setDataSource($dataSources[0])
                 ->setDelegate('.ui-tree-node-icon')
                 ->setDataActions(array(
-                    array('action' => NestedTree::ACTION_ADDBEFORE),
-                    array('action' => Editable::ACTION_ADD),
-                    array('action' => NestedTree::ACTION_ADDUNDER),
-                    array('action' => NestedTree::ACTION_CUT),
-                    array('action' => NestedTree::ACTION_PASTEUNDER),
-                    array('action' => NestedTree::ACTION_PASTEBEFORE),
-                    array('action' => NestedTree::ACTION_PASTEAFTER)
+                    array('action' => DataSet\NestedTree::ACTION_ADDBEFORE),
+                    array('action' => DataSet\Editable::ACTION_ADD),
+                    array('action' => DataSet\NestedTree::ACTION_ADDUNDER),
+                    array('action' => DataSet\NestedTree::ACTION_CUT),
+                    array('action' => DataSet\NestedTree::ACTION_PASTEUNDER),
+                    array('action' => DataSet\NestedTree::ACTION_PASTEBEFORE),
+                    array('action' => DataSet\NestedTree::ACTION_PASTEAFTER)
                 ));
         $panel1->addElement($contextMenu);
         $this->addContainer($panel1);
@@ -103,11 +101,11 @@ class Page extends Form {
                 ->setLabel('Privilege')
                 ->setWidth(150);
 
-        $iconSet = new ClassConst('iconSet', '\ZendY\Css');
-        $iconSet->setPrimary(ClassConst::COL_VALUE)
-                ->sortAction(array('field' => ClassConst::COL_VALUE));
+        $iconSet = new DataSet\ClassConst('iconSet', '\ZendY\Css');
+        $iconSet->setPrimary(DataSet\ClassConst::COL_VALUE)
+                ->sortAction(array('field' => DataSet\ClassConst::COL_VALUE));
         $iconFilter = new Filter();
-        $iconFilter->addFilter(ClassConst::COL_NAME, 'ICON_', DataSet::OPERATOR_BEGIN);
+        $iconFilter->addFilter(DataSet\ClassConst::COL_NAME, 'ICON_', DataSet\Base::OPERATOR_BEGIN);
         $iconSet->filterAction(array('filter' => $iconFilter));
         //print_r($cc->getItems());
         //exit;
@@ -118,8 +116,8 @@ class Page extends Form {
                 ->setDataSource($dataSources[0])
                 ->setDataField(DbPage::COL_CLASS)
                 ->setListSource($iconSource)
-                ->setKeyField(ClassConst::COL_VALUE)
-                ->setListField(ClassConst::COL_VALUE)
+                ->setKeyField(DataSet\ClassConst::COL_VALUE)
+                ->setListField(DataSet\ClassConst::COL_VALUE)
                 ->setLabel('Icon')
                 ->setWidth(150)
                 ->setStaticRender()
@@ -137,17 +135,20 @@ class Page extends Form {
                 ->setStaticRender()
         ;
 
-        $panel2 = new Panel();
-        $panel2->addElements($elements)
+        $panel2 = new Container\Box();
+        $panel2
+                ->setTitle('Page data')
+                ->addElements($elements)
                 ->setAlign(Css::ALIGN_CLIENT)
+                ->setSpace()
         ;
         $this->addContainer($panel2);
 
         $nav = new Navigator();
-        $nav->setActions($actions)
+        $nav
+                ->setActions($actions)
                 ->setDataSource($dataSources[0])
-                ->setHeight(40)
-                ->setAlign(Css::ALIGN_BOTTOM)
+                ->setSpace()
         ;
 
         $this->addContainer($nav);

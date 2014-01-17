@@ -51,6 +51,10 @@
     }
 }
 
+.ui-textfileview-rownumbers {
+    background-image: $bgImgUrlHeaderVertical;
+}
+
 /* Interaction states
 ----------------------------------*/
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {

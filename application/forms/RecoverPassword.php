@@ -28,17 +28,18 @@ class RecoverPassword extends \ZendY\Form {
 
         $btnPanel = new Container\Panel('btnPanel');
         $btnPanel
-                ->setHeight(40)
+                ->setHeight(35)
                 ->addElements(array($submit))
                 ->addClasses(array(
                     Css::DIALOG_BUTTONPANE,
                     Css::WIDGET_CONTENT,
                     Css::HELPER_CLEARFIX
-                ));
+                ))
+                ->setAlign(Css::ALIGN_BOTTOM);
 
         $panel = new Container\Box('panel');
         $panel->setWidth(450)
-                //->setHeight(150)
+                ->setHeight(150)
                 ->setTitle('Recovery password')
                 ->addElements(array($email))
                 ->addContainer($btnPanel)

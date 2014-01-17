@@ -55,9 +55,9 @@ class ImageView extends Widget {
         }
 
         $attribs = $this->_extractAttributes($id, $attribs);
-        $container = '<div'
+        $container = '<a id="%s" href="#"'
                 . $this->_htmlAttribs($attribs['outer'])
-                . '><a id="%s" href="#">%s%s%s</a></div>';
+                . '>%s%s%s</a>';
 
         $image = '<img id="' . $id . '-img"';
         $image .= $this->_htmlAttribs($attribs['inner']);

@@ -26,7 +26,7 @@ class ReportText extends Widget {
     public function reportText($id, $value = null, array $attribs = array()) {
         $attribs = $this->_prepareAttributes($id, $value, $attribs);
 
-        $attribs = $this->_extractAttributes($attribs);
+        $attribs = $this->_extractAttributes($id, $attribs);
         $container = '<div'
                 . $this->_htmlAttribs($attribs['outer'])
                 . '>%s</div>';

@@ -1,3 +1,6 @@
+/**
+ * Skrypt do ajaksowej walidacji formularza
+ */
 
 addErrorTooltip = function(id, errors) {
     $("#"+id+"-container").tooltip({
@@ -49,7 +52,7 @@ validate = function (formClass, id, url) {
             }
         }
     });    
-    /*console.log(data);*/
+
     var ret = new Array();
     //wysłanie asynchronicznego zapytania ajax'em
     $.ajaxSetup({
@@ -71,17 +74,4 @@ validate = function (formClass, id, url) {
         }
     },'json');
     return ret;
-}
-    
-getErrorHtml = function (formErrors, id) {
-    var o = '';
-    if (formErrors && Object.keys(formErrors).length>0) {
-        // style="list-style: none;"
-        o = '<ul id="errors-'+id+'" class="ui-corner-all">';
-        for(errorKey in formErrors) {
-            o += '<li>' + formErrors[errorKey]+ '</li>';
-        }
-        o += '</ul>';
-    }
-    return o;
 }

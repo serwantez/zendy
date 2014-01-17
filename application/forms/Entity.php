@@ -3,7 +3,7 @@
 namespace Application\Form;
 
 use ZendY\Db\Form;
-use ZendY\Form\Container\Panel;
+use ZendY\Form\Container;
 use ZendY\Db\Form\Container\Navigator;
 use ZendY\Css;
 use ZendY\Db\DataSource;
@@ -45,10 +45,11 @@ class Entity extends Form {
                 ->addClass(Css::ALIGN_CLIENT)
         ;
 
-        $panel1 = new Panel();
+        $panel1 = new Container\Panel();
         $panel1->addElement($treeView)
                 ->setAlign(Css::ALIGN_LEFT)
                 ->setWidth(450)
+                ->setSpace()
         ;
         $contextMenu = new DbElement\ContextMenu('entitymenu');
         $contextMenu
@@ -168,10 +169,13 @@ class Entity extends Form {
                 ->setHeight(300)
         ;
 
-        $panel2 = new Panel();
-        $panel2->addElements($elements)
+        $panel2 = new Container\Box();
+        $panel2
+                ->setTitle('Entity data')
+                ->addElements($elements)
                 ->setAlign(Css::ALIGN_CLIENT)
                 ->addClass(Css::SCROLL_AUTO)
+                ->setSpace()
         ;
         $this->addContainer($panel2);
 
@@ -184,13 +188,15 @@ class Entity extends Form {
             array('action' => Editable::ACTION_EDIT, 'shortkey' => 'F3'),
             array('action' => Editable::ACTION_SAVE, 'shortkey' => 'Ctrl+S'),
             Editable::ACTION_DELETE,
-            Editable::ACTION_CANCEL
+            Editable::ACTION_CANCEL,
+            NestedTree::ACTION_CALCULATEPARENT
         );
         $nav = new Navigator();
-        $nav->setActions($actions)
+        $nav
+                ->setActions($actions)
                 ->setDataSource($dataSources[0])
-                ->setHeight(40)
-                ->setAlign(Css::ALIGN_BOTTOM);
+                ->setSpace()
+        ;
 
         $this->addContainer($nav);
     }

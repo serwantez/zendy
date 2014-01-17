@@ -1,20 +1,21 @@
-.ui-form .field-container {
-  padding: 2px;
-}
-.ui-form .field-container .field-label {
-  display: inline-block;
-  width: 150px;
-}
-.ui-form .field-container .field-description {
-  clear: both;
-  display: block;
-  font-style: italic;
-  color: #888;
-  margin-bottom: 5px;
-}
 .ui-form ul.ui-state-error {
   list-style: none;
 }
 .ui-form ul.ui-state-error li {
   padding: 2px;
+}
+
+.field-container {
+  padding: 2px;
+}
+.field-container .field-label {
+  display: inline-block;
+  width: 150px;
+}
+.field-container .field-description {
+  clear: both;
+  display: block;
+  font-style: italic;
+  color: #888;
+  margin-bottom: 5px;
 }

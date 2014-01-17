@@ -3,7 +3,7 @@
 namespace Application\Form;
 
 use ZendY\Db\Form;
-use ZendY\Form\Container\Panel;
+use ZendY\Form\Container;
 use ZendY\Db\Form\Container\Navigator;
 use ZendY\Db\Form\Container\FilterDialog;
 use ZendY\Css;
@@ -91,9 +91,10 @@ class Rule extends Form {
                 ->setPager(30)
         ;
 
-        $panelp = new Panel();
+        $panelp = new Container\Panel();
         $panelp->addElement($grid)
-                ->setAlign(Css::ALIGN_CLIENT);
+                ->setAlign(Css::ALIGN_CLIENT)
+                ->setSpace();
 
         $this->addContainer($panelp);
 
@@ -141,11 +142,14 @@ class Rule extends Form {
                 ->setLabel('Rule type', 100)
         ;
 
-        $panelData = new Panel();
-        $panelData->addElements($element)
-                ->setWidth(350)
+        $panelData = new Container\Box();
+        $panelData
+                ->setTitle('Rule data')
+                ->addElements($element)
+                ->setWidth(360)
                 ->setAlign(Css::ALIGN_RIGHT)
-                ->addClass(Css::SCROLL_AUTO);
+                ->addClass(Css::SCROLL_AUTO)
+                ->setSpace();
         ;
         $this->addContainer($panelData);
 
@@ -174,13 +178,12 @@ class Rule extends Form {
         $nav->setActions($actions)
                 ->addElement($btnOpenFilter)
                 ->setDataSource($dataSourceDbRule)
-                ->setHeight(38)
-                ->setAlign(Css::ALIGN_BOTTOM);
+                ->setSpace();
         $this->addContainer($nav);
 
         // okno filtrowania
         $dialogDbRuleFilter = new FilterDialog('dialogDbRuleFilter');
-        $panelDbRuleFilters = new Panel('panelDbRuleFilters');
+        $panelDbRuleFilters = new Container\Panel('panelDbRuleFilters');
         $filterElements[0] = new DbElement\Filter\IconEdit('filterRole');
         $filterElements[0]
                 ->setDataSource($dataSourceDbRule)

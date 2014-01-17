@@ -161,7 +161,6 @@ class User extends Form {
                 ->setDataSource($dataSourceDbUser)
                 ->addElement($btnAdd)
                 ->addElement($btnEdit)
-                ->setHeight(40)
                 ->setAlign(Css::ALIGN_BOTTOM)
         ;
 

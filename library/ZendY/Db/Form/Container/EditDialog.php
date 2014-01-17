@@ -93,7 +93,6 @@ class EditDialog extends Dialog implements DataInterface {
     public function onContain() {
         $this->_navigator
                 ->setDataSource($this->_dataSource)
-                ->setHeight(38)
                 ->setAlign(Css::ALIGN_BOTTOM)
         ;
         $this->addContainer($this->_navigator);

@@ -28,7 +28,8 @@ class User extends Table {
     const COL_FIRSTNAME = 'firstname';
     const COL_SURNAME = 'surname';
     const COL_EMAIL = 'email';
-    const COL_ADDEDTIME = 'added_time';
+    const COL_ADDITION_TIME = 'addition_time';
+    const COL_PHOTO = 'photo';
 
     /**
      * Domyślna nazwa tabeli
@@ -96,10 +97,16 @@ class User extends Table {
                 'null' => false
             ),
             array(
-                'name' => self::COL_ADDEDTIME,
+                'name' => self::COL_ADDITION_TIME,
                 'type' => Mysql::FIELD_TYPE_TIMESTAMP,
                 'null' => false,
                 'default' => 'CURRENT_TIMESTAMP'
+            ),
+            array(
+                'name' => self::COL_PHOTO,
+                'type' => Mysql::FIELD_TYPE_VARCHAR,
+                'length' => 255,
+                'null' => true
             )
         ),
         'primaryKey' => array(self::COL_ID),
@@ -149,7 +156,8 @@ class User extends Table {
                 self::COL_FIRSTNAME => 'Administrator',
                 self::COL_SURNAME => '',
                 self::COL_EMAIL => '',
-                self::COL_ADDEDTIME => null
+                self::COL_ADDITION_TIME => null,
+                self::COL_PHOTO => null
             )
         );
     }

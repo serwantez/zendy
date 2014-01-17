@@ -9,8 +9,8 @@ listBox = function(id, options) {
     this.widgetUl = $("#"+this.id+"-list");
    
     this.showValue = function(value) {
-        $("#"+self.id+"-list li").removeClass("ui-state-highlight");
-        $("#"+self.id+"-list li[key='"+value+"']").addClass("ui-state-highlight");
+        $("#"+self.id+"-list li").removeClass("ui-state-active");
+        $("#"+self.id+"-list li[key='"+value+"']").addClass("ui-state-active");
         $("#"+self.id+"-list li[key='"+value+"'] a").focus();
     }
     

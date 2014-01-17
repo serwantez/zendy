@@ -32,12 +32,23 @@ class Tab extends Panel {
      */
     public function refreshDecorators() {
         $attribs = \ZendY\View\Helper\Widget::prepareCSS($this->getAttribs());
-        $attribs['id'] = $this->getId();
-        $attribs['jQueryParams'] = $this->getJQueryParams();
+        $tabAttribs['id'] = $this->getId();
+        $tabAttribs['jQueryParams'] = $this->getJQueryParams();
         $this->setDecorators(array(
             array('FormElements'),
-            array('HtmlTag', array('tag' => 'div', 'id' => $this->getId())),
-            array('TabContainer', $attribs)
+            array(array('Inner' => 'HtmlTag'), array(
+                    'tag' => 'div',
+                    'id' => $this->getId()
+            )),
+            array('TabContainer', $tabAttribs),
+            array(array('Space' => 'HtmlTag'), array(
+                    'style' => sprintf('position: absolute; left: %s; top: %s; right: %s; bottom: %s;'
+                            , $this->_space . 'px'
+                            , $this->_space . 'px'
+                            , $this->_space . 'px'
+                            , $this->_space . 'px')
+            )),
+            array(array('Outer' => 'HtmlTag'), $attribs)
         ));
         return $this;
     }

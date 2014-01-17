@@ -1,11 +1,3 @@
-/*
-Document   : layout
-Created on : 2013-01-05, 17:32:13
-Author     : Piotr Zając
-Description:
-Purpose of the stylesheet follows.
-*/
-
 $headerHeight: 27px;
 $pageTitleHeight: 30px;
 * {
@@ -39,31 +31,22 @@ h2 {
     }
 }
 
-#locale {
-    height: 100%;
-    position: absolute;
-    right: 0;
-    top: 0;
-    display: inline-block;
-    width: 200px;
-}
-
-.navigation {
-    //height: 100%;
-}
-
 tr.row-red {
     td {
         color: red;
     }
 }
 
-.row-grey, .row-grey td {
+.row-grey, .row-grey td, .row-grey a {
     color: grey;
 }
 
-.row-italic, .row-italic td {
+.row-italic, .row-italic td, .row-italic a {
     font-style: italic;
+}
+
+.row-bold, .row-bold td, .row-bold a {
+    font-weight: bold;
 }
 
 .ui-title {
@@ -74,4 +57,16 @@ tr.row-red {
 .ui-layout {
     min-width: 800px;
     min-height: 500px;
+}
+
+tt {
+    background-color: #F8F8F8;
+    border: 1px solid #EAEAEA;
+    border-radius: 3px;
+    margin: 0 2px;
+    padding: 0 5px;
+}
+
+dt {
+    color: #6AC00E;
 }

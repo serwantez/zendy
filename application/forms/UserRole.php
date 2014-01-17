@@ -129,7 +129,6 @@ class UserRole extends Form {
                 ->setDataSource($dataSources[0])
                 ->addElement($btnAdd)
                 ->addElement($btnEdit)
-                ->setHeight(40)
                 ->setAlign(Css::ALIGN_BOTTOM)
         ;
 

@@ -56,12 +56,20 @@ class Accordion extends Panel {
     public function refreshDecorators() {
         $this->setJQueryParam(self::PARAM_HEIGHTSTYLE, self::HEIGHTSTYLE_FILL);
         $attribs = \ZendY\View\Helper\Widget::prepareCSS($this->getAttribs());
-        $attribs['id'] = $this->getId();
-        $attribs['jQueryParams'] = $this->getJQueryParams();
+        $accordionAttribs['id'] = $this->getId();
+        $accordionAttribs['jQueryParams'] = $this->getJQueryParams();
         $this->setDecorators(array(
             array('FormElements'),
             array('HtmlTag', array('tag' => 'div', 'id' => $this->getId())),
-            array('AccordionContainer', $attribs)
+            array('AccordionContainer', $accordionAttribs),
+            array(array('Space' => 'HtmlTag'), array(
+                    'style' => sprintf('position: absolute; left: %s; top: %s; right: %s; bottom: %s;'
+                            , $this->_space . 'px'
+                            , $this->_space . 'px'
+                            , $this->_space . 'px'
+                            , $this->_space . 'px')
+            )),
+            array(array('Outer' => 'HtmlTag'), $attribs)
         ));
         return $this;
     }

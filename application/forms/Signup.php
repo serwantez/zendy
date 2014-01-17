@@ -56,17 +56,18 @@ class Signup extends \ZendY\Form {
 
         $btnPanel = new Container\Panel('btnPanel');
         $btnPanel
-                ->setHeight(40)
+                ->setHeight(35)
                 ->addElements(array($submit))
                 ->addClasses(array(
                     Css::DIALOG_BUTTONPANE,
                     Css::WIDGET_CONTENT,
                     Css::HELPER_CLEARFIX
-                ));
+                ))
+                ->setAlign(Css::ALIGN_BOTTOM);
 
         $panel = new Container\Box('panel');
         $panel->setWidth(450)
-                //->setHeight(150)
+                ->setHeight(230)
                 ->setTitle('Sign up')
                 ->addElements(array($login, $password, $repeatpassword, $email, $repeatemail))
                 ->addContainer($btnPanel)

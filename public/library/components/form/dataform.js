@@ -1,5 +1,5 @@
 /**
- * skrypt komponentu ZendY_Db_Form 
+ * Skrypt klasy ZendY\Db\Form 
  * @author Piotr Zając
  */
 
@@ -113,9 +113,6 @@ dataForm = function(id, className, url, message) {
     }
  
     this.refreshControls = function(data, action) {
-        /*if('errors' in data) {
-            alert('Action error');
-        }*/
         //komunikaty systemowe
         if('msg' in data) {
             data.splice('msg', 1);
@@ -124,25 +121,8 @@ dataForm = function(id, className, url, message) {
             if (ds[d]) {
                 this.clearErrors(d);
                 //komunikaty błędów dla zbioru głównego
-                //ds[d].formId == self.id && action == 'saveAction' && 
                 if (data[d]['errors']) {
                     this.showErrors(d, data[d]['errors']);
-                    /*var msg = data[d]['errors'];
-                    var s = message+': ';
-                    if (typeof msg === 'object') {
-                        for (var i in msg) {
-                            s += i+' - ';
-                            if (typeof msg[i] === 'object') {
-                                for (var j in msg[i]) {
-                                    s += msg[i][j]+'. ';
-                                }
-                            } else {
-                                s += msg[i];
-                            }
-                        }
-                    } else {
-                        s = msg;
-                    }*/
                     alert(message);
                 }
                 //powiadomienia
@@ -174,7 +154,6 @@ dataForm = function(id, className, url, message) {
                         cdata['rows'] = data[d]['multi'][n];
                         cdata['sort'] = data[d]['sort'];
                         ds[d].dn[n].refresh(cdata);
-                    //console.log('Odświeżam kontrolkę nawigacyjną '+ds[d].dn[n].id);
                     }
 
                     var value = new Array();
@@ -200,7 +179,6 @@ dataForm = function(id, className, url, message) {
                         else {
                             ds[d].de[j].setData('');
                         }
-                        //alert('Brak pola "'+ds[d].de[j].dataField+'" wskazanego jako źródło wartości');
                         if(data[d].expr['state']==0) {
                             ds[d].de[j].disable();
                         } else {
@@ -237,7 +215,6 @@ dataForm = function(id, className, url, message) {
                 //filtry
                 for(var f in ds[d].df) {
                     if (data[d]['filter']['user'] && data[d]['filter']['user'][ds[d].df[f].dataField]){
-                        //console.log('filtrr '+data['filter']['user'][self.df[f].dataField]['value']);
                         ds[d].df[f].setData(data[d]['filter']['user'][ds[d].df[f].dataField]['value']);
                     } else ds[d].df[f].clear();
                     if(data[d].expr['state']>0) {
@@ -270,7 +247,6 @@ dataForm = function(id, className, url, message) {
             $.post(self.url, params, function(data) {
                 //parsowanie odpowiedzi
                 data = $.parseJSON(data);
-                //console.log(self.id+') Parametry zwracane '+JSON.stringify(data)); 
                 self.refreshControls(data, params.dataAction);
                 closeDialog();
             });

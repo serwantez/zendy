@@ -30,8 +30,8 @@ sortableListBox = function(id, options) {
     });
     
     this.showValue = function(value) {
-        $("#"+self.id+"-list li").removeClass("ui-state-highlight");
-        $("#"+self.id+"-list li[key='"+value+"']").addClass("ui-state-highlight");
+        $("#"+self.id+"-list li").removeClass("ui-state-active");
+        $("#"+self.id+"-list li[key='"+value+"']").addClass("ui-state-active");
     }
     
     this.widget.bind("change", function(e, ui){

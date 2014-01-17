@@ -21,11 +21,11 @@ grid = function(id, options) {
     options =  $.extend(defaults, options);
    
     this.showValue = function(value) {
-        $(container+" .ui-grid-body tr").removeClass("ui-state-highlight");
+        $(container+" .ui-grid-body tr").removeClass("ui-state-active");
         $(container+" .ui-grid-body tr td:first-child")
         .html("");
         $(container+" .ui-grid-body tr[key='"+value+"']")
-        .addClass("ui-state-highlight");
+        .addClass("ui-state-active");
         $(container+" .ui-grid-body tr[key='"+value+"'] td:first-child")
         .append($("<span></span>")
             .addClass('ui-icon '+options.icon.selected)

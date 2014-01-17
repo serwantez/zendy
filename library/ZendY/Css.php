@@ -24,6 +24,8 @@ class Css {
     const ALIGN_BOTTOM = 'ui-align-bottom';
     const ALIGN_LEFT = 'ui-align-left';
     const ALIGN_CENTER = 'ui-align-center';
+    const ALIGN_HCENTER = 'ui-align-hcenter';    
+    const ALIGN_VCENTER = 'ui-align-vcenter';
 
     /**
      * Style dotyczące przycisków

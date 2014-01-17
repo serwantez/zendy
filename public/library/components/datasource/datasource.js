@@ -152,7 +152,7 @@ dataSource = function(id, url, formClass, formId, dialog, confirmText) {
         params.id = self.id;
         params.formId = self.formId;
         params.form = self.formClass;
-        //console.log(params);
+        //console.log(actionType);
             
         if (actionType == 'save') {
             params.fieldsValues = self.getFieldsValues();
@@ -164,8 +164,8 @@ dataSource = function(id, url, formClass, formId, dialog, confirmText) {
                 user: self.getFilters()
             };
         }
-        
-        if (actionType == 'generateFile' || actionType == 'report') {
+
+        if (actionType == 'generateFile' || actionType == 'generateWebpage') {
             beforeAction();
             var url = self.url;
             for (key in params) {

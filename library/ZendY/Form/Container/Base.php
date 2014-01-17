@@ -36,6 +36,20 @@ abstract class Base extends Form {
     protected $_events = array();
 
     /**
+     * Wolna przestrzeń wokół krawędzi
+     * 
+     * @var integer
+     */
+    protected $_space = 0;
+
+    /**
+     * Klasa widżetu
+     * 
+     * @var string
+     */
+    protected $_widgetClass;
+
+    /**
      * Konstruktor
      *
      * @param string|null $id
@@ -58,9 +72,21 @@ abstract class Base extends Form {
      * @return void
      */
     public function init() {
+        $this->setWidgetClass(Css::WIDGET);
         parent::init();
         $this->removeDecorator('Form');
         $this->setIsSubForm(true);
+    }
+
+    /**
+     * Ustawia klasę widżetu
+     * 
+     * @param string $widgetClass
+     * @return \ZendY\Form\Container\Base
+     */
+    public function setWidgetClass($widgetClass) {
+        $this->_widgetClass = $widgetClass;
+        return $this;
     }
 
     /**
@@ -96,6 +122,17 @@ abstract class Base extends Form {
     }
 
     /**
+     * Ustawia przestrzeń wokół krawędzi
+     * 
+     * @param integer $space
+     * @return \ZendY\Form\Container\Base
+     */
+    public function setSpace($space = 2) {
+        $this->_space = $space;
+        return $this;
+    }
+
+    /**
      * Odświeża dekoratory po zmianach wykonanych na formularzu 
      * po dołaczeniu go do innego kontenera
      * 
@@ -108,6 +145,14 @@ abstract class Base extends Form {
             'FormElements',
             array(array('Inner' => 'HtmlTag'), array(
                     'class' => Css::PADDING_ALL . ' ' . Css::SCROLL_DISABLE
+            )),
+            array(array('Space' => 'HtmlTag'), array(
+                    'class' => $this->_widgetClass,
+                    'style' => sprintf('position: absolute; left: %s; top: %s; right: %s; bottom: %s;'
+                            , $this->_space . 'px'
+                            , $this->_space . 'px'
+                            , $this->_space . 'px'
+                            , $this->_space . 'px')
             )),
             array(array('Outer' => 'HtmlTag'), $attribs)
         ));

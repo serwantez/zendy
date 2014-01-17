@@ -286,8 +286,15 @@ $alignMargin: 0px;
 
 .ui-align-center {
     margin: 0 auto;
-    left: 0;
-    right: 0;
+    position: absolute !important;
+    vertical-align: middle;
+}
+
+.ui-align-hcenter {
+    margin: 0 auto;
+}
+
+.ui-align-vcenter {
     position: absolute !important;
     vertical-align: middle;
 }
@@ -319,7 +326,7 @@ $defaultPadding: 4px;
 }
 
 .ui-padding-right {
-    padding-top: $defaultPadding;
+    padding-right: $defaultPadding;
 }
 
 .ui-padding-top {

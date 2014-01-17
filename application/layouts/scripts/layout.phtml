@@ -35,6 +35,7 @@
                 ->addJavascriptFile($this->host . '/library/jquery-ui-1.10.2/globalize-master/lib/globalize.js')
                 ->addJavascriptFile($this->host . '/library/jquery-ui-1.10.2/globalize-master/lib/cultures/globalize.cultures.js')
                 ->addJavascriptFile($this->host . '/library/jquery-ui-1.10.2/ui/i18n/jquery-ui-i18n.js')
+                ->addJavascriptFile($this->host . '/library/components/layout/layout.js')
         ;
         ?>
     </head>
@@ -58,13 +59,16 @@
             </div>
         </div>
         <div class="ui-align-bottom" style="top: 25px;">
-            <div class="ui-widget ui-widget-header ui-state-active ui-align-top" style="height: 30px;">
-                <h2 class="ui-padding-all"><?= $this->translate($activePageLabel); ?></h2>
-                <div id="locale"><?php
-                echo $this->localeForm;
-                ?></div>
+            <div class="ui-widget ui-widget-header ui-state-active ui-align-top" 
+                 style="height: 34px;">
+                <h2 class="ui-padding-left ui-align-vcenter">
+                    <?= $this->translate($activePageLabel); ?>
+                </h2>
+                <div class="ui-align-right ui-align-vcenter" style="width: 200px; height: 27px;">
+                    <?= $this->localeForm; ?>
+                    </div>
             </div>
-            <div class="ui-align-bottom" style="top: 31px">
+            <div class="ui-align-bottom" style="top: 35px">
                 <?= $this->layout()->content; ?>
             </div>
         </div>

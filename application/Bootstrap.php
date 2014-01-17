@@ -40,6 +40,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         Blueimp\Upload\Handler::$uploadDir = 'application/images/uploaded/';
         //folder przechowywania miniatur
         Blueimp\Upload\Handler::$thumbnailDir = 'library/components/fileupload/server/php/thumbnails/';
+        //kolorystyka podświetleń
+        ini_set('highlight.comment', '#999999');
+        ini_set('highlight.string', '#ce7b00');
+        ini_set('highlight.default', 'black');
+        ini_set('highlight.keyword', '#0000e6');
     }
 
     /**
@@ -102,6 +107,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         Zend_Registry::set('Zend_Translate', $translate);
 
         $f = new Application\Form\Locale();
+        $f->removeDecorator('Description');
+        $f->removeDecorator('HtmlTag');
         $this->view->localeForm = $f->render();
     }
 

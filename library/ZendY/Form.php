@@ -40,6 +40,13 @@ class Form extends \ZendX_JQuery_Form {
     protected $_isSubForm = false;
 
     /**
+     * Odstęp od krawędzi
+     * 
+     * @var integer
+     */
+    protected $_space = 0;
+
+    /**
      * Konstruktor
      * 
      * @param array|Zend_Config|null $options 
@@ -49,9 +56,6 @@ class Form extends \ZendX_JQuery_Form {
         $this->addPrefixPath('ZendY\Form\Decorator', 'ZendY/Form/Decorator', \Zend_Form::DECORATOR);
         $this->setAjaxValidator();
         $this->setMethod(\Zend_Form::METHOD_POST);
-        $this->addClasses(array(
-            Css::WIDGET,
-            Css::FORM));
         parent::__construct($options);
     }
 
@@ -116,10 +120,13 @@ class Form extends \ZendX_JQuery_Form {
 
         $decorators = $this->getDecorators();
         if (empty($decorators)) {
-            $this->addDecorator('Description')
-                    ->addDecorator('FormElements')
-                    ->addDecorator('HtmlTag', array('tag' => 'dl'))
-                    ->addDecorator('Form');
+            $this->setDecorators(array(
+                'Description',
+                'FormElements',
+                array('Form', array(
+                        'class' => Css::WIDGET . ' ' . Css::FORM . ' ' . Css::ALIGN_CLIENT
+                ))
+            ));
         }
         return $this;
     }
@@ -188,6 +195,14 @@ class Form extends \ZendX_JQuery_Form {
             throw new Exception('Subform must be ZendY\Form instance');
         }
         return $this;
+    }
+
+    public function setSpace($space = 2) {
+        $this->_space = $space;
+    }
+
+    public function getSpace() {
+        return $this->_space;
     }
 
     /**

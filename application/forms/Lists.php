@@ -53,18 +53,20 @@ class Lists extends Form {
         $panel7 = new Container\Panel();
         $panel7->addElement($comboLists)
                 ->addElement($btnOpenLists)
-                ->setHeight(45)
+                ->setHeight(40)
                 ->setAlign(Css::ALIGN_TOP);
 
         $panel8 = new Container\Panel();
         $panel8->addElement($comboListItems)
-                ->setAlign(Css::ALIGN_CLIENT);
+                ->setAlign(Css::ALIGN_CLIENT)
+        ;
 
         $panel1 = new Container\Panel();
         $panel1->addContainer($panel7)
                 ->addContainer($panel8)
                 ->setAlign(Css::ALIGN_LEFT)
                 ->setWidth(300)
+                ->setSpace()
         ;
         $this->addContainer($panel1);
 
@@ -96,9 +98,12 @@ class Lists extends Form {
                 ->setWidth(250)
         ;
 
-        $panel2 = new Container\Panel();
-        $panel2->addElements($elements)
+        $panel2 = new Container\Box();
+        $panel2
+                ->setTitle('List element')
+                ->addElements($elements)
                 ->setAlign(Css::ALIGN_CLIENT)
+                ->setSpace()
         ;
         $this->addContainer($panel2);
 
@@ -118,10 +123,10 @@ class Lists extends Form {
             DataSet\Editable::ACTION_CANCEL
         );
         $nav = new DbContainer\Navigator();
-        $nav->setActions($actions)
+        $nav
+                ->setActions($actions)
                 ->setDataSource($dataSourceListItems)
-                ->setHeight(40)
-                ->setAlign(Css::ALIGN_BOTTOM)
+                ->setSpace()
         ;
 
         $this->addContainer($nav);

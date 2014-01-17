@@ -19,6 +19,7 @@ class Auth extends Form {
                 ->setLabel('User name', 180)
                 ->setWidth(180)
                 ->setRequired(true)
+                ->setFocus()
         ;
 
         //kontrolka hasła
@@ -56,19 +57,21 @@ class Auth extends Form {
         //panel będący kontenerem dla przycisków i linku
         $btnPanel = new Form\Container\Panel('btnPanel');
         $btnPanel
-                ->setHeight(40)
+                ->setHeight(35)
                 ->addElements(array($submit, $signUp, $recover))
                 ->addClasses(array(
                     Css::DIALOG_BUTTONPANE,
                     Css::WIDGET_CONTENT,
                     Css::HELPER_CLEARFIX
-                ));
+                ))
+                ->setAlign(Css::ALIGN_BOTTOM);
 
         //panel z nagłówkiem będący kontenerem dla kontrolek nazwy użytkownika i hasła 
         //oraz dla panelu przycisków
-        $mainPanel = new Form\Container\Box('panel');
-        $mainPanel
+        $mainBox = new Form\Container\Box('mainBox');
+        $mainBox
                 ->setWidth(440)
+                ->setHeight(150)
                 ->setTitle('Logging')
                 ->addElements(array($login, $password))
                 ->addContainer($btnPanel)
@@ -76,7 +79,7 @@ class Auth extends Form {
         ;
 
         //dodanie głównego panelu do formularza
-        $this->addContainer($mainPanel);
+        $this->addContainer($mainBox);
     }
 
 }
