@@ -1,0 +1,40 @@
+<p>
+    Przykład obrazuje działanie zbiorów danych powiązanych relacją master-detail (jeden do wielu). 
+    W modelu zostały użyte dane Głównego Urzędu Statystyczengo dotyczące podziału terytorialnego Polski.
+</p>
+<p>
+    Na formularzu znajdują się 4 listy (klasy <tt>ZendY\Db\Form\Element\Listbox</tt>), 
+    każda o szerokości 25% i maksymalnej dostępnej wysokości (po uwzględnieniu nagłówka listy). 
+    Kolejne listy połączone są z następującymi zbiorami:
+</p>    
+<ol>
+    <li>województw (klasa <tt>ZendY\Db\DataSet\Table</tt>),</li>
+    <li>powiatów (klasa <tt>ZendY\Db\DataSet\Table</tt>),</li>
+    <li>gmin (klasa <tt>ZendY\Db\DataSet\Table</tt>),</li>
+    <li>miejscowości (klasa <tt>Application\Model\Simc</tt>).</li>
+</ol>
+<p>
+    Zmiana bieżącego województwa powoduje wyświetlenie listy powiatów z terenu wybranego województwa, 
+    zmiana bieżącego powiatu wyświetla listę odpowiadających gmin, itd.
+</p>
+<p>
+    Dodatkowo, na liście miejscowości, wyszczególnione zostały poprzez pogrubienie wszystkie nazwy miast.
+    Operacja ta nosi nazwę formatowania warunkowego i jest realizowana dwuetapowo:
+</p>    
+<ul>
+    <li>
+        utworzenie obiektu klasy <tt>ZendY\Db\Filter</tt> i podanie warunku filtrowania:
+        [code]<?php
+        $cityFilter = new \ZendY\Db\Filter();
+        $cityFilter->addFilter('s.rm', 96);
+?>[/code]
+    </li>
+    <li>
+        dodanie do listy obiektu filtrującego wraz z podaniem nazwy klasy css, 
+        która zostanie użyta przy wyświetleniu rekordu spełniającego podany warunek:
+        [code]<?php
+        $listL->addConditionalRowFormat($cityFilter, 'row-bold');
+?>[/code]
+    </li>
+</ul>
+

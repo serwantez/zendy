@@ -86,6 +86,26 @@ class EditDialog extends Dialog implements DataInterface {
     }
 
     /**
+     * Ustawia przyciski akcji
+     * 
+     * @param array $actions
+     * @return \ZendY\Db\Form\Container\EditDialog
+     */
+    public function setActions(array $actions) {
+        $this->_navigator->setActions($actions);
+        return $this;
+    }
+
+    /**
+     * Zwraca przyciski akcji
+     * 
+     * @return array
+     */
+    public function getActions() {
+        return $this->_navigator->getActions();
+    }
+
+    /**
      * Obsługa zdarzenia dołączenia nawigatora do formularza nadrzędnego
      * 
      * @return \ZendY\Db\Form\Container\EditDialog
@@ -101,8 +121,8 @@ class EditDialog extends Dialog implements DataInterface {
         $btnDel = $this->_navigator->getElement($this->_navigator->getId() . '_' . Editable::ACTION_DELETE);
         $btnCan = $this->_navigator->getElement($this->_navigator->getId() . '_' . Editable::ACTION_CANCEL);
 
-        /*if (isset($btnSave))
-            $this->addCloser($btnSave);*/
+        /* if (isset($btnSave))
+          $this->addCloser($btnSave); */
         if (isset($btnDel))
             $this->addCloser($btnDel);
         if (isset($btnCan)) {

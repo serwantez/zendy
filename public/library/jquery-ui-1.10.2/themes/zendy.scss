@@ -3,7 +3,7 @@ $iconSize: 16px;
 /* Ustawienia czcionki */
 $ffDefault: Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
 $fwDefault: normal;
-$fsDefault: 1.1em;
+$fsDefault: 1em;
 
 /* Zaokrąglenia */
 $cornerRadius: 0px;
@@ -31,10 +31,10 @@ $bgImgUrlDefault: url(images/ui-bg_glass_75_e6e6e6_1x400.png);
 $iconsDefault: url(images/ui-icons_888888_256x240.png);
 
 /* Klikalne: stan po najechaniu kursorem */
-$bgColorHover: #1184fb;
+$bgColorHover: #a5c8ff;
 $borderColorHover: #1184fb;
-$fcHover: #ffffff;
-$bgImgUrlHover: url(images/ui-bg_highlight-soft_25_0073ea_1x100.png);
+$fcHover: #000000;
+$bgImgUrlHover: none;
 $iconsHover: url(images/ui-icons_ffffff_256x240.png);
 
 /* Klikalne: stan aktywności */

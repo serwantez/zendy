@@ -131,7 +131,11 @@ class UiWidgetMultiElement extends \ZendX_JQuery_Form_Decorator_UiWidgetElement 
         $id = $element->getId();
         $attribs['id'] = $id;
 
-        //print_r($attribs);
+        $helperObject = $view->getHelper($helper);
+        if (method_exists($helperObject, 'setTranslator')) {
+            $helperObject->setTranslator($element->getTranslator());
+        }
+
         $elementContent = $view->$helper($name, $value, $jQueryParams, $attribs, $multiOptions);
         switch ($this->getPlacement()) {
             case self::APPEND:

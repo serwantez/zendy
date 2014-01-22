@@ -1,0 +1,97 @@
+<p>Przykład pokazuje wykorzystanie biblioteki do stworzenia rejestru pracowników.</p>
+<p>Rejestr zawiera następujące pola:</p>
+<ul>
+    <li>identyfikator pracownika,</li>
+    <li>imię,</li>
+    <li>nazwisko,</li>
+    <li>płeć,</li>
+    <li>kraj zamieszkania,</li>
+    <li>adres zamieszkania,</li>
+    <li>kod pocztowy,</li>
+    <li>miejscowość poczty,</li>
+    <li>zdjęcie,</li>
+    <li>numer telefonu,</li>
+    <li>adres poczty elektronicznej,</li>
+</ul>
+<p>
+    Do budowy formularza zostały wykorzystane następujące elementy:
+</p>
+<ul>
+    <li>
+        nawigator (obiekt klasy <tt>ZendY\Db\Form\Container\Navigator</tt>), zawierający przyciski akcji:
+        <ul>
+            <li>odświeżenia danych,</li>
+            <li>eksportu rekordów do pliku MS Excel,</li>
+            <li>wydruku rekordów,</li>
+            <li>otwarcia okna filtrowania rekordów,</li>            
+            <li>dodania rekordu (w nowym oknie),</li>
+            <li>edycji bieżącego rekordu (w nowym oknie),</li>
+            <li>otwarcia okna z umowami pracownika.</li>
+        </ul>            
+    </li>
+    <li>
+        panel główny wypełniający pozostałą część formularza, 
+        a w nim siatka danych (obiekt klasy <tt>ZendY\Db\Form\Element\Grid</tt>) wyświetlająca w kolumnach następujące informacje o pracownikach:
+        <ul>
+            <li>identyfikator,</li>
+            <li>nazwisko,</li>
+            <li>kraj zamieszkania,</li>
+            <li>adres zamieszkania,</li>
+            <li>kod pocztowy,</li>
+            <li>miejscowość poczty</li>
+        </ul>
+    </li>
+    <li>
+        okno danych szczegółowych (obiekt klasy <tt>ZendY\Db\Form\Container\EditDialog</tt>), a w nim:
+        <ul>
+            <li>kontrolka tekstowa z identyfikatorem pracownika,</li>
+            <li>kontrolka tekstowa imienia,</li>
+            <li>kontrolka tekstowa nazwiska</li>
+            <li>przyciski radio do wyboru płci</li>
+            <li>lista rozwijalna do wyboru kraju zamieszkania,</li>
+            <li>kontrolka tekstowa adresu zamieszkania,</li>
+            <li>kontrolka tekstowa kodu pocztowego,</li>
+            <li>kontrolka tekstowa miejscowości poczty,</li>
+            <li>kontrolka graficzna zdjęcia pracownika,</li>
+            <li>kontrolka tekstowa telefonu,</li>
+            <li>kontrolka adresu poczty elektronicznej.</li>
+        </ul>
+    </li>
+    <li>
+        okno dialogowe do filtrowania rekordów (obiekt klasy <tt>ZendY\Db\Form\Container\FilterDialog</tt>), a w nim tekstowe kontrolki filtrowania po:
+        <ul>
+            <li>nazwisku,</li>
+            <li>imieniu,</li>
+            <li>nazwie kraju zamieszkania,</li>
+            <li>adresie zamieszkania,</li>
+            <li>kodzie pocztowym,</li>
+            <li>nazwie miejscowości poczty,</li>
+        </ul>
+        Wszystkie kontrolki filtrujące to obiekty klasy <tt>ZendY\Db\Form\Element\Filter\IconEdit</tt>.
+    </li>
+    <li>
+        okno dialogowe z umowami pracownika (obiekt klasy <tt>ZendY\Db\Form\Container\EditDialog</tt>), a w nim:
+        <ul>
+            <li>panel z nawigacyjną siatką danych,</li>
+            <li>
+                lewy panel edycji umowy, będący kontenerem dla kontrolek:
+                <ul>
+                    <li>lista wyboru rodzaju umowy,</li>
+                    <li>pole numeryczne dla określenia wymiaru czasu pracy (liczba godzin dziennie),</li>
+                    <li>data podpisania umowy,</li>
+                    <li>data początku obowiązywania umowy,</li>
+                    <li>data końca obowiązywania umowy</li>
+                </ul>
+            </li>
+        </ul>
+    </li>    
+</ul>
+Do formularza podpięte są następujące zbiory danych: 
+<ul>
+    <li>pracownik (<tt>Application\Model\Worker</tt>),</li>
+    <li>płeć (<tt>Application\Model\Sex</tt>),</li>
+    <li>kraj (<tt>ZendY\Db\DataSet\App\Country</tt>),</li>
+    <li>umowa (<tt>Application\Model\Agreement</tt>),</li>
+    <li>typ umowy (<tt>ZendY\Db\DataSet\App\ListItem</tt>).</li>
+</ul>
+Zbiór "pracownik" powiązany jest ze zbiorem "umowa" relacją master-detail (jeden pracownik może mieć wiele umów).

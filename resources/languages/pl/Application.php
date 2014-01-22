@@ -38,6 +38,7 @@ return array(
     "Help About" => "O programie",
     "Help topics" => "Tematy pomocy",
     "I don't remember my password" => "Nie pamiętam swojego hasła",
+    "IATA code" => "Kod IATA",
     "Icon" => "Ikona",
     "Length" => "Długość",
     "Line" => "Linia",
@@ -45,6 +46,7 @@ return array(
     "Line number" => "Numer linii",
     "Lines" => "Linie",
     "Lists" => "Słowniki",
+    "Locality" => "Miejscowość",
     "Log in" => "Zaloguj",
     "Log out" => "Wyloguj",
     "Logging" => "Logowanie",
@@ -98,6 +100,7 @@ return array(
     "Users" => "Użytkownicy",
     "User name" => "Nazwa użytkownika",
     "View" => "Widok",
+    "Voivodship" => "Województwo",
     "Week" => "Tydzień",
     "Workers registry" => "Rejestr pracowników"
 );

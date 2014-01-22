@@ -1,0 +1,710 @@
+Przez elementy formularza rozumieć należy kontrolki, które mogą być grupowane w kontenerach,
+lecz same nie mogą być kontenerami dla innych kontrolek. 
+Najczęściej przekazują one do serwera wartość ustawioną przez użytkownika.
+Podobnie jak w przypadku podziału formularzy wyróżniamy elementy:
+<ul>
+    <li>standardowe (<tt>ZendY\Form\Element</tt>)</li>
+<li>i bazodanowe (<tt>ZendY\Db\Form\Element</tt>).</li>
+</ul>
+<p>
+    Wszystkie elementy formularza dziedziczą po klasie bazowej <tt>ZendY\Form\Element\Widget</tt>.
+Zawiera ona metody wspólne dla wszystkich elementów np.:
+<ul>
+    <li><tt>getJQueryParam()</tt> - zwraca parametr jQuery przekazywany do przeglądarki</li>
+<li><tt>removeJQueryParam()</tt> - usuwa wybrany parametr jQuery</li>
+<li><tt>setJQueryParam()</tt> - ustawia parametr jQuery</li>
+<li><tt>getDisabled()</tt> - zwraca informację, czy kontrolka jest wyłączona</li>
+<li><tt>setDisabled()</tt> - wyłącza/włącza aktywność kontrolki</li>
+<li><tt>getFocus()</tt> - zwraca informację, czy na kontrolce ma być ustawiony fokus</li>
+<li><tt>setFocus()</tt> - ustawia fokus na kontrolce</li>
+<li><tt>getFrontEditParams()</tt> - zwraca tablicę parametrów kontrolek edycyjnych</li>
+<li><tt>setFrontEditParam()</tt> - ustawia parametr kontrolki edycyjnej</li>
+<li><tt>setOnEvent()</tt> - wywołuje na obiekcie jQuery metodę obsługującą podane zdarzenie</li>
+<li><tt>setOnEventParam()</tt> - ustawia kod operacji dla wystąpienia zdarzenia przewidzianego w kontrolce</li>
+<li><tt>getReadOnly()</tt> - zwraca informację, czy kontrolka jest w trybie tylko do odczytu</li>
+<li><tt>setReadOnly()</tt> - włącza/wyłącza dla kontrolki tryb tylko do odczytu </li>
+<li><tt>setLabel()</tt> - ustawia etykietę kontrolki</li>
+<li><tt>setSubLabel()</tt> - ustawia etykietę dolną kontrolki</li>
+<li><tt>getTitle()</tt> - zwraca atrybut tytuł</li>
+<li><tt>setTitle()</tt> - ustawia atrybut tytuł</li>
+<li><tt>getTooltip()</tt> - zwraca parametry podpowiedzi w dymku</li>
+<li><tt>setTooltip()</tt> - ustawia parametry podpowiedzi w dymku</li>
+</ul>
+Ponadto wszystkie kontrolki mają dostep do metod związanych ze stylami css, 
+dzięki użyciu przez klasę <tt>ZendY\Form\Element\Widget</tt> cechy <tt>ZendY\Form\CssTrait</tt>.
+</p>
+<p>
+    Wszystkie elementy formularza, których wartość ustawiana jest poprzez wybór ze zdefiniowanego zbioru wartości nazywane są listami. 
+    Listy dziedziczą po klasie bazowej <tt>ZendY\Form\Element\CustomList</tt>. 
+Główne metody publiczne list:
+<ul>
+    <li><tt>getColumnSpace()</tt> - zwraca znak podziału kolumn na liście</li>
+<li><tt>setColumnSpace()</tt> - ustawia znak podziału kolumn na liście</li>
+<li><tt>getEmptyValue()</tt> - zwraca informację o wyświetlaniu pustego pola</li>
+<li><tt>setEmptyValue()</tt> - ustawia możliwość wyboru pustego pola</li>
+<li><tt>addMultiOption()</tt> - dodaje do listy jeden element</li>
+<li><tt>addMultiOptions()</tt> - dodaje do listy wiele elementów na raz</li>
+<li><tt>clearMultiOptions()</tt> - usuwa wszystkie elementy listy</li>
+<li><tt>getMultiOption()</tt> - zwraca pojedynczy element listy</li>
+<li><tt>getMultiOptions()</tt> - zwraca wszystkie elementy listy</li>
+<li><tt>removeMultiOption()</tt> - usuwa pojedynczy element listy</li>
+<li><tt>setMultiOptions()</tt> - ustawia wszystkie elementy listy</li>
+</ul>
+</p>
+<p>Pakiet <tt>ZendY\Form\Element</tt> zawiera następujące kontrolki:
+<dl>
+    <dt>Button</dt>
+    <dd>
+        Przycisk, widget jQuery UI. Główne metody publiczne:
+        <ul>
+            <li><tt>getLabel()</tt> - zwraca etykietę przycisku</li>
+            <li><tt>setLabel()</tt> - ustawia etykietę przycisku</li>
+            <li><tt>getShortKey()</tt> - zwraca skrót klawiaturowy</li>
+            <li><tt>removeShortKey()</tt> - usuwa skrót klawiaturowy</li>        
+            <li><tt>setShortKey()</tt> - ustawia skrót klawiaturowy</li>
+        </ul>
+    </dd>
+    <dt>Calendar</dt>
+    <dd>
+        Kalendarz do prezentacji danych związanych z czasem. 
+        Posiada dwa widoki (nazywane tu zakresami): miesiąca (<tt>ZendY\Form\Element\Calendar::RANGE_MONTH</tt>) i tygodnia (<tt>ZendY\Form\Element\Calendar::RANGE_WEEK</tt>). 
+    Główne metody publiczne:
+    <ul>
+        <li><tt>getRange()</tt> - zwraca zakres kalendarza</li>
+        <li><tt>setRange()</tt> - ustawia zakres kalendarza</li>
+        <li><tt>getCurrentDate()</tt> - zwraca bieżącą datę kalendarza</li>
+        <li><tt>setCurrentDate()</tt> - ustawia bieżącą datę kalendarza</li>
+        <li><tt>getPeriod()</tt> - zwraca daty graniczne dla ustawionego zakresu kalendarza</li>
+    </ul>
+</dd>
+<dt>Combobox</dt>
+<dd>
+    Pole listy rozwijalnej, odpowiednik <tt>Zend_Form_Select</tt>. 
+Wszystkie metody są dziedziczone po klasie <tt>ZendY\Form\Element\CustomList</tt>.
+</dd>
+<dt>ContextMenu</dt>
+<dd>
+    Menu podręczne (kontekstowe), uruchamiane prawym przyciskiem myszy.
+    Oprócz metod dziedziczonych po <tt>ZendY\Form\Element\CustomList</tt> udostępnia:
+<ul>
+    <li><tt>getContext()</tt> - zwraca id powiązanej kontrolki</li>
+    <li><tt>setContext()</tt> - ustawia powiązaną kontrolkę</li>
+</ul>
+</dd>
+<dt>DatePicker</dt>
+<dd>
+    Pole wyboru daty, widget jQuery UI. Datę można wpisać ręcznie lub wybrać z kalendarza. Metody publiczne:
+    <ul>
+        <li><tt>getLocale()</tt> - zwraca kod ustawień językowych</li>
+        <li><tt>setLocale()</tt> - ustawia język kalendarza</li>
+        <li><tt>getDateFormat()</tt> - zwraca format daty wyświetlanej w kontrolce</li>
+        <li><tt>setDateFormat()</tt> - ustawia format daty wyświetlanej w kontrolce</li>
+        <li><tt>getMaxDate()</tt> - zwraca maksymalną datę</li>
+        <li><tt>setMaxDate()</tt> - ustawia maksymalną datę</li>
+        <li><tt>getMinDate()</tt> - zwraca minimalną datę</li>
+        <li><tt>setMinDate()</tt> - ustawia minimalną datę</li>
+        <li><tt>getDuration()</tt> - zwraca czas włączania/wyłączania kalendarza</li>
+        <li><tt>setDuration()</tt> - ustawia czas włączania/wyłączania kalendarza</li>
+    </ul>
+</dd>
+<dt>DocFileView</dt>
+<dd>
+    Widok zawartości pliku tekstowego z dokumentacją. Główne metody publiczne:
+    <ul>
+        <li><tt>getCodeHighlight()</tt> - informuje, czy kod zawarty w pliku pomiędzy znacznikami "code" ma być kolorowany</li>
+        <li><tt>setCodeHighlight()</tt> - ustawia parametr informujący, czy kod zawarty w pliku pomiędzy znacznikami "code" ma być kolorowany</li>
+        <li><tt>getFileName()</tt> - zwraca ścieżkę do pliku</li>
+        <li><tt>setFileName()</tt> - ustawia ścieżkę do pliku</li>
+    </ul>    
+</dd>
+<dt>Edit</dt>
+<dd>
+    Pole tekstowe jednowierszowe, odpowiednik Zend_Form_Element_Text. Główne metody publiczne:
+    <ul>
+        <li><tt>getMaxLength()</tt> - zwraca maksymalną liczbę wprowadzanych znaków (tylko przeglądarki obsługujące HTML5)</li>
+        <li><tt>setMaxLength()</tt> - ogranicza liczbę wprowadzanych znaków (tylko przeglądarki obsługujące HTML5)</li>
+        <li><tt>getPlaceHolder()</tt> - zwraca treść podpowiedzi w polu (tylko przeglądarki obsługujące HTML5)</li>
+        <li><tt>setPlaceHolder()</tt> - ustawia podpowiedź w polu, ukrywaną przy uzyskaniu fokusu (tylko przeglądarki obsługujące HTML5)</li>
+    </ul>    
+</dd>
+<dt>Email</dt>
+<dd>
+    Pole adresu poczty elektronicznej. Główne metody publiczne:
+    <ul>
+        <li><tt>getIconPosition()</tt> - zwraca pozycję ikony względem pola tekstowego</li>
+        <li><tt>setIconPosition()</tt> - ustawia pozycję ikony względem pola tekstowego</li>
+        <li><tt>getMaxLength()</tt> - zwraca maksymalną liczbę wprowadzanych znaków (tylko przeglądarki obsługujące HTML5)</li>
+        <li><tt>setMaxLength()</tt> - ogranicza liczbę wprowadzanych znaków (tylko przeglądarki obsługujące HTML5)</li>
+        <li><tt>getPlaceHolder()</tt> - zwraca treść podpowiedzi w polu (tylko przeglądarki obsługujące HTML5)</li>
+        <li><tt>setPlaceHolder()</tt> - ustawia podpowiedź w polu, ukrywaną przy uzyskaniu fokusu (tylko przeglądarki obsługujące HTML5)</li>
+    </ul>    
+</dd>
+<dt>Grid</dt>
+<dd>
+    Siatka danych. Dziedziczy po <tt>ZendY\Form\Element\CustomList</tt>. Główne metody publiczne:
+<ul>
+    <li><tt>addColumn()</tt> - dodaje kolumnę</li>
+    <li><tt>addColumns()</tt> - dodaje wiele kolumn na raz</li>
+    <li><tt>getColumn()</tt> - zwraca kolumnę o podanym identyfikatorze</li>
+    <li><tt>getColumns()</tt> - zwraca wszystkie kolumny</li>
+    <li><tt>getRecordPerPage()</tt> - zwraca liczbę rekordów na stronę</li>
+    <li><tt>setRecordPerPage()</tt> - ustawia liczbę rekordów na stronę</li>
+    <li><tt>setPager()</tt> - rejestruje wtyczkę stronicującą dane</li>
+    <li><tt>setSorter()</tt> - rejestruje wtyczkę sortującą dane</li>
+</ul>    
+</dd>
+<dt>Hidden</dt>
+<dd>
+    Pole ukryte, odpowiednik Zend_Form_Element_Hidden.
+</dd>
+<dt>IconButton</dt>
+<dd>
+    Przycisk z ikonami, widget jQuery UI. Przycisk może mieć maksymalnie dwie ikony. 
+    Główne metody publiczne:
+    <ul>
+        <li><tt>getIcons()</tt> - zwraca klasy ikon</li>
+        <li><tt>setIcons()</tt> - ustawia klasy ikon</li>
+        <li><tt>getVisibleText()</tt> - zwraca informację o wyświetlaniu tekstu na przyciskach</li>
+        <li><tt>setVisibleText()</tt> - ustawia, czy ma się wyświetlać tekst na przycisku</li>
+    </ul>
+</dd>
+<dt>IconComboox.</dt>
+<dd>
+    Kontrolka rozwijalnej listy, której wartościami są klasy ikon. 
+    Dziedziczy po <tt>ZendY\Form\Element\CustomList</tt>. Główne metody:
+<ul>
+    <li><tt>getIcon()</tt> - zwraca klasę ikony akcji rozwijania listy</li>
+    <li><tt>setIcon()</tt> - ustawia klasę ikony akcji rozwijania listy</li>
+</ul>    
+</dd>
+<dt>IconEdit</dt>
+<dd>
+    Pole tekstowe z ikoną. Główne metody:
+    <ul>
+        <li><tt>getIconPosition()</tt> - zwraca pozycję ikony względem pola tekstowego</li>
+        <li><tt>setIconPosition()</tt> - ustawia pozycję ikony względem pola tekstowego</li>
+        <li><tt>getIcon()</tt> - zwraca klasę ikony</li>
+        <li><tt>setIcon()</tt> - ustawia klasę ikony</li>    
+    </ul>     
+</dd>
+<dt>IconSubmit</dt>
+<dd>
+    Przycisk z ikoną wysyłający formularz. Główne metody:
+    <ul>
+        <li><tt>getIcon()</tt> - zwraca klasę ikony</li>
+        <li><tt>setIcon()</tt> - ustawia klasę ikony</li>  
+    </ul>    
+</dd>
+<dt>Image</dt>
+<dd>
+    Pole obrazu. Główne metody:
+    <ul>
+        <li><tt>getSource()</tt> - zwraca ścieżkę dostępu do pliku graficznego</li>
+        <li><tt>setSource()</tt> - ustawia ścieżkę dostępu do pliku graficznego</li>
+        <li><tt>getAlt()</tt> - zwraca atrybut z podpisem obrazu</li>
+        <li><tt>setAlt()</tt> - ustawia atrybut z podpisem obrazu</li>
+        <li><tt>setFit()</tt> - ustawia dopasowanie obrazu do kontenera</li>
+        <li><tt>getUploadDirectory()</tt> - ustawia katalog pobierania obrazu</li>
+        <li><tt>setUploadDirectory()</tt> - zwraca katalog pobierania obrazu</li>
+        <li><tt>getNullPath()</tt> - ustawia ścieżkę dostępu do pustej grafiki</li>
+        <li><tt>setNullPath()</tt> - zwraca ścieżkę dostępu do pustej grafiki</li>
+    </ul>
+</dd>
+<dt>Link</dt>
+<dd>
+    Link, kontrolka tylko do odczytu. Główne metody publiczne:
+    <ul>
+        <li><tt>getHref()</tt> - zwraca adres linku</li>
+        <li><tt>setHref()</tt> - ustawia adres linku</li>
+    </ul>
+</dd>
+<dt>LinkEdit</dt>
+<dd>
+    Pole tekstowe z dynamicznym linkiem. Główne metody publiczne:
+    <ul>
+        <li><tt>getProtocol()</tt> - zwraca nazwę protokołu dla linku</li>
+        <li><tt>setProtocol()</tt> - ustawia nazwę protokołu dla linku</li>
+    </ul>
+</dd>
+<dt>Listbox</dt>
+<dd>
+    Pole listy rozwiniętej. Dziedziczy po <tt>ZendY\Form\Element\CustomList</tt>.
+</dd>
+<dt>Password</dt>
+<dd>
+    Pole hasła. Dziedziczy po <tt>ZendY\Form\Element\CustomEdit</tt>.
+</dd>
+<dt>Radio</dt>
+<dd>
+    Pole opcji radio. Dziedziczy po <tt>ZendY\Form\Element\CustomList</tt>.
+</dd>
+<dt>RadioButton</dt>
+<dd>
+    Przyciski opcji jQuery UI. Główne metody publiczne:
+    <ul>
+        <li><tt>getIcons()</tt> - zwraca klasy ikon</li>
+        <li><tt>setIcons()</tt> - ustawia klasy ikon</li>
+        <li><tt>getVisibleText()</tt> - zwraca informację o wyświetlaniu tekstu na przyciskach</li>
+        <li><tt>setVisibleText()</tt> - ustawia, czy ma się wyświetlać tekst na przycisku</li>
+        <li><tt>getToolButton()</tt> - zwraca informację, czy przyciski mają wyglądać jak przyciski paska narzędziowego</li>
+        <li><tt>setToolButton()</tt> - ustawia wygląd przycisków paska narzędziowego</li>
+    </ul>
+</dd>
+<dt>RegisterEmail</dt>
+<dd>
+    Pole rejestracyjne do podania adresu poczty elektronicznej. Główne metody publiczne:
+    <ul>
+        <li><tt>getTableAndField()</tt> - zwraca opcje walidatora sprawdzającego istnienie adresu w bazie</li>
+        <li><tt>setTableAndField()</tt> - ustawia opcje walidatora sprawdzającego istnienie adresu w bazie</li>
+    </ul>
+</dd>
+<dt>RegisterLogin</dt>
+<dd>
+    Pole rejestracyjne do podania nazwy użytkownika. Główne metody publiczne:
+    <ul>
+        <li><tt>getTableAndField()</tt> - zwraca opcje walidatora sprawdzającego istnienie nazwy użytkownika w bazie</li>
+        <li><tt>setTableAndField()</tt> - ustawia opcje walidatora sprawdzającego istnienie nazwy użytkownika w bazie</li>
+    </ul>
+</dd>
+<dt>RepeatEmail</dt>
+<dd>
+    Pole powtórzonego adresu poczty elektronicznej (weryfikacyjne). Główne metody publiczne:
+    <ul>
+        <li><tt>setControl()</tt> - ustawia kontrolkę adresu mailowego, z którą ma być porównywana wartość</li>
+    </ul>
+</dd>
+<dt>RepeatPassword</dt>
+<dd>
+    Pole powtórzonego hasła (weryfikacyjne). Główne metody publiczne:
+    <ul>
+        <li><tt>setControl()</tt> - ustawia kontrolkę hasła, z którą ma być porównywana wartość</li>
+    </ul>
+</dd>
+<dt>SortableListBox</dt>
+<dd>
+    Kontrolka listy sortowalnej rozwiniętej. Dziedziczy po <tt>ZendY\Form\Element\CustomList</tt>.
+</dd>
+<dt>SpinEdit</dt>
+<dd>
+    Pole wyboru liczby z policzalnego przedziału liczb dyskretnych, widget jQuery UI. Główne metody publiczne:
+    <ul>
+        <li><tt>getMin()</tt> - zwraca minimalną wartość</li>
+        <li><tt>setMin()</tt> - ustawia minimalną wartość</li>
+        <li><tt>getMax()</tt> - zwraca maksymalną wartość</li>
+        <li><tt>setMax()</tt> - ustawia maksymalną wartość</li>
+        <li><tt>getStep()</tt> - zwraca najmniejszy krok przejścia do następnej wartości (strzałki kursora)</li>
+        <li><tt>setStep()</tt> - ustawia najmniejszy krok przejścia do następnej wartości (strzałki kursora)</li>
+        <li><tt>getPage()</tt> - zwraca duży krok przejścia do następnej wartości (PageUp, PageDown)</li>
+        <li><tt>setPage()</tt> - ustawia duży krok przejścia do następnej wartości (PageUp, PageDown)</li>
+        <li><tt>getLocale()</tt> - zwraca kod ustawień językowych</li>
+        <li><tt>setLocale()</tt> - ustawia kod języka</li>
+        <li><tt>getFormat()</tt> - zwraca format liczb</li>
+        <li><tt>setFormat()</tt> - ustawia format liczb</li>    
+    </ul>
+</dd>
+<dt>Submit</dt>
+<dd>
+    Przycisk wysyłający formularz. Główne metody publiczne:
+    <ul>
+        <li><tt>getCaption()</tt> - zwraca tekst przycisku (jego wartość)</li>
+        <li><tt>setCaption()</tt> - ustawia tekst przycisku (jego wartość)</li>
+    </ul>
+</dd>
+<dt>Text</dt>
+<dd>
+    Etykieta tekstowa, tylko do odczytu.
+</dd>
+<dt>TextFileView</dt>
+<dd>
+    Widok zawartości pliku tekstowego. Główne metody publiczne:
+    <ul>
+        <li><tt>getFileName()</tt> - zwraca ścieżkę do pliku</li>
+        <li><tt>setFileName()</tt> - ustawia ścieżkę do pliku</li>
+    </ul>    
+</dd>
+<dt>Textarea</dt>
+<dd>
+    Pole tekstowe wieloliniowe. Dziedziczy po <tt>ZendY\Form\Element\CustomEdit</tt>.
+</dd>
+<dt>Url</dt>
+<dd>
+    Pole adresu strony internetowej. Dziedziczy po <tt>ZendY\Form\Element\CustomEdit</tt>.    
+</dd>
+</dl>
+</p>
+<p>Pakiet <tt>ZendY\Db\Form\Element</tt> zawiera kontrolki powiązane ze zbiorami danych:</p>
+<dl>
+    <dt>Button</dt>
+    <dd>
+        Przycisk wykonujący akcję na zbiorze danych. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataAction()</tt> - zwraca akcję przypisaną do przycisku</li>
+            <li><tt>setDataAction()</tt> - przypisuje akcję do przycisku</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>        
+            <li><tt>getFrontActionParam()</tt> - zwraca wartość podanego parametru przekazywanego do przeglądarki</li>
+            <li><tt>setFrontActionParam()</tt> - dodaje parametr przekazywany do przeglądarki</li>
+        </ul>
+    </dd>
+    <dt>Calendar</dt>
+    <dd>
+        Kalendarz wyświetlający obchody zapisane w zbiorze danych. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>getDateField()</tt> - zwraca pole daty</li>
+            <li><tt>setDateField()</tt> - ustawia pole daty</li>
+            <li><tt>getHolidayField()</tt> - zwraca pole dnia wolnego od pracy</li>
+            <li><tt>setHolidayField()</tt> - ustawia pole dnia wolnego od pracy</li>
+            <li><tt>getKeyField()</tt> - zwraca nazwę pola klucza ze źródła listy</li>
+            <li><tt>setKeyField()</tt> - ustawia nazwę pola klucza ze źródła listy</li>
+            <li><tt>getListField()</tt> - zwraca nazwy pól wyświetlanych ze źródła listy</li>
+            <li><tt>setListField()</tt> - ustawia nazwę pól wyświetlanych ze źródła listy</li>
+            <li><tt>getListSource()</tt> - zwraca źródło listy</li>
+            <li><tt>setListSource()</tt> - ustawia źródło listy</li>        
+        </ul>
+    </dd>
+    <dt>Comboox</dt>
+    <dd>
+        Pole listy rozwijalnej. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>getKeyField()</tt> - zwraca nazwę pola klucza ze źródła listy</li>
+            <li><tt>setKeyField()</tt> - ustawia nazwę pola klucza ze źródła listy</li>
+            <li><tt>getListField()</tt> - zwraca nazwy pól wyświetlanych ze źródła listy</li>
+            <li><tt>setListField()</tt> - ustawia nazwę pól wyświetlanych ze źródła listy</li>
+            <li><tt>getListSource()</tt> - zwraca źródło listy</li>
+            <li><tt>setListSource()</tt> - ustawia źródło listy</li>    
+        </ul>
+    </dd>
+    <dt>ContextMenu</dt>
+    <dd>
+        Menu podręczne. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataActions()</tt> - zwraca akcje elementów menu</li>
+            <li><tt>setDataActions()</tt> - ustawia akcje elementów menu</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>DatePicker</dt>
+    <dd>
+        Pole daty. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>DocFileView</dt>
+    <dd>
+        Pole widoku pliku tekstowego z dokumentacją, którego ścieżka dostępu zapisana jest w zbiorze danych. 
+        Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>Edit</dt>
+    <dd>
+        Pole tekstowe jednowierszowe. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>Email</dt>
+    <dd>
+        Pole adresu poczty elektronicznej. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>Expr</dt>
+    <dd>
+        Pole wartości wyrażenia związanego ze zbiorem danych, np. liczba rekordów zbioru. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>getExpr()</tt> - zwraca wyrażenie</li>
+            <li><tt>setExpr()</tt> - ustawia wyrażenie</li>
+        </ul>
+    </dd>
+    <dt>Grid</dt>
+    <dd>
+        Siatka danych. Główne metody publiczne:
+        <ul>
+            <li><tt>addColumn()</tt> - dodaje kolumnę powiązaną z polem w źródle danych</li>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>getKeyField()</tt> - zwraca nazwę pola klucza ze źródła listy</li>
+            <li><tt>setKeyField()</tt> - ustawia nazwę pola klucza ze źródła listy</li>
+            <li><tt>getListSource()</tt> - zwraca źródło listy</li>
+            <li><tt>setListSource()</tt> - ustawia źródło listy</li>    
+        </ul>
+    </dd>
+    <dt>Hidden</dt>
+    <dd>
+        Pole ukryte. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>IconComboox</dt>
+    <dd>
+        Kontrolka rozwijalnej listy, której wartościami są klasy ikon zapisane w zbiorze danych. 
+        Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>getKeyField()</tt> - zwraca nazwę pola klucza ze źródła listy</li>
+            <li><tt>setKeyField()</tt> - ustawia nazwę pola klucza ze źródła listy</li>
+            <li><tt>getListField()</tt> - zwraca nazwy pól wyświetlanych ze źródła listy</li>
+            <li><tt>setListField()</tt> - ustawia nazwę pól wyświetlanych ze źródła listy</li>
+            <li><tt>getListSource()</tt> - zwraca źródło listy</li>
+            <li><tt>setListSource()</tt> - ustawia źródło listy</li> 
+        </ul>
+    </dd>
+    <dt>IconEdit</dt>
+    <dd>
+        Pole tekstowe z ikoną. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>Image</dt>
+    <dd>
+        Pole obrazu. Grafika wyświetlana w kontrolce zapisana jest w zbiorze danych. 
+        Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>addLoader()</tt> - dodaje do wskazanego elementu kod otwarcia systemowego okna przesyłania pliku przy podanym zdarzeniu</li>
+        </ul>
+    </dd>
+    <dt>ImageView</dt>
+    <dd>
+        Pole obrazu. Grafika wyświetlana w kontrolce zapisana jest na dysku, 
+        zaś w zbiorze danych zapisana jest ścieżka do pliku. 
+        Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>addLoader()</tt> - dodaje do wskazanego elementu kod otwarcia systemowego okna przesyłania pliku przy podanym zdarzeniu</li>
+        </ul>
+    </dd>    
+    <dt>LineListMap</dt>
+    <dd>
+        Mapa firmy Google wyświetlająca listę linii, których współrzędne zapisane są w zbiorze danych. 
+        Główne metody publiczne:
+        <ul>
+            <li><tt>addConditionalRowFormat()</tt> - dodaje warunek formatujący wyświetlane rekordy</li>
+            <li><tt>getConditionalRowFormat()</tt> - zwraca tablicę warunków formatujących rekordy</li>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>getKeyField()</tt> - zwraca nazwę pola klucza ze źródła listy</li>
+            <li><tt>setKeyField()</tt> - ustawia nazwę pola klucza ze źródła listy</li>
+            <li><tt>getListField()</tt> - zwraca nazwy pól wyświetlanych ze źródła listy</li>
+            <li><tt>setListField()</tt> - ustawia nazwę pól wyświetlanych ze źródła listy, pierwsze z pól powinno wskazywać na współrzędne linii</li>
+            <li><tt>getListSource()</tt> - zwraca źródło listy</li>
+            <li><tt>setListSource()</tt> - ustawia źródło listy</li>             
+        </ul>
+    </dd>
+    <dt>LineMap</dt>
+    <dd>
+        Mapa firmy Google wyświetlająca linię, której współrzędne zapisane są w zbiorze danych. 
+        Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze współrzędnymi linii</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze współrzędnymi linii</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>Listbox</dt>
+    <dd>
+        Pole listy rozwiniętej. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>getKeyField()</tt> - zwraca nazwę pola klucza ze źródła listy</li>
+            <li><tt>setKeyField()</tt> - ustawia nazwę pola klucza ze źródła listy</li>
+            <li><tt>getListField()</tt> - zwraca nazwy pól wyświetlanych ze źródła listy</li>
+            <li><tt>setListField()</tt> - ustawia nazwę pól wyświetlanych ze źródła listy</li>
+            <li><tt>getListSource()</tt> - zwraca źródło listy</li>
+            <li><tt>setListSource()</tt> - ustawia źródło listy</li>
+        </ul>
+    </dd>
+    <dt>LongText</dt>
+    <dd>
+        Pole długich wartości tekstowych (tylko do odczytu). Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>PointMap</dt>
+    <dd>
+        Mapa firmy Google wyświetlająca punkt, którego współrzędne zapisane są w zbiorze danych. 
+        Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze współrzędnymi punktów</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze współrzędnymi punktów</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>Radio</dt>
+    <dd>
+        Pole opcji radio. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>getKeyField()</tt> - zwraca nazwę pola klucza ze źródła listy</li>
+            <li><tt>setKeyField()</tt> - ustawia nazwę pola klucza ze źródła listy</li>
+            <li><tt>getListField()</tt> - zwraca nazwy pól wyświetlanych ze źródła listy</li>
+            <li><tt>setListField()</tt> - ustawia nazwę pól wyświetlanych ze źródła listy</li>
+            <li><tt>getListSource()</tt> - zwraca źródło listy</li>
+            <li><tt>setListSource()</tt> - ustawia źródło listy</li>
+        </ul>
+    </dd>
+    <dt>RadioButton</dt>
+    <dd>
+        Przyciski opcji radio (jQuery UI). Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>getKeyField()</tt> - zwraca nazwę pola klucza ze źródła listy</li>
+            <li><tt>setKeyField()</tt> - ustawia nazwę pola klucza ze źródła listy</li>
+            <li><tt>getListField()</tt> - zwraca nazwy pól wyświetlanych ze źródła listy</li>
+            <li><tt>setListField()</tt> - ustawia nazwę pól wyświetlanych ze źródła listy</li>
+            <li><tt>getListSource()</tt> - zwraca źródło listy</li>
+            <li><tt>setListSource()</tt> - ustawia źródło listy</li>
+        </ul>
+    </dd>    
+    <dt>SortableListBox</dt>
+    <dd>
+        Pole listy sortowalnej rozwiniętej. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>getKeyField()</tt> - zwraca nazwę pola klucza ze źródła listy</li>
+            <li><tt>setKeyField()</tt> - ustawia nazwę pola klucza ze źródła listy</li>
+            <li><tt>getListField()</tt> - zwraca nazwy pól wyświetlanych ze źródła listy</li>
+            <li><tt>setListField()</tt> - ustawia nazwę pól wyświetlanych ze źródła listy</li>
+            <li><tt>getListSource()</tt> - zwraca źródło listy</li>
+            <li><tt>setListSource()</tt> - ustawia źródło listy</li>
+        </ul>
+    </dd>
+    <dt>SpinEdit</dt>
+    <dd>
+        Pole wyboru liczby z policzalnego przedziału liczb dyskretnych. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>Text</dt>
+    <dd>
+        Etykieta tekstowa (tylko do odczytu). Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>TextFileView</dt>
+    <dd>
+        Pole widoku pliku tekstowego, którego ścieżka dostępu zapisana jest w zbiorze danych. 
+        Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze ścieżką do pliku</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze ścieżką do pliku</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>Textarea</dt>
+    <dd>
+        Pole tekstowe wielowierszowe. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+    <dt>Treeview</dt>
+    <dd>
+        Pole prezentujące dane w postaci struktury drzewiastej. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+            <li><tt>getIconField()</tt> - zwraca nazwę pola z klasami ikon</li>
+            <li><tt>setIconField()</tt> - ustawia nazwę pola z klasami ikon</li>
+            <li><tt>getKeyField()</tt> - zwraca nazwę pola klucza ze źródła listy</li>
+            <li><tt>setKeyField()</tt> - ustawia nazwę pola klucza ze źródła listy</li>
+            <li><tt>getListField()</tt> - zwraca nazwy pól wyświetlanych ze źródła listy</li>
+            <li><tt>setListField()</tt> - ustawia nazwę pól wyświetlanych ze źródła listy</li>
+            <li><tt>getListSource()</tt> - zwraca źródło listy</li>
+            <li><tt>setListSource()</tt> - ustawia źródło listy</li>
+        </ul>
+    </dd>
+    <dt>Url</dt>
+    <dd>
+        Pole adresu strony internetowej. Główne metody publiczne:
+        <ul>
+            <li><tt>getDataField()</tt> - zwraca nazwę pola ze źródła danych</li>
+            <li><tt>setDataField()</tt> - ustawia nazwę pola ze źródła danych</li>
+            <li><tt>getDataSource()</tt> - zwraca źródło danych</li>
+            <li><tt>setDataSource()</tt> - ustawia źródło danych</li>
+        </ul>
+    </dd>
+</dl>
+<p>Uproszczony diagram klas dla kontrolek formularza podstawowego i bazodanowego:<br />
+    [file]../application/views/scripts/zendy/form_elements.svg[/file]
+</p>

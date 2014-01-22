@@ -221,12 +221,6 @@ class Query extends Base {
             }
         }
 
-        /* if ($this->getId() == 'hafas_location') {
-          Msg::add($this->getId() . '-> before query');
-          print($select);
-          exit();
-          } */
-
         try {
             $q = $select->query();
         } catch (Exception $exc) {

@@ -163,9 +163,9 @@ class Radio extends Widget {
         // done!
         $xhtml .= implode($listsep, $list);
 
-        $container = '<div'
+        $container = '<span'
                 . $this->_htmlAttribs($attribs['outer'])
-                . '>%s</div>';
+                . '>%s</span>';
 
         $this->view->headLink()->appendStylesheet($this->view->host . '/library/components/radio/radio.css');
 

@@ -108,7 +108,7 @@ class Grid extends CustomList {
         $columns = $this->getAttrib('columns');
         return $columns[$columnId];
     }
-    
+
     /**
      * Zwraca wszystkie kolumny
      * 
@@ -155,8 +155,16 @@ class Grid extends CustomList {
      * @return void
      */
     public function loadDecorators() {
+        $this->_labelOptions['id'] = $this->getName();
+        $this->_labelOptions['class'] = Css::WIDGET . ' '
+                . Css::WIDGET_HEADER . ' '
+                . Css::CORNER_TOP . ' '
+                . Css::PADDING_ALL . ' '
+                . Css::GRID_LABEL;
         $this->setDecorators(array(
-            array('UiWidgetMultiElement')
+            array('UiWidgetMultiElement'),
+            array('Label', $this->_labelOptions),
+            array(array('Section' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field-container'))
         ));
     }
 

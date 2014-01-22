@@ -18,6 +18,7 @@ class Msg extends Object {
      * Komunikaty predefiniowane
      */
 
+    const MSG_ACTION_DELETE_ROLE_DENIED = 'You cannot delete this role';
     const MSG_ACTION_CONFIRM = 'Are you sure you want to execute this action?';
     const MSG_ACTION_NO_ACTION = 'Action %s is not registered';
     const MSG_ACTION_NO_PERMISSION = 'You have not permissions to execute action %s';

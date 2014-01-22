@@ -400,6 +400,30 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
     }
 
     /**
+     * Tworzy pasek Tooltip na podstawie komunikatów o błędach 
+     * 
+     * @return \ZendY\Form\Element\Widget
+     */
+    protected function _setErrorsTooltip() {
+        $this->addClass(Css::STATE_ERROR);
+        $errors = \ZendY\JQuery::encodeJson($this->getMessages());
+        $params = array(
+            'items' => '.' . Css::STATE_ERROR,
+            'content' => new \Zend_Json_Expr(sprintf('function() {
+                    var errors = %s;
+                    var errorsjoined = "";
+                    for (var i in errors) {
+                    errorsjoined += errors[i]+"<br />";
+                    }
+                    return errorsjoined;
+                    }', $errors)),
+            'tooltipClass' => Css::STATE_ERROR,
+            'position' => array('my' => 'left+10 center', 'at' => 'right center'));
+        $this->setTooltip($params);
+        return $this;
+    }
+
+    /**
      * Validate element value
      * 
      * @param mixed $value
@@ -409,23 +433,20 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
     public function isValid($value, $context = null) {
         $valid = parent::isValid($value, $context);
         if (!$valid) {
-            $this->addClass(Css::STATE_ERROR);
-            $errors = \ZendY\JQuery::encodeJson($this->getMessages());
-            $params = array(
-                'items' => '.' . Css::STATE_ERROR,
-                'content' => new \Zend_Json_Expr(sprintf('function() {
-                    var errors = %s;
-                    var errorsjoined = "";
-                    for (var i in errors) {
-                    errorsjoined += errors[i]+"<br />";
-                    }
-                    return errorsjoined;
-                    }', $errors)),
-                'tooltipClass' => Css::STATE_ERROR,
-                'position' => array('my' => 'left+10 center', 'at' => 'right center'));
-            $this->setTooltip($params);
+            $this->_setErrorsTooltip();
         }
         return $valid;
+    }
+
+    /**
+     * Add an error message and mark element as failed validation
+     *
+     * @param  string $message
+     * @return \ZendY\Form\Element\Widget
+     */
+    public function addError($message) {
+        parent::addError($message);
+        $this->_setErrorsTooltip();
     }
 
     /**

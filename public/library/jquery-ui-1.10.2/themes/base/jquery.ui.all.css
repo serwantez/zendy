@@ -28,7 +28,7 @@
 ----------------------------------*/
 .ui-widget {
   font-family: Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 1.1em;
+  font-size: 1em;
 }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
   font-family: Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -88,20 +88,20 @@
 
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
   border: 1px solid #1184fb;
-  background: url(images/ui-bg_highlight-soft_25_0073ea_1x100.png) 50% 50% repeat-x #1184fb;
+  background: none 50% 50% repeat-x #a5c8ff;
   font-weight: normal;
-  color: white;
+  color: black;
 }
 .ui-state-hover path, .ui-state-hover rect, .ui-widget-content .ui-state-hover path, .ui-widget-content .ui-state-hover rect, .ui-widget-header .ui-state-hover path, .ui-widget-header .ui-state-hover rect, .ui-state-focus path, .ui-state-focus rect, .ui-widget-content .ui-state-focus path, .ui-widget-content .ui-state-focus rect, .ui-widget-header .ui-state-focus path, .ui-widget-header .ui-state-focus rect {
   stroke: #1184fb;
-  fill: #1184fb;
+  fill: #a5c8ff;
 }
 .ui-state-hover text, .ui-widget-content .ui-state-hover text, .ui-widget-header .ui-state-hover text, .ui-state-focus text, .ui-widget-content .ui-state-focus text, .ui-widget-header .ui-state-focus text {
-  fill: white;
+  fill: black;
 }
 
 .ui-state-hover a, .ui-state-hover a:hover {
-  color: white;
+  color: black;
   text-decoration: none;
 }
 
@@ -1453,6 +1453,10 @@ otherwise color shifts while dragging when bar can't keep up with mouse */
   margin: 0 auto;
   position: absolute !important;
   vertical-align: middle;
+}
+
+.ui-align-hcenter {
+  margin: 0 auto;
 }
 
 .ui-align-vcenter {

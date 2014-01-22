@@ -54,9 +54,9 @@ class DbImage extends Widget {
         }
 
         $attribs = $this->_extractAttributes($id, $attribs);
-        $container = '<a id="%s" href="#"'
+        $container = '<span id="%s" href="#"'
                 . $this->_htmlAttribs($attribs['outer'])
-                . '>%s%s</a>';
+                . '>%s%s</span>';
 
         $image = '<img id="' . $id . '-img"';
         $image .= $this->_htmlAttribs($attribs['inner']);

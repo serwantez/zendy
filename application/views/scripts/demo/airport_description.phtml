@@ -1,0 +1,58 @@
+<p>Przykład pokazuje wykorzystanie biblioteki do stworzenia prostego rejestru portów lotniczych.</p>
+<p>Rejestr zawiera 4 pola:</p>
+<ul>
+    <li>międzynarodowy kod lotniska (IATA),</li>
+    <li>nazwę lotniska,</li>
+    <li>kraj, w którym lotnisko się znajduje,</li>
+    <li>współrzędne geograficzne.</li>
+</ul>
+<p>
+    Do budowy formularza zostały wykorzystane następujące elementy:
+</p>
+<ul>
+    <li>
+        panel lewy (obiekt klasy <tt>ZendY\Form\Container\Panel</tt>), 
+    jako kontener dla listy wszystkich lotnisk (obiekt klasy <tt>ZendY\Db\Form\Element\Listbox</tt>)
+    </li>
+    <li>
+        nawigator (obiekt klasy <tt>ZendY\Db\Form\Container\Navigator</tt>), zawierający przyciski akcji:
+        <ul>
+            <li>przejścia do pierwszego rekordu,</li>
+            <li>przejścia do poprzedniego rekordu,</li>
+            <li>przejścia do następnego rekordu,</li>
+            <li>przejścia do ostatniego rekordu,</li>
+            <li>odświeżenia danych,</li>
+            <li>eksportu rekordów do pliku MS Excel,</li>
+            <li>dodania rekordu,</li>
+            <li>edycji bieżącego rekordu,</li>
+            <li>zapisania bieżącego rekordu,</li>
+            <li>usunięcia bieżącego rekordu,</li>
+            <li>otwarcia okna filtrowania rekordów.</li>
+        </ul>            
+    </li>
+    <li>
+        panel główny wypełniający pozostałą część formularza, a w nim:
+        <ul>
+            <li>
+                panel górny przechowujący 3 kontrolki edycyjne:
+                <ul>
+                    <li>kontrolka tekstowa (obiekt klasy <tt>ZendY\Db\Form\Element\Edit</tt>) do wprowadzenia kodu IATA,</li>
+                    <li>kontrolka tekstowa do wpisania nazwy lotniska,</li>
+                    <li>lista rozwijalna (obiekt klasy <tt>ZendY\Db\Form\Element\Combobox</tt>) do wyboru kraju.</li>
+                </ul>
+            </li>
+            <li>panel zawierający mapę firmy Google z zaznaczeniem lokalizacji lotniska. 
+                Ponieważ lotniska w tym przykładzie traktowane są jako obiekty punktowe, użyty jest obiekt klasy <tt>ZendY\Db\Form\Element\PointMap</tt>.</li>
+        </ul>
+    </li>
+    <li>
+        okno dialogowe do filtrowania rekordów (obiekt klasy <tt>ZendY\Db\Form\Container\FilterDialog</tt>), a w nim:
+        <ul>
+            <li>tekstowa kontrolka filtrowania po kodzie lotniska,</li>
+            <li>tekstowa kontrolka filtrowania po nazwie lotniska,</li>
+            <li>tekstowa kontrolka filtrowania po nazwie kraju.</li>
+        </ul>
+        Wszystkie kontrolki filtrujące to obiekty klasy <tt>ZendY\Db\Form\Element\Filter\IconEdit</tt>.
+    </li>
+</ul>
+Do formularza podpięte są dwa zbiory danych: lotnisko (<tt>Application\Model\Airport</tt>) i kraj (<tt>ZendY\Db\DataSet\App\Country</tt>).

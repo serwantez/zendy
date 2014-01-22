@@ -1,0 +1,109 @@
+<p>ZendY wspiera również skórki jQuery UI. 
+    Instalację można przeprowadzić poprzez dołączeniu do projektu:
+<ul>
+    <li>gotowego pliku css ze strony jQuery UI,</li>
+    <li>lub pliku scss ze zmiennymi formatującymi.</li>
+</ul>
+W obu przypadkach można tworzyć własne skórki.<br />
+Plik scss powinien zawierać następujące definicje:
+<ul>
+    <li>ustawienia domyślne czcionki
+        <ul>
+            <li><i>$ffDefault</i> - nazwa czcionki</li>
+            <li><i>$fwDefault</i> - grubość czcionki</li>
+            <li><i>$fsDefault</i> - rozmiar czcionki</li>
+        </ul>
+    </li>
+    <li><i>$cornerRadius</i> - zaokrąglenia krawędzi,</li>
+    <li>elementy nagłówkowe i paski narzędziowe
+        <ul>
+            <li><i>$bgColorHeader</i> - kolor tła</li>
+            <li><i>$borderColorHeader</i> - kolor obramowania</li>
+            <li><i>$fcHeader</i> - kolor czcionki</li>
+            <li><i>$bgImgUrlHeader</i> - url obrazu tła</li>
+            <li><i>$iconsHeader</i> - url obrazu ikon</li>
+        </ul>
+    </li>
+    <li>zawartość kontrolek
+        <ul>
+            <li><i>$bgColorContent</i> - kolor tła</li>
+            <li><i>$borderColorContent</i> - kolor obramowania</li>
+            <li><i>$fcContent</i> - kolor czcionki</li>
+            <li><i>$bgImgUrlContent</i> - url obrazu tła</li>
+            <li><i>$iconsContent</i> - url obrazu ikon</li>
+        </ul>
+    </li>
+    <li>stan domyślny elementów klikalnych
+        <ul>
+            <li><i>$bgColorDefault</i> - kolor tła</li>
+            <li><i>$borderColorDefault</i> - kolor obramowania</li>
+            <li><i>$fcDefault</i> - kolor czcionki</li>
+            <li><i>$bgImgUrlDefault</i> - url obrazu tła</li>
+            <li><i>$iconsDefault</i> - url obrazu ikon</li>
+        </ul>
+    </li>
+    <li>stan po najechaniu kursorem elementów klikalnych
+        <ul>
+            <li><i>$bgColorHover</i> - kolor tła</li>
+            <li><i>$borderColorHover</i> - kolor obramowania</li>
+            <li><i>$fcHover</i> - kolor czcionki</li>
+            <li><i>$bgImgUrlHover</i> - url obrazu tła</li>
+            <li><i>$iconsHover</i> - url obrazu ikon</li>
+        </ul>
+    </li>
+    <li>stan aktywności elementów klikalnych
+        <ul>
+            <li><i>$bgColorActive</i> - kolor tła</li>
+            <li><i>$borderColorActive</i> - kolor obramowania</li>
+            <li><i>$fcActive</i> - kolor czcionki</li>
+            <li><i>$bgImgUrlActive</i> - url obrazu tła</li>
+            <li><i>$iconsActive</i> - url obrazu ikon</li>
+        </ul>
+    </li>
+    <li>stan zaznaczenia
+        <ul>
+            <li><i>$bgColorHighlight</i> - kolor tła</li>
+            <li><i>$borderColorHighlight</i> - kolor obramowania</li>
+            <li><i>$fcHighlight</i> - kolor czcionki</li>
+            <li><i>$bgImgUrlHighlight</i> - url obrazu tła</li>
+            <li><i>$iconsHighlight</i> - url obrazu ikon</li>
+        </ul>
+    </li>
+    <li>stan błędu
+        <ul>
+            <li><i>$bgColorError</i> - kolor tła</li>
+            <li><i>$borderColorError</i> - kolor obramowania</li>
+            <li><i>$fcError</i> - kolor czcionki</li>
+            <li><i>$bgImgUrlError</i> - url obrazu tła</li>
+            <li><i>$iconsError</i> - url obrazu ikon</li>
+        </ul>
+    </li>
+    <li>ekran przesłonięty
+        <ul>
+            <li><i>$bgColorOverlay</i> - kolor tła</li>
+            <li><i>$opacityOverlay</i> - nieprzezroczystość w %</li>
+            <li><i>$bgImgUrlOverlay</i> - url obrazu tła</li>
+        </ul>
+    </li>
+    <li>efekt cienia
+        <ul>
+            <li><i>$bgColorShadow</i> - kolor tła</li>
+            <li><i>$opacityShadow</i> - nieprzezroczystość w %</li>
+            <li><i>$thicknessShadow</i> - grubość warstwy cieniowanej</li>
+            <li><i>$offsetTopShadow</i> - górny margines</li>
+            <li><i>$offsetLeftShadow</i> - lewy margines</li>
+            <li><i>$cornerRadiusShadow</i> - zaokrąglenie</li>
+            <li><i>$bgImgUrlShadow</i> - url obrazu tła</li>            
+        </ul>
+    </li>
+    <li><i>$linkColor</i> - domyślny kolor linków</li>
+</ul>
+Przykład pliku skórki "start"<br />
+[code][file]../public/library/jquery-ui-1.10.2/themes/start.scss[/file][/code]<br />
+Przykład dołączenia skórki "start" w głównym pliku scss (jquery-ui-1.10.2/themes/base/jquery.ui.all.scss):
+<code>
+    @import "../start";
+</code>
+Po wykonaniu tej czynności należy skompilować główny plik scss.<br />
+Pliki scss ze skórkami "smoothness" i "start" są dołączone do biblioteki ZendY.
+</p>

@@ -137,7 +137,7 @@ class Grid extends \ZendY\Form\Element\Grid implements ColumnInterface {
      */
     protected function _performList() {
         if ($this->hasListSource())
-            $results = $this->_listSource->getItems();
+            $results = $this->_listSource->getDataSet()->getItems();
         else {
             $results = array();
         }
@@ -163,17 +163,12 @@ class Grid extends \ZendY\Form\Element\Grid implements ColumnInterface {
 
             $keyValueString = implode(';', $keyValueArray);
 
-            $option = '';
-            $c = 0;
             foreach ($this->_listField as $field) {
                 if (!array_key_exists($field, $r)) {
                     throw new Exception(
                             'Kolumna wyświetlana ' . $field . ' nie jest obecna w wyniku zapytania');
                 }
-                if ($c > 0)
-                    $option .= $this->_columnSpace;
-                $option .= $r[$field];
-                $c++;
+                $option[$field] = $r[$field];
             }
             $options[$keyValueString] = $option;
         }

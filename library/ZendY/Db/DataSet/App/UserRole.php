@@ -28,6 +28,8 @@ class UserRole extends EditableQuery {
     const COL_USER_NAME = 'username';
     const COL_ROLE_ID = 'role_id';
     const COL_ROLE_NAME = 'role_name';
+    const COL_ACTIVE = 'active';
+    const COL_ADDITION_TIME = 'addition_time';
 
     /**
      * Domyślna nazwa tabeli
@@ -62,6 +64,18 @@ class UserRole extends EditableQuery {
                 'type' => Mysql::FIELD_TYPE_SMALLINT,
                 'length' => 6,
                 'null' => false
+            ),
+            array(
+                'name' => self::COL_ACTIVE,
+                'type' => Mysql::FIELD_TYPE_TINYINT,
+                'length' => 1,
+                'null' => false
+            ),
+            array(
+                'name' => self::COL_ADDITION_TIME,
+                'type' => Mysql::FIELD_TYPE_TIMESTAMP,
+                'null' => false,
+                'default' => 'CURRENT_TIMESTAMP'
             )
         ),
         'primaryKey' => array(self::COL_ID)
@@ -78,7 +92,9 @@ class UserRole extends EditableQuery {
         $this->from(array('ur' => $this->_name), array(
                     self::COL_ID,
                     self::COL_ROLE_ID,
-                    self::COL_USER_ID
+                    self::COL_USER_ID,
+                    self::COL_ACTIVE,
+                    self::COL_ADDITION_TIME
                 ))
                 ->join(array('ro' => Role::TABLE_NAME)
                         , "`ur`.`" . self::COL_ROLE_ID . "` = `ro`.`" . Role::COL_ID . "`"
@@ -101,7 +117,8 @@ class UserRole extends EditableQuery {
             array(
                 self::COL_ID => 1,
                 self::COL_USER_ID => 1,
-                self::COL_ROLE_ID => 4
+                self::COL_ROLE_ID => 4,
+                self::COL_ACTIVE => 1
             )
         );
     }

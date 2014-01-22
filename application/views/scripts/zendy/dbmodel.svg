@@ -1,0 +1,157 @@
+<svg 
+    version="1.1" 
+    preserveAspectRatio="none" 
+    xmlns="http://www.w3.org/2000/svg" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    class="ui-svg" 
+    width="1060px" 
+    height="163px" 
+    viewBox="0 0 403860 62049">
+    <g transform="scale(0.64583)">
+        <g id="zbior_danych" class="ui-state-hover">
+            <path class="ui-svg-element" 
+                  d="M 10161 23562 L 84513 23562 84513 74838 10161 74838 Z"/>
+            <g pointer-events="none" transform="matrix(381,0,0,381,13818,38151)">
+                <g transform="translate(0 23.04)">
+                    <text class="ui-svg-text ui-svg-text-label"
+                          x="17.896299827755897px" 
+                          y="0px">Zbiór</text>
+                    <text class="ui-svg-text ui-svg-text-label"
+                          x="80.4158310777559px" 
+                          y="0px">danych</text>
+                </g>
+                <g transform="translate(0, 29)">
+                    <g transform="translate(0 23.04)">
+                        <text class="ui-svg-text ui-svg-text-label"
+                              x="32.7185654527559px" 
+                              y="0px">(Data</text>
+                        <text class="ui-svg-text ui-svg-text-label"
+                              x="98.8357529527559px" 
+                              y="0px">Set)</text>
+                    </g>
+                </g>
+            </g>
+        </g>
+
+        <g id="zrodlo_danych" class="ui-state-hover">
+            <path class="ui-svg-element" 
+                  d="M 124052 23562 L 198404 23562 198404 74838 124052 74838 Z"/>
+            <g pointer-events="none" transform="matrix(381,0,0,381,127709,38151)">
+                <g transform="translate(0 23.04)">
+                    <text class="ui-svg-text ui-svg-text-label"
+                          x="11.476377952755897px" 
+                          y="0px">Źródło</text>
+                    <text class="ui-svg-text ui-svg-text-label"
+                          x="86.8357529527559px" 
+                          y="0px">danych</text>
+                </g>
+                <g transform="translate(0, 29)">
+                    <g transform="translate(0 23.04)">
+                        <text class="ui-svg-text ui-svg-text-label"
+                              x="12.738096702755897px" 
+                              y="0px">(Data</text>
+                        <text class="ui-svg-text ui-svg-text-label"
+                              x="78.8552842027559px" 
+                              y="0px">Source)</text>
+                    </g>
+                </g>
+            </g>
+        </g>
+
+        <g id="komponenty_wizualne" class="ui-state-hover">
+            <path class="ui-svg-element" 
+                  d="M 238203 23562 L 312555 23562 312555 74838 238203 74838 Z"/>
+            <g pointer-events="none" transform="matrix(380.99999999999994,0,0,380.99999999999994,241860,43675.50036907196)">
+                <g transform="translate(0 23.04)">
+                    <text class="ui-svg-text ui-svg-text-label"
+                          x="41.176374585609736px" 
+                          y="0px">Kontrolki</text>
+                </g>
+            </g>
+        </g>
+        <g id="arrow_pobranie_danych" class="ui-state-hover">
+            <path class="ui-svg-element" 
+                  d="M 114290 60176 L 107330 53216 107330 56696 90122 56696 90122 63656 107330 63656 107330 67136 Z"/>
+        </g>
+        <g id="arrow_wywolanie_zdarzenia" class="ui-state-hover">
+            <path class="ui-svg-element" 
+                  d="M 205946 38840 L 212906 31880 212906 35360 230114 35360 230114 42320 212906 42320 212906 45800 Z"/>
+        </g>
+        <g id="arrow_wykonanie_zdarzenia" class="ui-state-hover">
+            <path class="ui-svg-element" 
+                  d="M 90122 41273 L 97082 34313 97082 37793 114290 37793 114290 44753 97082 44753 97082 48233 Z"/>
+        </g>
+        <g id="arrow_wyswietlenie_danych" class="ui-state-hover">
+            <path class="ui-svg-element" 
+                  d="M 230114 60176 L 223154 53216 223154 56696 205946 56696 205946 63656 223154 63656 223154 67136 Z"/>
+        </g>
+        <g id="wywolanie_zdarzenia">
+            <g pointer-events="none" transform="matrix(381,0,0,381,201553.9844,8800.7266)">
+                <g transform="translate(0 17.919999999999998)">
+                    <text class="ui-svg-text ui-svg-text-description"
+                          x="0.5581938976377927px" 
+                          y="0px">wywołanie</text>
+                </g>
+                <g transform="translate(0 22)">
+                    <g transform="translate(0 17.919999999999998)">
+                        <text class="ui-svg-text ui-svg-text-description"
+                              x="3.1714751476377927px" 
+                              y="0px">zdarzenia</text>
+                    </g>
+                </g>
+            </g>
+        </g>
+
+        <g id="wyswietlenie_danych">
+            <g pointer-events="none" transform="matrix(381,0,0,381,197159.4688,75856.7344)">
+                <g transform="translate(0 17.919999999999998)">
+                    <text class="ui-svg-text ui-svg-text-description"
+                          x="2.113312007874015px" 
+                          y="0px">wyświetlenie</text>
+                </g>
+                <g transform="translate(0 22)">
+                    <g transform="translate(0 17.919999999999998)">
+                        <text class="ui-svg-text ui-svg-text-description"
+                              x="24.771515132874015px" 
+                              y="0px">danych</text>
+                    </g>
+                </g>
+            </g>
+
+        </g>
+        <g id="wykonanie_zdarzenia">
+            <g pointer-events="none" transform="matrix(380.99999999999994,0,0,381,84748.9609,8800.7266)">
+                <g transform="translate(0 17.919999999999998)">
+                    <text class="ui-svg-text ui-svg-text-description"
+                          x="6.6789954478346445px" 
+                          y="0px">wykonanie</text>
+                </g>
+                <g transform="translate(0 22)">
+                    <g transform="translate(0 17.919999999999998)">
+                        <text class="ui-svg-text ui-svg-text-description"
+                              x="10.384073572834644px" 
+                              y="0px">zdarzenia</text>
+                    </g>
+                </g>
+            </g>
+        </g>
+        <g id="pobranie_danych">
+            <g pointer-events="none" transform="matrix(381,0,0,381,81335.4766,75856.7344)">
+                <g transform="translate(0 17.919999999999998)">
+                    <text class="ui-svg-text ui-svg-text-description"
+                          x="18.453155757874015px" 
+                          y="0px">pobranie
+                    </text>
+                </g>
+                <g transform="translate(0 22)">
+                    <g transform="translate(0 17.919999999999998)">
+                        <text class="ui-svg-text ui-svg-text-description"
+                              x="24.771515132874015px" 
+                              y="0px">danych
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

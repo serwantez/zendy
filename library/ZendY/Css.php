@@ -24,7 +24,7 @@ class Css {
     const ALIGN_BOTTOM = 'ui-align-bottom';
     const ALIGN_LEFT = 'ui-align-left';
     const ALIGN_CENTER = 'ui-align-center';
-    const ALIGN_HCENTER = 'ui-align-hcenter';    
+    const ALIGN_HCENTER = 'ui-align-hcenter';
     const ALIGN_VCENTER = 'ui-align-vcenter';
 
     /**
@@ -99,6 +99,7 @@ class Css {
     const GRID = 'ui-grid';
     const GRID_BODY = 'ui-grid-body';
     const GRID_FIRSTROW = 'ui-grid-firstrow';
+    const GRID_LABEL = 'ui-grid-label';
     const GRID_WITHPAGER = 'ui-grid-withpager';
     const GRID_PAGER = 'ui-grid-pager';
     const GRID_PAGER_NAVI = 'ui-grid-pager-navi';

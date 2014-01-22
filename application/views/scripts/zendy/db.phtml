@@ -1,0 +1,100 @@
+<p>
+    Działanie komponentów bazodanowych przedstawia poniższy schemat:<br />
+    [file]../application/views/scripts/zendy/dbmodel.svg[/file]
+</p>
+<p>
+    Kontrolki są połączone ze zbiorem danych za pomocą źródła danych. 
+    Źródło danych to komponent pełniący funkcję pośredniczącą w wymianie danych pomiędzy serwerem, 
+    a przeglądarką, dlatego składa się z dwóch części: klasy <tt>ZendY\Db\DataSource.php</tt> oraz skryptu <tt>components\datasource\datasource.js</tt>.
+</p>
+<p>
+    Zbiory danych ze względu na swoją funkcję we wzorcu MVC należą do warstwy modelu. 
+    Każdy zbiór musi dziedziczyć po klasie abstrakcyjnej <tt>ZendY\Db\DataSet\Base</tt>. 
+Wymusza ona na klasach potomnych zdefiniowanie następujących metod:
+<ul>
+    <li><tt>getCurrent()</tt> - zwraca bieżący rekord,</li>
+<li><tt>getItems($offset = null, $itemCount = null, $fields = null, $conditionalFormats = null)</tt> - zwraca tablicę rekordów, 
+począwszy od miejsca: <i>$offset</i>, 
+w liczbie: <i>$itemCount</i>, 
+dla pól: <i>$fields</i>, 
+z dodatkowymi warunkami formatującymi wyświetlanie rekordów: <i>$conditionalFormats</i>,</li>
+<li><tt>_count()</tt> - funkcja chroniona, oblicza i zwraca liczbę wszystkich rekordów w zbiorze,</li>
+<li><tt>getColumns()</tt> - zwraca wszystkie zdefiniowane kolumny zbioru.</li>
+</ul>
+Zbiory danych podobnie jak kontrolery posiadają akcje. 
+Są to publiczne metody wykonujące dowolne operacje na zbiorze.
+Klasa bazowa wprowadza następujące akcje:
+<ul>
+    <li>
+        standardowe (<tt>ZendY\Db\DataSet\Base::ACTIONTYPE_STANDARD</tt>):
+    <ul>
+        <li><tt>openAction()</tt> - otwiera zbiór danych,</li>
+        <li><tt>closeAction()</tt> - zamyka zbiór danych,</li>
+        <li><tt>firstAction()</tt> - przechodzi do pierwszego rekordu,</li>
+        <li><tt>lastAction()</tt> - przechodzi do ostatniego rekordu,</li>
+        <li><tt>previousAction()</tt> - przechodzi do poprzedniego rekordu,</li>
+        <li><tt>nextAction()</tt> - przechodzi do następnego rekordu,</li>
+        <li><tt>seekAction()</tt> - przechodzi do rekordu o podanej pozycji,</li>
+        <li><tt>searchAction()</tt> - przechodzi do pierwszego rekordu pasującego do podanych kryteriów,</li>
+        <li><tt>refreshAction()</tt> - pusta akcja odświeżająca dane,</li>
+        <li><tt>sortAction()</tt> - sortuje zbiór po podanej kolumnie i w podanym kierunku,</li>
+        <li><tt>firstPageAction()</tt> - przechodzi do pierwszej strony rekordów,</li>
+        <li><tt>lastPageAction()</tt> - przechodzi do ostatniej strony rekordów,</li>
+        <li><tt>previousPageAction()</tt> - przechodzi do poprzedniej strony rekordów,</li>
+        <li><tt>nextPageAction()</tt> - przechodzi do następnej strony rekordów,</li>
+        <li><tt>seekPageAction()</tt> - przechodzi do strony o podanym numerze,</li>
+    </ul>
+</li>
+<li>
+    filtrujące (<tt>ZendY\Db\DataSet\Base::ACTIONTYPE_FILTER</tt>):
+<ul>
+    <li><tt>filterAction()</tt> - filtruje zbiór po podanych kryteriach,</li>
+    <li><tt>clearfilterAction()</tt> - akcja usuwająca filtry,</li>
+    <li><tt>filterSearchAction()</tt> - filtruje zbiór i wyszukuje pierwszy rekord pasujący do podanych kryteriów,</li>
+    <li><tt>filterSeekAction()</tt> - filtruje zbiór i przechodzi do podanej pozycji,</li>
+</ul>
+</li>
+<li>
+    generujące pliki (<tt>ZendY\Db\DataSet\Base::ACTIONTYPE_GENERATEFILE</tt>):
+<ul>
+    <li><tt>exportExcelAction()</tt> - eksportuje dane zbioru do arkusza w formacie MS Excel,</li>
+</ul>
+</li>
+<li>
+    generujące strony (<tt>ZendY\Db\DataSet\Base::ACTIONTYPE_GENERATEWEBPAGE</tt>):
+<ul>
+    <li><tt>printAction()</tt> - generuje raport do druku.</li>
+</ul>
+</li>
+</ul>
+</p>
+<p>
+    Biblioteka ZendY posiada kilka zbiorów podstawowych:
+<ul>
+    <li><tt>ZendY\Db\DataSet\ArraySet</tt> - zbiór przechowujący dane w postaci tablicy asocjacyjnej,</li>
+<li><tt>ZendY\Db\DataSet\Table</tt> - zbiór danych przechowywanych w tabeli.</li>
+<li><tt>ZendY\Db\DataSet\Sortable</tt> - zbiór danych przechowywanych w tabeli z kolumną sortującą,</li>
+<li><tt>ZendY\Db\DataSet\NestedTree</tt> - zbiór przechowujący w tabeli zagnieżdżone struktury drzewiaste typu "nested set",</li>
+<li><tt>ZendY\Db\DataSet\Query</tt> - zbiór danych przechowywanych jako wynik zapytania sql,</li>
+<li><tt>ZendY\Db\DataSet\EditableQuery</tt> - zbiór edytowalny reprezentowany przez zapytanie sql (połączenie funkcjonalnosci Table i Query),</li>
+<li><tt>ZendY\Db\DataSet\ClassConst</tt> - zbiór stałych klasy,</li>
+<li><tt>ZendY\Db\DataSet\FilesTree</tt> - zbiór przechowujący dane o strukturze drzewiastej plików na dysku,</li>
+</ul>
+</p>
+Poniższy schemat przedstawia uproszczony diagram klas dla podstawowych zbiorów danych:<br />
+[file]../application/views/scripts/zendy/dataset.svg[/file]
+<p>
+    Programista może skorzystać również z gotowych zbiorów przygotowanych pod tworzenie szablonowej aplikacji:
+<ul>
+    <li><tt>ZendY\Db\DataSet\App\Page</tt> - zbiór zawierający strukturę drzewiastą strony, dziedziczy po NestedTree,</li>        
+<li><tt>ZendY\Db\DataSet\App\User</tt> - zbiór użytkowników, dziedziczy po Table,</li>
+<li><tt>ZendY\Db\DataSet\App\Role</tt> - zbiór ról użytkowników, dziedziczy po NestedTree,</li>
+<li><tt>ZendY\Db\DataSet\App\Rule</tt> - zbiór uprawnień (reguł dla ACL), dziedziczy po EditableQuery,</li>
+<li><tt>ZendY\Db\DataSet\App\UserRole</tt> - zbiór przypisań ról do użytkowników, dziedziczy po EditableQuery,</li>
+<li><tt>ZendY\Db\DataSet\App\Locale</tt> - zbiór ustawień językowych aplikacji, dziedziczy po Table,</li>
+<li><tt>ZendY\Db\DataSet\App\Lists</tt> - zbiór słowników, dziedziczy po Sortable,</li>
+<li><tt>ZendY\Db\DataSet\App\Entity</tt> - zbiór jednostek organizacyjnych (firm, organizacji itp.), dziedziczy po NestedTree,</li>
+<li><tt>ZendY\Db\DataSet\App\Currency</tt> - zbiór walut świata, dziedziczy po Table,</li>
+<li><tt>ZendY\Db\DataSet\App\Country</tt> - zbiór państw świata, dziedziczy po EditableQuery.</li>
+</ul>
+</p>

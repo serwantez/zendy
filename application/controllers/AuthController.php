@@ -36,7 +36,8 @@ class AuthController extends Zend_Controller_Action {
     }
 
     public function profileAction() {
-// action body
+        $form = new Form\Profile();
+        $this->view->form = $form;
     }
 
     public function loginAction() {

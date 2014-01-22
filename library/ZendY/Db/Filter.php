@@ -205,7 +205,7 @@ class Filter extends Object {
                     $searched = '%' . $searched;
                 }
 
-                if ($cond) {
+                if ($cond && !($searched instanceof \Zend_Db_Expr)) {
                     $searched = $db->quote($searched);
                 }
 
@@ -225,7 +225,7 @@ class Filter extends Object {
 
                 //sprawdzenie czy kolumna jest aliasem lub występuje z domeną
                 foreach ($columns as $columnData) {
-                    if ($columnData[2] == $field 
+                    if ($columnData[2] == $field
                             || ($field == $columnData[1] && is_null($columnData[2]))) {
                         if ($columnData[1] instanceof \Zend_Db_Expr) {
                             $uniqueField = $columnData[1];

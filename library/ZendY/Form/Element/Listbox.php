@@ -37,6 +37,8 @@ class Listbox extends Combobox {
             Css::WIDGET_CONTENT,
             Css::CORNER_ALL
         ));
+        $this->setWidth(150);
+        $this->setHeight(50);
         $this->setRegisterInArrayValidator(false);
     }
 

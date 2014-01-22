@@ -151,7 +151,7 @@ abstract class Base extends Component {
     /**
      * Nadrzędne źródło danych w relacji master-detail
      * 
-     * @var \ZendY\Db\DataSource 
+     * @var \ZendY\Db\DataSource|null
      */
     protected $_masterSource = null;
 
@@ -161,6 +161,20 @@ abstract class Base extends Component {
      * @var string 
      */
     protected $_masterField;
+
+    /**
+     * Operator porównania z wartością z nadrzędnego zbioru danych
+     * 
+     * @var string
+     */
+    protected $_masterOperator = self::OPERATOR_EQUAL;
+
+    /**
+     * Porównywane wyrażenie, którego $_masterField jest parametrem
+     * 
+     * @var string|null
+     */
+    protected $_masterExpr = null;
 
     /**
      * Pole w bieżącym zbiorze danych 
@@ -634,6 +648,50 @@ abstract class Base extends Component {
     }
 
     /**
+     * Ustawia operator porównania z wartością z nadrzędnego zbioru danych
+     * dla relacji master-detail
+     * 
+     * @param string $operator
+     * @return \ZendY\Db\DataSet\Base
+     */
+    public function setMasterOperator($operator) {
+        $this->_masterOperator = $operator;
+        return $this;
+    }
+
+    /**
+     * Zwraca operator porównania z wartością z nadrzędnego zbioru danych
+     * dla relacji master-detail
+     * 
+     * @return string|null
+     */
+    public function getMasterOperator() {
+        return $this->_masterOperator;
+    }
+
+    /**
+     * Ustawia wyrażenie porównania
+     * dla relacji master-detail
+     * 
+     * @param string $expr
+     * @return \ZendY\Db\DataSet\Base
+     */
+    public function setMasterExpr($expr) {
+        $this->_masterExpr = $expr;
+        return $this;
+    }
+
+    /**
+     * Zwraca wyrażenie porównania
+     * dla relacji master-detail
+     * 
+     * @return string|null
+     */
+    public function getMasterExpr() {
+        return $this->_masterExpr;
+    }
+
+    /**
      * Ustawia pole w bieżącym zbiorze danych 
      * powiązane relacją master-detail ze zbiorem nadrzędnym
      * 
@@ -952,9 +1010,20 @@ abstract class Base extends Component {
                 if ($this->_state)
                     $result = $this->closeAction(null, true);
                 $cur = $masterSet->getCurrent();
+
                 if (array_key_exists($this->_masterField, $cur)) {
                     Msg::add($this->getId() . ' będzie przefiltrowany');
-                    $this->_filter->setFilter('master', array($indexField => $cur[$this->_masterField]));
+                    if ($this->getMasterExpr() != null) {
+                        $value = new \Zend_Db_Expr(sprintf($this->getMasterExpr(), $cur[$this->_masterField]));
+                    } else {
+                        $value = $cur[$this->_masterField];
+                    }
+                    $this->_filter->setFilter('master', array(
+                        $indexField => array(
+                            'value' => $value,
+                            'operator' => $this->getMasterOperator()
+                        )
+                    ));
                 }
             }
             //zbiór master jest zamknięty
@@ -1252,12 +1321,23 @@ abstract class Base extends Component {
         Msg::add($this->getId() . '->' . __FUNCTION__);
         $result = array();
         if (isset($params['field'])) {
-            if (!isset($params['direction']))
-                $params['direction'] = 'asc';
-            if ($params['direction'] == 'clear') {
-                $this->_order->removeSort($params['field']);
+            if (is_array($params['field'])) {
+                foreach ($params['field'] as $field) {
+                    $direction = 'asc';
+                    if (is_array($field)) {
+                        $field = $field[0];
+                        $direction = $field[1];
+                    }
+                    $this->_order->setSort(array('field' => $field, 'direction' => $direction));
+                }
             } else {
-                $this->_order->setSort(array('field' => $params['field'], 'direction' => $params['direction']));
+                if (!isset($params['direction']))
+                    $params['direction'] = 'asc';
+                if ($params['direction'] == 'clear') {
+                    $this->_order->removeSort($params['field']);
+                } else {
+                    $this->_order->setSort(array('field' => $params['field'], 'direction' => $params['direction']));
+                }
             }
         }
         return $result;
