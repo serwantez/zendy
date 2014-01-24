@@ -107,7 +107,7 @@ class Dialog extends Base {
             array(array('Inner' => 'HtmlTag'), array(
                     'class' => Css::ALIGN_CLIENT . ' ' . Css::PADDING_ALL . ' ' . Css::SCROLL_AUTO
             )),
-            array('DialogContainer', $attribs)
+            array('Dialog', $attribs)
         ));
         return $this;
     }

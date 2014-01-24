@@ -15,7 +15,7 @@ require_once "ZendX/JQuery/Form/Decorator/DialogContainer.php";
  * 
  * @author Piotr Zając
  */
-class DialogContainer extends \ZendX_JQuery_Form_Decorator_DialogContainer {
+class Dialog extends \ZendX_JQuery_Form_Decorator_DialogContainer {
 
     /**
      * Nadpisanie metody renderującej z powodu braku tłumaczenia tytułu okna

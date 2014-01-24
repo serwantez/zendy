@@ -27,6 +27,7 @@ class User extends Table {
     const COL_ACTIVE = 'active';
     const COL_FIRSTNAME = 'firstname';
     const COL_SURNAME = 'surname';
+    const COL_SEX = 'sex';
     const COL_EMAIL = 'email';
     const COL_ADDITION_TIME = 'addition_time';
     const COL_PHOTO = 'photo';
@@ -90,6 +91,13 @@ class User extends Table {
                 'length' => 50,
                 'null' => false
             ),
+            array(
+                'name' => self::COL_SEX,
+                'type' => Mysql::FIELD_TYPE_TINYINT,
+                'length' => 1,
+                'null' => false,
+                'default' => 0
+            ),            
             array(
                 'name' => self::COL_EMAIL,
                 'type' => Mysql::FIELD_TYPE_VARCHAR,

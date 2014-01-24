@@ -264,7 +264,8 @@ abstract class Base extends Component {
      * @param bool $refresh Informacja czy po wykonaniu akcji należy odświeżyć kontrolki zawierające cały zbiór
      * @return void
      */
-    protected function _registerAction($name
+    protected function _registerAction(
+    $name
     , $type = self::ACTIONTYPE_STANDARD
     , $icon = array()
     , $text = ''
@@ -714,6 +715,25 @@ abstract class Base extends Component {
     }
 
     /**
+     * Ustawia parametry dla relacji master-detail
+     * 
+     * @param \ZendY\Db\DataSource $source
+     * @param string $field
+     * @param string $index
+     * @param string $operator
+     * @param string $expr
+     * @return \ZendY\Db\DataSet\Base
+     */
+    public function setMaster(DataSource $source, $field, $index, $operator = self::OPERATOR_EQUAL, $expr = null) {
+        $this->_masterSource = $source;
+        $this->_masterField = $field;
+        $this->_indexField = $index;
+        $this->_masterOperator = $operator;
+        $this->_masterExpr = $expr;
+        return $this;
+    }
+
+    /**
      * Zwraca informację o posiadaniu zbioru nadrzędnego w relacji master-detail
      * 
      * @return bool
@@ -997,6 +1017,7 @@ abstract class Base extends Component {
             $params['first'] = true;
         }
         $result = array();
+
         if ($this->hasMaster()) {
             Msg::add($this->getId() . ' ma mastera');
             $masterSet = $this->_masterSource->getDataSet();
@@ -1005,9 +1026,10 @@ abstract class Base extends Component {
             if (is_array($indexField)) {
                 $indexField = $indexField[2];
             }
+
             //zbiór nadrzędny master jest otwarty
-            if ($masterSet->getState()) {
-                if ($this->_state)
+            if ($masterSet->getState() <> self::STATE_OFF) {
+                if ($this->getState() <> self::STATE_OFF)
                     $result = $this->closeAction(null, true);
                 $cur = $masterSet->getCurrent();
 
