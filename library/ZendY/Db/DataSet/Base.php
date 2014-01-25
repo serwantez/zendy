@@ -122,6 +122,12 @@ abstract class Base extends Component {
     const CONNECTOR_OR = 'or';
 
     /**
+     * Wartości domyślne
+     */
+    const DEFAULT_MASTER_OPERATOR = self::OPERATOR_EQUAL;
+    const DEFAULT_MASTER_EXPR = null;
+
+    /**
      * Typ zwracanych danych
      */
     const RESULT_ASSOC = 'assoc';
@@ -149,40 +155,11 @@ abstract class Base extends Component {
     protected $_primary;
 
     /**
-     * Nadrzędne źródło danych w relacji master-detail
+     * Ustawienia relacji master-detail
      * 
-     * @var \ZendY\Db\DataSource|null
+     * @var array
      */
-    protected $_masterSource = null;
-
-    /**
-     * Pole w nadrzędnym zbiorze danych w relacji master-detail
-     * 
-     * @var string 
-     */
-    protected $_masterField;
-
-    /**
-     * Operator porównania z wartością z nadrzędnego zbioru danych
-     * 
-     * @var string
-     */
-    protected $_masterOperator = self::OPERATOR_EQUAL;
-
-    /**
-     * Porównywane wyrażenie, którego $_masterField jest parametrem
-     * 
-     * @var string|null
-     */
-    protected $_masterExpr = null;
-
-    /**
-     * Pole w bieżącym zbiorze danych 
-     * powiązane relacją master-detail ze zbiorem nadrzędnym
-     * 
-     * @var string
-     */
-    protected $_indexField;
+    protected $_masters = array();
 
     /**
      * Numer bieżącego wiersza w zbiorze
@@ -566,8 +543,11 @@ abstract class Base extends Component {
      */
     public function __sleep() {
         Msg::add($this->getId() . '->' . __FUNCTION__);
-        if ($this->hasMaster() && is_object($this->_masterSource)) {
-            $this->_masterSource = (string) $this->_masterSource->getId();
+        if ($this->hasMaster()) {
+            foreach ($this->_masters as $key => $master) {
+                if (is_object($master['masterSource']))
+                    $this->_masters[$key]['masterSource'] = (string) $this->_masters[$key]['masterSource']->getId();
+            }
         }
         Msg::add($this->getId() . '-> koniec usypiania');
         return array_keys(get_object_vars($this));
@@ -580,8 +560,12 @@ abstract class Base extends Component {
      */
     public function __wakeup() {
         Msg::add($this->getId() . '->' . __FUNCTION__);
-        if ($this->hasMaster() && is_string($this->_masterSource)) {
-            $this->_masterSource = \ZendY\Db\ActionManager::getInstance()->getDataSource($this->_masterSource);
+        if ($this->hasMaster()) {
+            $actionManager = \ZendY\Db\ActionManager::getInstance();
+            foreach ($this->_masters as $key => $master) {
+                if (is_string($master['masterSource']))
+                    $this->_masters[$key]['masterSource'] = $actionManager->getDataSource($master['masterSource']);
+            }
         }
     }
 
@@ -606,130 +590,43 @@ abstract class Base extends Component {
     }
 
     /**
-     * Ustawia nadrzędne źródło danych 
-     * dla relacji master-detail
-     * 
-     * @param \ZendY\Db\DataSource $masterSource
-     * @return \ZendY\Db\DataSet\Base
-     */
-    public function setMasterSource(DataSource $masterSource) {
-        $this->_masterSource = $masterSource;
-        return $this;
-    }
-
-    /**
-     * Zwraca nadrzędne źródło danych
-     * 
-     * @return \ZendY\Db\DataSource|null
-     */
-    public function getMasterSource() {
-        return $this->_masterSource;
-    }
-
-    /**
-     * Ustawia pole w nadrzędnym zbiorze danych
-     * dla relacji master-detail
-     * 
-     * @param string $field
-     * @return \ZendY\Db\DataSet\Base
-     */
-    public function setMasterField($field) {
-        $this->_masterField = $field;
-        return $this;
-    }
-
-    /**
-     * Zwraca pole w nadrzędnym zbiorze danych
-     * dla relacji master-detail
-     * 
-     * @return string|null
-     */
-    public function getMasterField() {
-        return $this->_masterField;
-    }
-
-    /**
-     * Ustawia operator porównania z wartością z nadrzędnego zbioru danych
-     * dla relacji master-detail
-     * 
-     * @param string $operator
-     * @return \ZendY\Db\DataSet\Base
-     */
-    public function setMasterOperator($operator) {
-        $this->_masterOperator = $operator;
-        return $this;
-    }
-
-    /**
-     * Zwraca operator porównania z wartością z nadrzędnego zbioru danych
-     * dla relacji master-detail
-     * 
-     * @return string|null
-     */
-    public function getMasterOperator() {
-        return $this->_masterOperator;
-    }
-
-    /**
-     * Ustawia wyrażenie porównania
-     * dla relacji master-detail
-     * 
-     * @param string $expr
-     * @return \ZendY\Db\DataSet\Base
-     */
-    public function setMasterExpr($expr) {
-        $this->_masterExpr = $expr;
-        return $this;
-    }
-
-    /**
-     * Zwraca wyrażenie porównania
-     * dla relacji master-detail
-     * 
-     * @return string|null
-     */
-    public function getMasterExpr() {
-        return $this->_masterExpr;
-    }
-
-    /**
-     * Ustawia pole w bieżącym zbiorze danych 
-     * powiązane relacją master-detail ze zbiorem nadrzędnym
-     * 
-     * @param string|array $field
-     * @return \ZendY\Db\DataSet\Base
-     */
-    public function setIndexField($field) {
-        $this->_indexField = $field;
-        return $this;
-    }
-
-    /**
-     * Zwraca pole w bieżącym zbiorze danych
-     * powiązane relacją master-detail ze zbiorem nadrzędnym
-     * 
-     * @return string|array|null
-     */
-    public function getIndexField() {
-        return $this->_indexField;
-    }
-
-    /**
      * Ustawia parametry dla relacji master-detail
      * 
-     * @param \ZendY\Db\DataSource $source
-     * @param string $field
-     * @param string $index
+     * @param \ZendY\Db\DataSource $masterSource
+     * @param string $masterField
+     * @param string $detailField
      * @param string $operator
      * @param string $expr
      * @return \ZendY\Db\DataSet\Base
      */
-    public function setMaster(DataSource $source, $field, $index, $operator = self::OPERATOR_EQUAL, $expr = null) {
-        $this->_masterSource = $source;
-        $this->_masterField = $field;
-        $this->_indexField = $index;
-        $this->_masterOperator = $operator;
-        $this->_masterExpr = $expr;
+    public function addMaster(DataSource $masterSource, $masterField, $detailField
+    , $operator = self::DEFAULT_MASTER_OPERATOR, $expr = null) {
+        $this->_masters[] = array(
+            'masterSource' => $masterSource,
+            'masterField' => $masterField,
+            'detailField' => $detailField,
+            'operator' => $operator,
+            'expr' => $expr
+        );
+        return $this;
+    }
+
+    /**
+     * Ustawia kilka relacji master-detail na raz
+     * 
+     * @param array $master
+     * @return \ZendY\Db\DataSet\Base
+     */
+    public function setMaster(array $masters) {
+        foreach ($masters as $key => $master) {
+            if (!isset($master['operator'])) {
+                $masters[$key]['operator'] = self::DEFAULT_MASTER_OPERATOR;
+            }
+            if (!isset($master['expr'])) {
+                $masters[$key]['expr'] = self::DEFAULT_MASTER_EXPR;
+            }
+        }
+        $this->_masters = $masters;
         return $this;
     }
 
@@ -739,9 +636,7 @@ abstract class Base extends Component {
      * @return bool
      */
     public function hasMaster() {
-        return (isset($this->_masterSource)
-                && isset($this->_masterField)
-                && isset($this->_indexField));
+        return (count($this->_masters) > 0);
     }
 
     /**
@@ -751,8 +646,12 @@ abstract class Base extends Component {
      * @return bool
      */
     public function isDetailSet(Base $masterSet) {
-        $id = $this->_masterSource->getDataSet()->getId();
-        return ($id == $masterSet->getId());
+        foreach ($this->_masters as $master) {
+            $id = $master['masterSource']->getDataSet()->getId();
+            if (($id == $masterSet->getId()))
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -866,7 +765,8 @@ abstract class Base extends Component {
      * @return \ZendY\Db\DataSet\Base
      */
     public function clearMaster() {
-        $this->_filter->clearFilter('master');
+        foreach ($this->_masters as $key => $master)
+            $this->_filter->clearFilter('master' . $key);
         return $this;
     }
 
@@ -1020,38 +920,39 @@ abstract class Base extends Component {
 
         if ($this->hasMaster()) {
             Msg::add($this->getId() . ' ma mastera');
-            $masterSet = $this->_masterSource->getDataSet();
-            $indexField = $this->_indexField;
-            //pole przekazane jako tablica: domena,nazwa pola,alias
-            if (is_array($indexField)) {
-                $indexField = $indexField[2];
-            }
-
-            //zbiór nadrzędny master jest otwarty
-            if ($masterSet->getState() <> self::STATE_OFF) {
-                if ($this->getState() <> self::STATE_OFF)
-                    $result = $this->closeAction(null, true);
-                $cur = $masterSet->getCurrent();
-
-                if (array_key_exists($this->_masterField, $cur)) {
-                    Msg::add($this->getId() . ' będzie przefiltrowany');
-                    if ($this->getMasterExpr() != null) {
-                        $value = new \Zend_Db_Expr(sprintf($this->getMasterExpr(), $cur[$this->_masterField]));
-                    } else {
-                        $value = $cur[$this->_masterField];
-                    }
-                    $this->_filter->setFilter('master', array(
-                        $indexField => array(
-                            'value' => $value,
-                            'operator' => $this->getMasterOperator()
-                        )
-                    ));
+            foreach ($this->_masters as $key => $master) {
+                $masterSet = $master['masterSource']->getDataSet();
+                //pole przekazane jako tablica: domena,nazwa pola,alias
+                if (is_array($master['detailField'])) {
+                    $master['detailField'] = $master['detailField'];
                 }
-            }
-            //zbiór master jest zamknięty
-            else {
-                $result = $this->closeAction(null, true);
-                $this->_filter->setFilter('master', array($indexField => ''));
+
+                //zbiór nadrzędny master jest otwarty
+                if ($masterSet->getState() <> self::STATE_OFF) {
+                    if ($this->getState() <> self::STATE_OFF)
+                        $result = $this->closeAction(null, true);
+                    $cur = $masterSet->getCurrent();
+
+                    if (array_key_exists($master['masterField'], $cur)) {
+                        Msg::add($this->getId() . ' będzie przefiltrowany');
+                        if ($master['expr'] != null) {
+                            $value = new \Zend_Db_Expr(sprintf($master['expr'], $cur[$master['masterField']]));
+                        } else {
+                            $value = $cur[$master['masterField']];
+                        }
+                        $this->_filter->setFilter('master' . $key, array(
+                            $master['detailField'] => array(
+                                'value' => $value,
+                                'operator' => $master['operator']
+                            )
+                        ));
+                    }
+                }
+                //zbiór master jest zamknięty
+                else {
+                    $result = $this->closeAction(null, true);
+                    $this->_filter->setFilter('master', array($master['detailField'] => ''));
+                }
             }
         }
 
