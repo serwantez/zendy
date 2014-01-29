@@ -66,3 +66,33 @@ tt {
 dt {
   color: #6AC00E;
 }
+
+.info-container {
+  padding-top: 10px;
+}
+
+.info-block {
+  display: inline-block;
+  width: 290px;
+  height: 80px;
+}
+.info-block a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
+.info-block a div {
+  padding: 5px;
+}
+.info-block a div img {
+  float: left;
+}
+.info-block a div div {
+  float: left;
+  width: 200px;
+  display: inline-block;
+}
+.info-block a div div h3 {
+  margin: 2px 0px;
+}

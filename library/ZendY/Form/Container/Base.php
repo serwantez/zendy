@@ -160,7 +160,7 @@ abstract class Base extends Form {
     }
 
     /**
-     * Obsługa zdarzenia dołączenia nawigatora do formularza nadrzędnego
+     * Obsługa zdarzenia dołączenia kontenera do formularza nadrzędnego
      * 
      * @return \ZendY\Form\Container\Custom
      */

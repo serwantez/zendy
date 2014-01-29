@@ -44,7 +44,7 @@ trait CssTrait {
         }
         return $this;
     }
-    
+
     /**
      * Ustawia klasę css (pojedynczą lub wiele) nadpisując istniejące
      * 
@@ -195,14 +195,7 @@ trait CssTrait {
      * @return \ZendY\Form\CssTrait
      */
     public function setAlign($align) {
-        $this->removeClasses(Css::$aligns)
-                ->addClass($align);
-        if ($align == Css::ALIGN_BOTTOM || $align == Css::ALIGN_TOP || $align == Css::ALIGN_CLIENT) {
-            $this->setWidth(null);
-        }
-        if ($align == Css::ALIGN_LEFT || $align == Css::ALIGN_RIGHT || $align == Css::ALIGN_CLIENT) {
-            $this->setHeight(null);
-        }
+        $this->setAttrib('align', $align);
         return $this;
     }
 
@@ -212,14 +205,7 @@ trait CssTrait {
      * @return string|null
      */
     public function getAlign() {
-        $result = false;
-        foreach (Css::$aligns as $align) {
-            $classes = $this->getClasses();
-            if (isset($classes) && in_array($align, $classes)) {
-                $result = $align;
-            }
-        }
-        return $result;
+        return $this->getAttrib('align');
     }
 
     /**

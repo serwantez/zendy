@@ -48,9 +48,6 @@ abstract class CustomMap extends Widget {
             Css::WIDGET_CONTENT,
             Css::CORNER_ALL
         ));
-        $this->setZoom(7);
-        $this->setCenter(array(50, 20));
-        $this->setMapType(self::MAPTYPEID_ROADMAP);
     }
 
     /**

@@ -25,12 +25,12 @@ class Box extends Base {
     protected static $count = 0;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefault() {
+        parent::_setDefault();
         $this->setTitle($this->getId());
     }
 

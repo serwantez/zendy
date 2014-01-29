@@ -83,6 +83,8 @@ abstract class Component extends Object {
     public function __construct($id = null, $options = null) {
         parent::__construct($id);
 
+        $this->_setDefaults();
+
         if (is_array($options)) {
             $this->setOptions($options);
         } elseif ($options instanceof \Zend_Config) {
@@ -98,6 +100,14 @@ abstract class Component extends Object {
          * Register decorators by default
          */
         $this->loadDefaultDecorators();
+    }
+
+    /**
+     * Funkcja definiująca wartości domyślne właściwości 
+     * - uzupełniana w klasach potomnych
+     */
+    protected function _setDefaults() {
+        
     }
 
     /**

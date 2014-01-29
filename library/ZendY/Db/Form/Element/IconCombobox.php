@@ -29,7 +29,8 @@ class IconCombobox extends Combobox {
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'iconCombobox';
         $this->addClasses(array(
             Css::ICONEDIT,

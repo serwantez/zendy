@@ -38,12 +38,12 @@ class ListItem extends Sortable {
     const TABLE_NAME = 'list_item';
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartoßci domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->setTableName(self::TABLE_NAME)
                 ->setPrimary(array(self::COL_LIST_ID, self::COL_ITEM_ID))
                 ->setSortField(self::COL_SORT);

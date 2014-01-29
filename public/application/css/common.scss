@@ -70,3 +70,34 @@ tt {
 dt {
     color: #6AC00E;
 }
+
+.info-container {
+    padding-top: 10px;
+}
+.info-block {
+    display: inline-block;
+    width: 290px;
+    height: 80px;
+    a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+        div {
+            padding: 5px;
+            img {
+                float: left;
+            }
+            div {
+                float: left;
+                width: 200px;
+                display: inline-block;
+                h3 {
+                    margin: 2px 0px;
+                }
+                span {
+                }
+            }
+        }
+    }
+}

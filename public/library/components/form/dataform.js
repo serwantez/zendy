@@ -113,10 +113,6 @@ dataForm = function(id, className, url, message) {
     }
  
     this.refreshControls = function(data, action) {
-        //komunikaty systemowe
-        if('msg' in data) {
-            data.splice('msg', 1);
-        }        
         for(var d in data) {
             if (ds[d]) {
                 this.clearErrors(d);

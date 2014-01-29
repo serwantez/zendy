@@ -8,16 +8,16 @@
 
 namespace ZendY\Db;
 
-use ZendY\Msg;
-use ZendY\Exception;
-use ZendY\Component;
-use ZendY\Db\DataSet\Base as DataSet;
-use ZendY\Db\DataSet\Editable;
-use ZendY\Db\DataSet\TableInterface;
-use ZendY\Db\Form as DbForm;
-use ZendY\Form\Container\Dialog;
-use ZendY\Db\Form\Element;
-use ZendY\Css;
+use ZendY\Msg,
+    ZendY\Exception,
+    ZendY\Component,
+    ZendY\Db\DataSet\Base as DataSet,
+    ZendY\Db\DataSet\Editable,
+    ZendY\Db\DataSet\TableInterface,
+    ZendY\Db\Form as DbForm,
+    ZendY\Form\Container\Dialog,
+    ZendY\Db\Form\Element,
+    ZendY\Css;
 
 /**
  * Źródło danych
@@ -147,29 +147,13 @@ class DataSource extends Component {
     protected $_dialog = true;
 
     /**
-     * Konstruktor
+     * Inicjalizacja obiektu
      * 
-     * @param string|null $id
-     * @param \ZendY\Db\DataSet\Base|null $dataSet
-     * @param \ZendY\Db\Form|null $form
-     * @throws Exception
      * @return void
      */
-    public function __construct($id = null, $dataSet = null, $form = null) {
-        parent::__construct($id);
-
+    public function init() {
+        parent::init();
         $this->_state = self::STATE_CREATED;
-
-        if (isset($dataSet)) {
-            if ($dataSet instanceof DataSet) {
-                $this->setDataSet($dataSet);
-            } else {
-                throw new Exception('DataSource only accepts instances of the type ZendY\Db\DataSet\Base');
-            }
-        }
-        if (isset($form)) {
-            $this->setForm($form);
-        }
     }
 
     /**

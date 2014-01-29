@@ -294,6 +294,24 @@ class Dialog extends Base {
     }
 
     /**
+     * Dodaje do wskazanych elementów kod otwarcia okna dialogowego 
+     * przy podanych zdarzeniach
+     * 
+     * @param array $openers
+     * @return \ZendY\Form\Container\Dialog
+     */
+    public function setOpeners(array $openers) {
+        foreach ($openers as $opener) {
+            if (is_array($opener)) {
+                $this->addOpener($opener['element'], $opener['event']);
+            } else {
+                $this->addOpener($opener);
+            }
+        }
+        return $this;
+    }
+
+    /**
      * Dodaje do wskazanego elementu kod zamknięcia okna dialogowego 
      * przy podanym zdarzeniu
      * 

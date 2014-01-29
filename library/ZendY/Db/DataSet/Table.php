@@ -28,12 +28,12 @@ class Table extends Editable implements TableInterface {
     protected $_db;
 
     /**
-     * Inicjalizuje obiekt
+     * Ustawia wartości domyślne
      *
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         //utworzenie obiektu tabeli
         $this->_table = new \Zend_Db_Table();
         $this->_db = $this->_table->getAdapter();

@@ -53,7 +53,10 @@ class Form extends \ZendX_JQuery_Form {
      * @return void
      */
     public function __construct($options = null) {
-        $this->addPrefixPath('ZendY\Form\Decorator', 'ZendY/Form/Decorator', \Zend_Form::DECORATOR);
+        $this->addPrefixPath('ZendY\Form\Decorator', 'ZendY/Form/Decorator', \Zend_Form::DECORATOR)
+                ->addPrefixPath('ZendY\Form\Element', 'ZendY/Form/Element', \Zend_Form::ELEMENT)
+                ->addElementPrefixPath('ZendY\Form\Decorator', 'ZendY/Form/Decorator', \Zend_Form::DECORATOR)
+                ->addDisplayGroupPrefixPath('ZendY\Form\Decorator', 'ZendY/Form/Decorator');
         $this->setAjaxValidator();
         $this->setMethod(\Zend_Form::METHOD_POST);
         parent::__construct($options);
@@ -296,6 +299,28 @@ class Form extends \ZendX_JQuery_Form {
     }
 
     /**
+     * Usuwa wszystkie kontenery
+     * 
+     * @return \ZendY\Form
+     */
+    public function clearContainers() {
+        $this->clearSubForms();
+        return $this;
+    }
+
+    /**
+     * Ustawia (nadpisuje) wszystkie kontenery
+     * 
+     * @param array $containers
+     * @return \ZendY\Form
+     */
+    public function setContainers(array $containers) {
+        $this->clearContainers();
+        $this->addContainers($containers);
+        return $this;
+    }
+
+    /**
      * Wyszukuje i zwraca element formularza (z uwzględnieniem podformularzy)
      * 
      * @param string $name
@@ -352,6 +377,7 @@ class Form extends \ZendX_JQuery_Form {
             );
             $this->getView()->jQuery()->addOnLoad($js);
         }
+
         return parent::render($view);
     }
 

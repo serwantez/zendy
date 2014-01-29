@@ -34,7 +34,6 @@ class PointMap extends \ZendY\Form\Element\CustomMap implements CellInterface {
     public function init() {
         parent::init();
         $this->helper = 'pointMap';
-        $this->setZoom(12);
     }
 
     /**

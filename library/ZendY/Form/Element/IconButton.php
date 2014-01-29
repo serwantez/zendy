@@ -14,23 +14,15 @@ namespace ZendY\Form\Element;
  * @author Piotr Zając
  */
 class IconButton extends Button {
-
     /**
      * Parametry
      */
 
     const PARAM_ICONS = 'icons';
 
-    /**
-     * Inicjalizacja obiektu
-     * 
-     * @return void
-     */
-    public function init() {
-        parent::init();
-        $this->jQueryParams = array(
-            self::PARAM_TEXT => false
-        );
+    protected function _setDefaults() {
+        parent::_setDefaults();
+        $this->setVisibleText(false);
     }
 
     /**

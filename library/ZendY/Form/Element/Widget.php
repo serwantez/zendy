@@ -75,12 +75,21 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
      * @return void
      */
     public function __construct($spec = null, $options = null) {
+        $this->addPrefixPath('ZendY\Form\Decorator', 'ZendY/Form/Decorator', \Zend_Form::DECORATOR);
         $this::$count++;
         if (!isset($spec)) {
             $spec = get_class($this) . '_' . $this::$count;
         }
+        $this->_setDefaults();
         parent::__construct($spec, $options);
         $this->_prepareEventParams();
+    }
+
+    /**
+     * Funkcja definiująca wartości domyślne właściwości 
+     * - uzupełniana w klasach potomnych
+     */
+    protected function _setDefaults() {
         $this->_labelOptions = array(
             'escape' => false,
             'requiredSuffix' => '*',
@@ -238,6 +247,12 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
      * @return \ZendY\Form\Element\Widget
      */
     public function setLabel($label, $width = null) {
+        if (is_array($label)) {
+            if (isset($label['width'])) {
+                $width = $label['width'];
+            }
+            $label = $label['text'];
+        }
         if (isset($width)) {
             if (!is_array($width))
                 $width = array(

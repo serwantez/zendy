@@ -25,6 +25,15 @@ class Listbox extends Combobox {
     static protected $count = 0;
 
     /**
+     * Ustawia wartości domyślne
+     */
+    protected function _setDefaults() {
+        parent::_setDefaults();
+        $this->setWidth(150);
+        $this->setHeight(50);
+    }
+
+    /**
      * Inicjalizacja obiektu
      * 
      * @return void
@@ -37,8 +46,6 @@ class Listbox extends Combobox {
             Css::WIDGET_CONTENT,
             Css::CORNER_ALL
         ));
-        $this->setWidth(150);
-        $this->setHeight(50);
         $this->setRegisterInArrayValidator(false);
     }
 

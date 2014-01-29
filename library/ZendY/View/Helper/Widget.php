@@ -11,6 +11,7 @@ namespace ZendY\View\Helper;
 require_once 'ZendX/JQuery/View/Helper/UiWidget.php';
 
 use ZendY\Form\Element;
+use ZendY\Css;
 
 /**
  * Bazowy pomocnik do wygenerowania pól formularza
@@ -26,6 +27,38 @@ abstract class Widget extends \ZendX_JQuery_View_Helper_UiWidget {
      * @return array $attribs
      */
     public static function prepareCSS(array $attribs) {
+        //zamienia atrybut align na klasę css
+        if (isset($attribs['align'])) {
+            //remove all align classes
+            if (array_key_exists('class', $attribs) && is_array($attribs['class'])) {
+                foreach ($attribs['class'] as $key => $class) {
+                    if (in_array($class, Css::$aligns)) {
+                        unset($attribs['class'][$key]);
+                    }
+                }
+            } else {
+                $attribs['class'] = array();
+            }
+            $attribs['class'][] = $attribs['align'];
+            //usunięcie stałej szerokości
+            if ($attribs['align'] == Css::ALIGN_BOTTOM
+                    || $attribs['align'] == Css::ALIGN_TOP
+                    || $attribs['align'] == Css::ALIGN_CLIENT) {
+                if (isset($attribs['style']) && isset($attribs['style']['width'])) {
+                    unset($attribs['style']['width']);
+                }
+            }
+            //usunięcie stałej wysokości
+            if ($attribs['align'] == Css::ALIGN_LEFT
+                    || $attribs['align'] == Css::ALIGN_RIGHT
+                    || $attribs['align'] == Css::ALIGN_CLIENT) {
+                if (isset($attribs['style']) && isset($attribs['style']['height'])) {
+                    unset($attribs['style']['height']);
+                }
+            }
+            unset($attribs['align']);
+        }
+
         //Klasy css mogą być podane jako tablica, należy je zamienić na ciąg rozdzielony spacjami
         if (array_key_exists('class', $attribs) && is_array($attribs['class']))
             $attribs['class'] = implode(' ', $attribs['class']);

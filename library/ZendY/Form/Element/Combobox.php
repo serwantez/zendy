@@ -24,7 +24,8 @@ class Combobox extends CustomList {
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'combobox';
         $this->setRegisterInArrayValidator(false);
         $this->addClasses(array(

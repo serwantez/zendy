@@ -218,13 +218,13 @@ abstract class Base extends Component {
     protected $_actions = array();
 
     /**
-     * Inicjalizuje obiekt
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         Msg::add($this->getId() . '->' . __FUNCTION__);
-        parent::init();
         $this->_filter = new Filter();
         $this->_order = new Sort();
         $this->_registerActions();
