@@ -48,8 +48,7 @@
         <div class="ui-align-top" style="height: 25px;">
             <div class="ui-align-left" style="height: 25px; width: 25px;">
                 <a class="ui-button ui-widget ui-widget-header ui-button-icon-only" 
-                   href="/"
-                   title="<?= $this->translate('Homepage'); ?>">
+                   href="/" title="<?= $this->translate('Homepage'); ?>">
                     <span class="ui-icon ui-icon-home"></span>
                     <span class="ui-button-text">ZendY</span>
                 </a>
@@ -61,12 +60,15 @@
         <div class="ui-align-bottom" style="top: 25px;">
             <div class="ui-widget ui-widget-header ui-state-active ui-align-top" 
                  style="height: 34px;">
-                <h2 class="ui-padding-left ui-align-vcenter">
+                <img style="height: 20px;" 
+                     class="ui-padding-left ui-align-vcenter" 
+                     src="/application/images/logo_small.png" />
+                <h2 class="ui-padding-left ui-align-vcenter" style="left: 90px">
                     <?= $this->translate($activePageLabel); ?>
                 </h2>
                 <div class="ui-align-right ui-align-vcenter" style="width: 200px; height: 27px;">
                     <?= $this->localeForm; ?>
-                    </div>
+                </div>
             </div>
             <div class="ui-align-bottom" style="top: 35px">
                 <?= $this->layout()->content; ?>
