@@ -22,6 +22,35 @@ class Button extends IconButton implements ActionInterface {
     use \ZendY\Db\DataTrait;
 
     /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_DATASOURCE = 'dataSource';
+    const PROPERTY_DATAACTION = 'dataAction';
+    
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DATAACTION,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_ICONS,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_SHORTKEY,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VISIBLETEXT,
+        self::PROPERTY_WIDTH
+    );    
+
+    /**
      * Licznik instancji
      * 
      * @var int 
@@ -115,7 +144,7 @@ class Button extends IconButton implements ActionInterface {
     public function getFrontActionParam($paramName) {
         return $this->_frontActionParams[$paramName];
     }
-    
+
     /**
      * Zwraca tablicę parametrów przekazywanych do przeglądarki
      * 
@@ -134,7 +163,7 @@ class Button extends IconButton implements ActionInterface {
     public function render(\Zend_View_Interface $view = null) {
         if ($this->hasDataSource())
             $this->getDataSource()->addNaviControl($this);
-        $resource = $this->getDataSource()->getDataSet()->getId();
+        $resource = $this->getDataSource()->getDataSet()->getName();
         $privilege = $this->getDataSource()->getDataSet()->getActionPrivilege($this->_dataAction);
         $result = parent::render($view);
         //nie wyświetli przycisku, gdy użytkownik nie ma uprawnienia do jego akcji
@@ -152,7 +181,7 @@ class Button extends IconButton implements ActionInterface {
     public function renderDbNavi() {
         $js = sprintf(
                 'ds.addAction("%s",%s);'
-                , $this->getId()
+                , $this->getName()
                 , \ZendY\JQuery::encodeJson($this->getFrontActionParams())
         );
         return $js;

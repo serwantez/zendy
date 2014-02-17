@@ -87,9 +87,9 @@ class UserRole extends EditableQuery {
      * @return void
      */
     public function init() {
-        $this->_name = self::TABLE_NAME;
         parent::init();
-        $this->from(array('ur' => $this->_name), array(
+        $this->setTableName(self::TABLE_NAME);
+        $this->from(array('ur' => $this->_tableName), array(
                     self::COL_ID,
                     self::COL_ROLE_ID,
                     self::COL_USER_ID,

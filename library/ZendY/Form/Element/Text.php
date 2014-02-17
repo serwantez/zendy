@@ -9,6 +9,7 @@
 namespace ZendY\Form\Element;
 
 use ZendY\Css;
+use ZendY\Exception;
 
 /**
  * Etykieta tekstowa
@@ -20,13 +21,61 @@ class Text extends Widget {
     use \ZendY\ControlTrait;
 
     /**
-     * Inicjalizacja obiektu
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'text';
-        $this->addClasses(array(Css::TEXT));
+        $this->setClasses(array(Css::TEXT));
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setDisabled($disabled) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setReadOnly($readOnly) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setRequired($flag = true) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
     }
 
     /**

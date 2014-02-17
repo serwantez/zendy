@@ -20,6 +20,36 @@ class ContextMenu extends \ZendY\Form\Element\ContextMenu {
     use \ZendY\Db\DataTrait;
 
     /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_DATASOURCE = 'dataSource';
+    const PROPERTY_DATAFIELD = 'dataField';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DATAFIELD,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_CONDITIONALROWFORMATS,
+        self::PROPERTY_CONTEXT,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
      * Licznik instancji
      * 
      * @var int
@@ -62,18 +92,18 @@ class ContextMenu extends \ZendY\Form\Element\ContextMenu {
                     'dataAction' => $value['action'],
                     'type' => 'mi'
                 );
-                $resource = $this->_dataSource->getDataSet()->getId();
+                $resource = $this->_dataSource->getDataSet()->getName();
                 $privilege = $this->_dataSource->getDataSet()->getActionPrivilege($value['action']);
                 if (ActionManager::allowed($resource, $privilege)) {
                     $this->addMultiOption($key, $value);
-                    $id = $this->getId() . '_' . $value['action'];
+                    $id = $this->getName() . '_' . $value['action'];
                     $this->_items[$id] = new ContextMenuItem($id);
                 }
             }
         }
         return $this;
     }
-    
+
     /**
      * Zwraca akcje elementów menu
      * 
@@ -90,8 +120,8 @@ class ContextMenu extends \ZendY\Form\Element\ContextMenu {
      * @return ZendY\Db\Form\Element\ContextMenuItem | null
      */
     public function getItem($action) {
-        if (array_key_exists($this->getId() . '_' . $action, $this->_items))
-            return $this->_items[$this->getId() . '_' . $action];
+        if (array_key_exists($this->getName() . '_' . $action, $this->_items))
+            return $this->_items[$this->getName() . '_' . $action];
         else
             return null;
     }
@@ -117,7 +147,7 @@ class ContextMenu extends \ZendY\Form\Element\ContextMenu {
         $js = array();
         foreach ($this->multiOptions as $key => $option) {
             $js[] = sprintf('ds.addAction("%s",%s);'
-                    , $this->getId() . '_' . $option['action']
+                    , $this->getName() . '_' . $option['action']
                     , \ZendY\JQuery::encodeJson($option['frontParam']));
         }
         return implode("\n", $js);

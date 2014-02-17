@@ -6,13 +6,11 @@
     vertical-align: middle;
     .ui-map-header {
         border-width: 0 0 1px 0;
-        padding: 0;
-        vertical-align: middle;
         position: absolute;
         left: 0;
-        top: 0;
         right: 0;
-        height: 18px;
+        top: 0;
+        height: 2.3em;
         input {
             display: block;
             position: absolute;
@@ -21,7 +19,28 @@
             right: 1px;
             bottom: 1px;
         }
+        .ui-map-title {
+            float: left;
+            margin: .1em 0;
+            padding: 0.4em 1em;
+            white-space: nowrap;
+            width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: normal;
+            text-transform: uppercase;
+        }
+        .ui-map-button {
+            height: 20px;
+            margin: -10px 0 0;
+            padding: 1px;
+            position: absolute;
+            right: 0.3em;
+            top: 50%;
+            width: 21px;
+        }
     }
+    
     .ui-map-canvas {
         border: none;
         background: none;
@@ -30,7 +49,7 @@
         vertical-align: middle;
         position: absolute;
         left: 0;
-        top: 18px;
+        top: 2.4em;
         right: 0;
         bottom: 0;
     }

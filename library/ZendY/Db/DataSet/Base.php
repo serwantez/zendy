@@ -23,10 +23,17 @@ use ZendY\Exception;
  * @author Piotr Zając
  */
 abstract class Base extends Component {
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_READONLY = 'readOnly';
+    const PROPERTY_PRIMARY = 'primary';
+    const PROPERTY_MASTER = 'master';
+
     /*
      * Typy akcji na zbiorach
      */
-
     const ACTIONTYPE_STANDARD = 'standard';
     const ACTIONTYPE_EDIT = 'edit';
     const ACTIONTYPE_FILTER = 'filter';
@@ -87,14 +94,26 @@ abstract class Base extends Component {
      * Liczba stron danych
      */
     const EXPR_PAGECOUNT = 'pageCount';
+
     /**
      * Stan zbioru wyłączonego
      */
     const STATE_OFF = 0;
+
     /**
      * Stan przeglądania rekordów
      */
     const STATE_VIEW = 1;
+
+    /**
+     * Stan dodawania rekordu
+     */
+    const STATE_INSERT = 2;
+
+    /**
+     * Stan edycji rekordu
+     */
+    const STATE_EDIT = 3;
 
     /**
      * Operatory porównania
@@ -218,13 +237,32 @@ abstract class Base extends Component {
     protected $_actions = array();
 
     /**
+     * Tryb działania zbioru
+     * 
+     * @var bool
+     */
+    protected $_editMode = true;
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_MASTER,
+        self::PROPERTY_NAME,
+        self::PROPERTY_PRIMARY,
+        self::PROPERTY_READONLY
+    );
+
+    /**
      * Ustawia wartości domyślne
      * 
      * @return void
      */
     protected function _setDefaults() {
         parent::_setDefaults();
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $this->_filter = new Filter();
         $this->_order = new Sort();
         $this->_registerActions();
@@ -466,31 +504,44 @@ abstract class Base extends Component {
      * @return \ZendY\Db\DataSet\Base
      */
     protected function _setActionState($params = array()) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
-        $this->_navigator[self::ACTION_FIRST] = ($this->_state == self::STATE_VIEW
+        Msg::add($this->getName() . '->' . __FUNCTION__);
+        $this->_navigator[self::ACTION_FIRST] = (
+                $this->_state >= self::STATE_VIEW
                 && $this->_offset > 0);
-        $this->_navigator[self::ACTION_PREVIOUS] = ($this->_state == self::STATE_VIEW
+        $this->_navigator[self::ACTION_PREVIOUS] = (
+                $this->_state >= self::STATE_VIEW
                 && $this->_offset > 0);
-        $this->_navigator[self::ACTION_LAST] = ($this->_state == self::STATE_VIEW
+        $this->_navigator[self::ACTION_LAST] = (
+                $this->_state >= self::STATE_VIEW
                 && $this->_offset < $this->_recordCount - 1);
-        $this->_navigator[self::ACTION_NEXT] = ($this->_state == self::STATE_VIEW
+        $this->_navigator[self::ACTION_NEXT] = (
+                $this->_state >= self::STATE_VIEW
                 && $this->_offset < $this->_recordCount - 1);
-        $this->_navigator[self::ACTION_FILTER] = ($this->_state >= self::STATE_VIEW);
-        $this->_navigator[self::ACTION_CLEARFILTER] = ($this->_state >= self::STATE_VIEW
+        $this->_navigator[self::ACTION_FILTER] = (
+                $this->_state >= self::STATE_VIEW);
+        $this->_navigator[self::ACTION_CLEARFILTER] = (
+                $this->_state >= self::STATE_VIEW
                 && count($this->getFilters()) > 0);
         $this->_navigator[self::ACTION_SEARCH] = $this->_navigator[self::ACTION_FILTER];
-        $this->_navigator[self::ACTION_REFRESH] = ($this->_state >= self::STATE_VIEW);
-        $this->_navigator[self::ACTION_EXPORTEXCEL] = ($this->_state == self::STATE_VIEW);
-        $this->_navigator[self::ACTION_PRINT] = ($this->_state == self::STATE_VIEW);
+        $this->_navigator[self::ACTION_REFRESH] = (
+                $this->_state >= self::STATE_VIEW);
+        $this->_navigator[self::ACTION_EXPORTEXCEL] = (
+                $this->_state >= self::STATE_VIEW);
+        $this->_navigator[self::ACTION_PRINT] = (
+                $this->_state >= self::STATE_VIEW);
         $page = $this->getPage();
         $pageCount = $this->getPageCount();
-        $this->_navigator[self::ACTION_FIRSTPAGE] = ($this->_state == self::STATE_VIEW
+        $this->_navigator[self::ACTION_FIRSTPAGE] = (
+                $this->_state >= self::STATE_VIEW
                 && $page > 1);
-        $this->_navigator[self::ACTION_PREVIOUSPAGE] = ($this->_state == self::STATE_VIEW
+        $this->_navigator[self::ACTION_PREVIOUSPAGE] = (
+                $this->_state >= self::STATE_VIEW
                 && $page > 1);
-        $this->_navigator[self::ACTION_LASTPAGE] = ($this->_state == self::STATE_VIEW
+        $this->_navigator[self::ACTION_LASTPAGE] = (
+                $this->_state >= self::STATE_VIEW
                 && $page < $pageCount);
-        $this->_navigator[self::ACTION_NEXTPAGE] = ($this->_state == self::STATE_VIEW
+        $this->_navigator[self::ACTION_NEXTPAGE] = (
+                $this->_state >= self::STATE_VIEW
                 && $page < $pageCount);
         return $this;
     }
@@ -542,14 +593,14 @@ abstract class Base extends Component {
      * @return array
      */
     public function __sleep() {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         if ($this->hasMaster()) {
             foreach ($this->_masters as $key => $master) {
                 if (is_object($master['masterSource']))
-                    $this->_masters[$key]['masterSource'] = (string) $this->_masters[$key]['masterSource']->getId();
+                    $this->_masters[$key]['masterSource'] = (string) $this->_masters[$key]['masterSource']->getName();
             }
         }
-        Msg::add($this->getId() . '-> koniec usypiania');
+        Msg::add($this->getName() . '-> koniec usypiania');
         return array_keys(get_object_vars($this));
     }
 
@@ -559,7 +610,7 @@ abstract class Base extends Component {
      * @return void
      */
     public function __wakeup() {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         if ($this->hasMaster()) {
             $actionManager = \ZendY\Db\ActionManager::getInstance();
             foreach ($this->_masters as $key => $master) {
@@ -647,8 +698,8 @@ abstract class Base extends Component {
      */
     public function isDetailSet(Base $masterSet) {
         foreach ($this->_masters as $master) {
-            $id = $master['masterSource']->getDataSet()->getId();
-            if (($id == $masterSet->getId()))
+            $id = $master['masterSource']->getDataSet()->getName();
+            if (($id == $masterSet->getName()))
                 return true;
         }
         return false;
@@ -690,6 +741,26 @@ abstract class Base extends Component {
      */
     public function getState() {
         return $this->_state;
+    }
+
+    /**
+     * Włącza/wyłącza tryb edycyjny
+     * 
+     * @param bool $editMode
+     * @return \ZendY\Db\DataSet\Base
+     */
+    public function setEditMode($editMode) {
+        $this->_editMode = $editMode;
+        return $this;
+    }
+
+    /**
+     * Zwraca informację o włączonym trybie edycyjnym
+     * 
+     * @return bool
+     */
+    public function getEditMode() {
+        return $this->_editMode;
     }
 
     /**
@@ -912,14 +983,14 @@ abstract class Base extends Component {
      * @return array
      */
     public function openAction($params = array('first' => true), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         if (!array_key_exists('first', $params)) {
             $params['first'] = true;
         }
         $result = array();
 
         if ($this->hasMaster()) {
-            Msg::add($this->getId() . ' ma mastera');
+            Msg::add($this->getName() . ' ma mastera');
             foreach ($this->_masters as $key => $master) {
                 $masterSet = $master['masterSource']->getDataSet();
                 //pole przekazane jako tablica: domena,nazwa pola,alias
@@ -934,7 +1005,7 @@ abstract class Base extends Component {
                     $cur = $masterSet->getCurrent();
 
                     if (array_key_exists($master['masterField'], $cur)) {
-                        Msg::add($this->getId() . ' będzie przefiltrowany');
+                        Msg::add($this->getName() . ' będzie przefiltrowany');
                         if ($master['expr'] != null) {
                             $value = new \Zend_Db_Expr(sprintf($master['expr'], $cur[$master['masterField']]));
                         } else {
@@ -958,7 +1029,10 @@ abstract class Base extends Component {
 
         if ($this->_state == self::STATE_OFF) {
             $this->_recordCount = $this->_count();
-            $this->_state = self::STATE_VIEW;
+            if ($this->_editMode)
+                $this->_state = self::STATE_EDIT;
+            else
+                $this->_state = self::STATE_VIEW;
             $this->_offset = -1;
             if ($params['first'])
                 $result = array_merge($result, $this->firstAction(null, true));
@@ -978,7 +1052,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function closeAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if ($this->_state) {
             $this->_state = self::STATE_OFF;
@@ -999,7 +1073,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function firstAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if ($this->_state && $this->_recordCount) {
             $this->_offset = 0;
@@ -1018,7 +1092,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function lastAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if ($this->_state) {
             $this->_offset = $this->_recordCount - 1;
@@ -1037,7 +1111,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function previousAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if ($this->_state)
             if ($this->_offset > 0) {
@@ -1057,7 +1131,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function nextAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if ($this->_state)
             if ($this->_offset < $this->_recordCount - 1) {
@@ -1077,7 +1151,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function seekAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if (isset($params['offset'])) {
             if ($this->_state > 0) {
@@ -1100,7 +1174,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function searchAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if (isset($params['searchValues'])) {
             $array = $this->getItems();
@@ -1142,9 +1216,12 @@ abstract class Base extends Component {
      * @return array
      */
     public function refreshAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
-        $this->_state = self::STATE_VIEW;
+        if ($this->_editMode)
+            $this->_state = self::STATE_EDIT;
+        else
+            $this->_state = self::STATE_VIEW;
         if (!$compositePart) {
             $this->_setActionState($params);
         }
@@ -1159,7 +1236,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function filterAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if (isset($params['filter'])) {
             $result = $this->closeAction(null, true);
@@ -1241,8 +1318,11 @@ abstract class Base extends Component {
      * @return array
      */
     public function sortAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
+        if (!array_key_exists('field', $params)) {
+            $params['field'] = $params[0];
+        }
         if (isset($params['field'])) {
             if (is_array($params['field'])) {
                 foreach ($params['field'] as $field) {
@@ -1274,7 +1354,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function firstPageAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if ($this->_state && $this->_recordCount) {
             $this->_page = 1;
@@ -1293,7 +1373,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function lastPageAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if ($this->_state && $this->_recordCount && $this->_recordPerPage) {
             $this->_page = ceil($this->_recordCount / $this->_recordPerPage);
@@ -1312,7 +1392,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function previousPageAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if ($this->_state && $this->_page > 1) {
             $this->_page--;
@@ -1331,7 +1411,7 @@ abstract class Base extends Component {
      * @return array
      */
     public function nextPageAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if ($this->_state && $this->_recordPerPage && $this->_page < $this->getPageCount()) {
             $this->_page++;
@@ -1350,12 +1430,15 @@ abstract class Base extends Component {
      * @return array
      */
     public function seekPageAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if (isset($params['page'])) {
             if ($this->_state > 0) {
                 //jeśli jest w stanie dodawania rekordu, przejdzie do stanu przeglądu
-                $this->_state = self::STATE_VIEW;
+                if ($this->_editMode)
+                    $this->_state = self::STATE_EDIT;
+                else
+                    $this->_state = self::STATE_VIEW;
                 if (($params['page'] <= $this->getPageCount()) && ($params['page'] > 0)) {
                     $this->_page = $params['page'];
                     if (!$compositePart) {
@@ -1418,7 +1501,7 @@ abstract class Base extends Component {
         $sheet->fromArray($rows, null, 'A2');
 
         header('Content-Type: application/vnd.ms-excel');
-        header(sprintf('Content-Disposition: attachment; filename="%s.xlsx"', $this->getId()));
+        header(sprintf('Content-Disposition: attachment; filename="%s.xlsx"', $this->getName()));
         $writer = new \PHPExcel_Writer_Excel2007($xls);
         $writer->save('php://output');
         exit;
@@ -1432,8 +1515,14 @@ abstract class Base extends Component {
      * @return void
      */
     public function printAction($params = array(), $compositePart = false) {
-        $dataSource = new DataSource($this->getId() . 'Source', $this);
-        $report = new PrintDataSet('DataSetReport', array('dataSource' => $dataSource));
+        $dataSource = new DataSource(array(
+                    'name' => $this->getName() . 'Source',
+                    'dataSet' => $this
+                ));
+        $report = new PrintDataSet(array(
+                    'name' => 'DataSetReport',
+                    'dataSource' => $dataSource
+                ));
         echo $report->render();
         exit;
     }

@@ -3,32 +3,12 @@ $pageTitleHeight: 30px;
 * {
     margin: 0;
     padding: 0;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 h2 {
-    font-size: 14px;
-}
-
-.ui-accordion-header {
-    margin-top: 0 !important;
-}
-
-.ui-tabs {
-    position: absolute !important;
-    padding: 0 !important;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    .ui-tabs-panel {
-        position: absolute;
-        height: auto !important;
-        left: 0;
-        right: 0;
-        top: 33px;
-        bottom: 0;
-    }
+    font-size: 18px;
+    font-weight: normal;
 }
 
 tr.row-red {
@@ -76,7 +56,7 @@ dt {
 }
 .info-block {
     display: inline-block;
-    width: 290px;
+    width: 280px;
     height: 80px;
     a {
         display: block;
@@ -89,9 +69,10 @@ dt {
                 float: left;
             }
             div {
+                width: 180px;
                 float: left;
-                width: 200px;
                 display: inline-block;
+                line-height: 110%;
                 h3 {
                     margin: 2px 0px;
                 }
@@ -100,4 +81,57 @@ dt {
             }
         }
     }
+}
+
+.ui-widget-header {
+    font-weight: normal;
+}
+
+.ui-dialog-title, .ui-document-title, .ui-box-title {
+    text-transform: uppercase;    
+}
+
+#nav {
+    .ui-widget-content {
+        background-color: #333333;
+    }
+    .ui-menu {
+        border: none;
+        z-index: 99;
+        .ui-menu-item {
+            min-width: 200px;
+            a {
+                font-size: 12px;
+                color: #aeb2b7;
+                padding: 0.5em 0 0.5em 2.5em;
+                span.ui-icon {
+                    background-image: url("../../library/jquery-ui-1.10.2/themes/base/images/ui-icons_888888_256x240.png");
+                }
+                span.ui-menu-icon-left {
+                    left: 0.5em;
+                    top: 0.5em;
+                }
+            }
+        }
+        a.ui-state-active, a.ui-state-focus {
+            background-color: #28282e !important;
+            border-color: #28282e !important;
+            color: #ffffff !important;
+            span.ui-icon {
+                background-image: url("../../library/jquery-ui-1.10.2/themes/base/images/ui-icons_ffffff_256x240.png") !important;
+            }
+        }
+        li.active > a {
+            color: #29ABE2 !important;
+            span.ui-icon {
+                background-image: url("../../library/jquery-ui-1.10.2/themes/base/images/ui-icons_29abe2_256x240.png") !important;
+            }
+        }        
+    }
+    
+}
+
+code, pre {
+    font-family: inherit;
+    font-weight: normal;
 }

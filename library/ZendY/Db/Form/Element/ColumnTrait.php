@@ -9,6 +9,7 @@
 namespace ZendY\Db\Form\Element;
 
 use ZendY\Db\DataSource;
+use ZendY\Exception;
 
 /**
  * Cecha kontrolek wyświetlających pole zbioru danych
@@ -46,6 +47,16 @@ trait ColumnTrait {
      * @var bool 
      */
     protected $_staticRender = false;
+    
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setMultiOptions(array $options) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }      
 
     /**
      * Ustawia źródło listy

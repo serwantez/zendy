@@ -48,9 +48,9 @@ class IconEdit extends Widget {
 
         $params = $this->_prepareParams($id, $params);
 
-        $container = '<div'
+        $container = '<span'
                 . $this->_htmlAttribs($attribs['outer'])
-                . '>%s%s</div>';
+                . '>%s%s</span>';
 
         $input = $this->view->formText($id, $value, $attribs['inner']);
 

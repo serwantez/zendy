@@ -18,12 +18,34 @@ class Password extends CustomEdit {
     use \ZendY\ControlTrait;
 
     /**
-     * Inicjalizacja obiektu
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MAXLENGTH,
+        self::PROPERTY_PLACEHOLDER,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'password';
     }
 

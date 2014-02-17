@@ -17,6 +17,12 @@ use ZendY\Css;
  * @author Piotr Zając
  */
 class Sortable extends Table {
+    
+    /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_SORTFIELD = 'sortField';  
+    
     /*
      * Akcje na zbiorze
      */
@@ -29,6 +35,20 @@ class Sortable extends Table {
      * @var string
      */
     protected $_sortField = 'sort';
+    
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_MASTER,
+        self::PROPERTY_NAME,
+        self::PROPERTY_PRIMARY,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_SORTFIELD,
+        self::PROPERTY_TABLENAME
+    );    
 
     /**
      * Ustawia parametry akcji

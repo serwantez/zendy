@@ -127,10 +127,10 @@ class Report extends Component implements \Iterator, \Countable, DataInterface {
      * @param array|Zend_Config|null $options
      * @return void
      */
-    public function __construct($id = null, $options = null) {
+    public function __construct($options = null) {
         $this->addPrefixPath('ZendY\\Report\\Decorator', 'ZendY/Report/Decorator', self::DECORATOR);
         $this->setAttrib('class', 'ui-report');
-        parent::__construct($id, $options);
+        parent::__construct($options);
     }
 
     /**

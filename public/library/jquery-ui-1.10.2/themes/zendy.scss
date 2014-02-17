@@ -12,22 +12,22 @@ $cornerRadius: 0px;
 $bgColorHeader: #cccccc;
 $borderColorHeader: #aaaaaa;
 $fcHeader: #222222;
-$bgImgUrlHeader: url(images/ui-bg_highlight-soft_50_dddddd_1x100.png);
-$bgImgUrlHeaderVertical: url(images/ui-bg_highlight-soft_50_dddddd_100x1.png);
+$bgImgUrlHeader: none /*url(images/ui-bg_highlight-soft_50_dddddd_1x100.png)*/;
+$bgImgUrlHeaderVertical: none /*url(images/ui-bg_highlight-soft_50_dddddd_100x1.png)*/;
 $iconsHeader: url(images/ui-icons_222222_256x240.png);
 
 /* Zawartość */
-$bgColorContent: #ffffff;
+$bgColorContent: rgba(255, 255, 255, 0.85);
 $borderColorContent: #aaaaaa;
 $fcContent: #222222;
-$bgImgUrlContent: url(images/ui-bg_flat_75_ffffff_40x100.png);
+$bgImgUrlContent: none /*url(images/ui-bg_flat_75_ffffff_40x100.png)*/;
 $iconsContent: url(images/ui-icons_222222_256x240.png);
 
 /* Klikalne: stan domyślny */
 $bgColorDefault: #e6e6e6;
 $borderColorDefault: #d3d3d3;
 $fcDefault: #000000;
-$bgImgUrlDefault: url(images/ui-bg_glass_75_e6e6e6_1x400.png);
+$bgImgUrlDefault: none /*url(images/ui-bg_glass_75_e6e6e6_1x400.png)*/;
 $iconsDefault: url(images/ui-icons_888888_256x240.png);
 
 /* Klikalne: stan po najechaniu kursorem */
@@ -41,21 +41,21 @@ $iconsHover: url(images/ui-icons_ffffff_256x240.png);
 $bgColorActive: #0073ea;
 $borderColorActive: #0073ea;
 $fcActive: #ffffff;
-$bgImgUrlActive: url(images/ui-bg_highlight-soft_25_0073ea_1x100.png);
+$bgImgUrlActive: none /*url(images/ui-bg_highlight-soft_25_0073ea_1x100.png)*/;
 $iconsActive: url(images/ui-icons_ffffff_256x240.png);
 
 /* Zaznaczone */
 $bgColorHighlight: #ffffff;
 $borderColorHighlight: #aaaaaa;
 $fcHighlight: #000000;
-$bgImgUrlHighlight: url(images/ui-bg_glass_65_ffffff_1x400.png);
+$bgImgUrlHighlight: none /*url(images/ui-bg_glass_65_ffffff_1x400.png)*/;
 $iconsHighlight: url(images/ui-icons_454545_256x240.png);
 
 /* Błędy */
 $bgColorError: #fef1ec;
 $borderColorError: #cd0a0a;
 $fcError: #cd0a0a;
-$bgImgUrlError: url(images/ui-bg_glass_95_fef1ec_1x400.png);
+$bgImgUrlError: none /*url(images/ui-bg_glass_95_fef1ec_1x400.png)*/;
 $iconsError: url(images/ui-icons_cd0a0a_256x240.png);
 
 /* Ekran modalny przesłonięty */

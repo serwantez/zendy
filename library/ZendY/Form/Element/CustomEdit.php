@@ -16,13 +16,42 @@ use ZendY\Css;
  * @author Piotr Zając
  */
 abstract class CustomEdit extends Widget {
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_MAXLENGTH = 'maxLength';
+    const PROPERTY_PLACEHOLDER = 'placeHolder';
 
     /**
-     * Inicjalizacja obiektu
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MAXLENGTH,
+        self::PROPERTY_NAME,
+        self::PROPERTY_PLACEHOLDER,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'edit';
         $this->addClasses(array(
             Css::EDIT,
@@ -30,6 +59,7 @@ abstract class CustomEdit extends Widget {
             Css::WIDGET_CONTENT,
             Css::CORNER_ALL
         ));
+        $this->setWidth(150);
     }
 
     /**
@@ -42,7 +72,7 @@ abstract class CustomEdit extends Widget {
         $this->setAttrib('maxlength', $maxlength);
         return $this;
     }
-    
+
     /**
      * Zwraca maksymalną liczbę wprowadzanych znaków (tylko przeglądarki obsługujące HTML5)
      * 
@@ -51,7 +81,7 @@ abstract class CustomEdit extends Widget {
     public function getMaxLength() {
         return $this->getAttrib('maxlength');
     }
-    
+
     /**
      * Ustawia podpowiedź w polu, ukrywaną przy uzyskaniu fokusu (tylko przeglądarki obsługujące HTML5)
      * 

@@ -16,21 +16,28 @@ use ZendY\Db\Form\Element as DbElement;
 class Country extends Form {
 
     public function init() {
-        $this->setAttrib('id', 'countryForm');
-        $this->setAlign(Css::ALIGN_CLIENT);
         $this->setEnctype(\Zend_Form::ENCTYPE_MULTIPART);
-        $this->setAjaxValidator(false);
 
-        $dataSet = new DbCountry('country');
-        $dataSources[0] = new DataSource('countrySource', $dataSet);
-        
-        $table['currency'] = new DataSet\Table('currency');
-        $table['currency']->setTableName('currency')
+        $dataSet = new DbCountry(array(
+                    'name' => 'country'
+                ));
+        $dataSources[0] = new DataSource(array(
+                    'name' => 'countrySource',
+                    'dataSet' => $dataSet
+                ));
+
+        $dataSetCur = new DataSet\Table(array(
+                    'name' => 'currency'
+                ));
+        $dataSetCur->setTableName('currency')
                 ->sortAction(array('field' => 'name'))
         ;
 
-        $listSources['currency'] = new DataSource('currencySource');
-        $listSources['currency']->setDataSet($table['currency']);        
+        $listSources['currency'] = new DataSource(array(
+                    'name' => 'currencySource',
+                    'dataSet' => $dataSetCur
+                ));
+
 
         //przyciski akcji
         $actions = array(
@@ -65,56 +72,56 @@ class Country extends Form {
                 ->setListSource($dataSources[0])
                 ->setKeyField(DbCountry::COL_ID)
                 ->addColumn(new Column(
-                                DbCountry::COL_ID
-                                , array(
-                            'label' => 'ID',
-                            'width' => 35,
-                            'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
+                                array(
+                                    'name' => DbCountry::COL_ID,
+                                    'label' => 'ID',
+                                    'width' => 35,
+                                    'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
                         )))
                 ->addColumn(new Column(
-                                DbCountry::COL_NAME
-                                , array(
-                            'label' => 'Name',
-                            'width' => 220
+                                array(
+                                    'name' => DbCountry::COL_NAME,
+                                    'label' => 'Name',
+                                    'width' => 220
                         )))
                 ->addColumn(new Column(
-                                DbCountry::COL_NAME_PL
-                                , array(
-                            'label' => 'Polish name',
-                            'width' => 220
+                                array(
+                                    'name' => DbCountry::COL_NAME_PL,
+                                    'label' => 'Polish name',
+                                    'width' => 220
                         )))
                 ->addColumn(new Column(
-                                DbCountry::COL_ALFA2
-                                , array(
-                            'label' => 'Alfa2',
-                            'width' => 50
+                                array(
+                                    'name' => DbCountry::COL_ALFA2,
+                                    'label' => 'Alfa2',
+                                    'width' => 50
                         )))
                 ->addColumn(new Column(
-                                DbCountry::COL_ALFA3
-                                , array(
-                            'label' => 'Alfa3',
-                            'width' => 50
+                                array(
+                                    'name' => DbCountry::COL_ALFA3,
+                                    'label' => 'Alfa3',
+                                    'width' => 50
                         )))
                 ->addColumn(new Column(
-                                DbCountry::COL_CURRENCY_NAME
-                                , array(
-                            'label' => 'Currency',
-                            'width' => 150
+                                array(
+                                    'name' => DbCountry::COL_CURRENCY_NAME,
+                                    'label' => 'Currency',
+                                    'width' => 150
                         )))
                 ->addColumn(new Column(
-                                DbCountry::COL_UIC
-                                , array(
-                            'label' => 'UIC',
-                            'width' => 50
+                                array(
+                                    'name' => DbCountry::COL_UIC,
+                                    'label' => 'UIC',
+                                    'width' => 50
                         )))
                 ->addColumn(new Column(
-                                DbCountry::COL_LINK_WIKI
-                                , array(
-                            'label' => 'Wikipedia',
-                            'width' => 260,
-                            'decorators' => array(
-                                array('Link', array('link' => '', 'target' => '_blank'))
-                            )
+                                array(
+                                    'name' => DbCountry::COL_LINK_WIKI,
+                                    'label' => 'Wikipedia',
+                                    'width' => 260,
+                                    'decorators' => array(
+                                        array('Link', array('link' => '', 'target' => '_blank'))
+                                    )
                         )))
                 ->setAlign(Css::ALIGN_CLIENT)
                 ->setPager(30)
@@ -128,6 +135,7 @@ class Country extends Form {
         $panel1 = new Container\Panel();
         $panel1->addElement($grid)
                 ->setAlign(Css::ALIGN_CLIENT)
+                ->setSpace()
         ;
         $this->addContainer($panel1);
 
@@ -253,20 +261,23 @@ class Country extends Form {
                 ->addElement($btnOpenFilter)
                 ->addElement($btnAdd)
                 ->addElement($btnEdit)
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'))
         ;
 
         $this->addContainer($nav);
 
-        $dialog = new DbContainer\EditDialog('countryDetails');
+        $dialog = new DbContainer\EditDialog(array(
+                    'name' => 'countryDetails'
+                ));
         $openEvent = sprintf('$("#%s").trigger("focus");'
-                , $elements[0]->getId()
+                , $elements[0]->getName()
         );
 
         $dialog
                 ->setDataSource($dataSources[0])
                 ->setTitle('Country details')
-                ->setWidth(480)
-                ->setHeight(490)
+                ->setWidth(500)
+                ->setHeight(530)
                 ->addContainer($detailsPanel)
                 ->addOpener($btnEdit)
                 ->addOpener($btnAdd)

@@ -39,7 +39,7 @@ class Pager extends Plugin {
      */
     public function postRender() {
         $this->_grid->addClass(Css::GRID_WITHPAGER);
-        $pagerName = $this->_grid->getId() . '_pager';
+        $pagerName = $this->_grid->getName() . '_pager';
 
         $html[] = sprintf(
                 '<div id="%s" class="%s %s %s">'

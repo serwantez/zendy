@@ -16,6 +16,25 @@ use ZendY\Css;
  * @author Piotr Zając
  */
 class TextFileView extends Text {
+    
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DATAFIELD,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );    
 
     /**
      * Licznik instancji
@@ -25,13 +44,14 @@ class TextFileView extends Text {
     static protected $count = 0;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'textFileView';
-        $this->addClasses(array(
+        $this->setClasses(array(
             Css::TEXTFILEVIEW,
             Css::WIDGET,
             Css::WIDGET_CONTENT,

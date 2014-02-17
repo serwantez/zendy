@@ -18,9 +18,14 @@ use ZendY\Db\Select;
  * @author Piotr Zając
  */
 class Query extends Base {
+    
+    /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_SELECT = 'select';
 
     /**
-     * Obiekt zapytania
+     * Obiekt zapytania sql
      * 
      * @var \ZendY\Db\Select
      */
@@ -32,14 +37,26 @@ class Query extends Base {
      * @var \Zend_Db_Adapter_Abstract
      */
     protected $_db;
+    
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_MASTER,
+        self::PROPERTY_NAME,
+        self::PROPERTY_PRIMARY,
+        self::PROPERTY_SELECT,
+    );       
 
     /**
-     * Inicjalizuje obiekt
+     * Ustawia wartości domyślne
      *
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->_db = \Zend_Registry::get('db');
         $this->_select = new Select($this->_db);
         $this->_readOnly = true;
@@ -64,8 +81,9 @@ class Query extends Base {
      * @return array
      */
     public function searchAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
+
         if (isset($params['searchValues'])) {
             $select1 = clone $this->_select;
             $columnPart = $select1->getPart(\ZendY\Db\Select::COLUMNS);
@@ -75,6 +93,7 @@ class Query extends Base {
             if (count($this->_order->getSorts())) {
                 $select1->order($this->_order->toSelect($columnPart));
             }
+
             $filter = new \ZendY\Db\Filter();
             foreach ($params['searchValues'] as $field => $fieldValue) {
                 if (is_array($fieldValue)) {
@@ -99,6 +118,9 @@ class Query extends Base {
             try {
                 $this->_db->query("set @row:=-1");
                 //exit($select3);
+                if (count($this->_select->getBind()) > 0) {
+                    $select3->bind($this->_select->getBind());
+                }
                 $q = $select3->query();
                 $offset = $q->fetchColumn();
                 $result = array_merge($result, $this->seekAction(array('offset' => $offset), true));
@@ -137,7 +159,7 @@ class Query extends Base {
             try {
                 $q = $select->query();
             } catch (Exception $exc) {
-                echo 'Id: ' . $this->getId() . ' function ' . __FUNCTION__;
+                echo 'Id: ' . $this->getName() . ' function ' . __FUNCTION__;
                 print($select);
                 echo $exc->getTraceAsString();
                 exit;
@@ -165,7 +187,7 @@ class Query extends Base {
      * @return array 
      */
     public function getItems($offset = null, $itemCount = null, $columns = '*', $conditionalFormats = null) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $select = clone $this->_select;
         $selectColumns = $select->getPart(Select::COLUMNS);
 
@@ -224,7 +246,7 @@ class Query extends Base {
         try {
             $q = $select->query();
         } catch (Exception $exc) {
-            echo 'Id: ' . $this->getId() . ' function ' . __FUNCTION__;
+            echo 'Id: ' . $this->getName() . ' function ' . __FUNCTION__;
             print($select);
             echo $exc->getTraceAsString();
             exit;
@@ -260,7 +282,7 @@ class Query extends Base {
             $q = $select->query();
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
-            echo 'Id: ' . $this->getId() . ' function ' . __FUNCTION__;
+            echo 'Id: ' . $this->getName() . ' function ' . __FUNCTION__;
             print($select);
             exit;
         }
@@ -276,7 +298,7 @@ class Query extends Base {
      * @return int
      */
     protected function _count() {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $select = clone $this->_select;
 
         if (count($this->_filter->getFilters())) {
@@ -293,7 +315,7 @@ class Query extends Base {
             $q = $select->query();
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
-            echo 'Id: ' . $this->getId() . ' function ' . __FUNCTION__;
+            echo 'Id: ' . $this->getName() . ' function ' . __FUNCTION__;
             print($select);
         }
         return $q->fetchColumn();
@@ -407,7 +429,7 @@ class Query extends Base {
      * @return array
      */
     public function getCurrent($filterBlobs = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         if ($this->_state && $this->_offset >= 0) {
             $select = clone $this->_select;
 
@@ -428,7 +450,7 @@ class Query extends Base {
                 $q = $select->query();
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
-                echo 'Id: ' . $this->getId() . ' function ' . __FUNCTION__;
+                echo 'Id: ' . $this->getName() . ' function ' . __FUNCTION__;
                 print($select);
                 exit;
             }
@@ -468,6 +490,26 @@ class Query extends Base {
      */
     public function getSQL() {
         return $this->_select->__toString();
+    }
+    
+    /**
+     * Ustawia obiekt zapytania sql
+     * 
+     * @param \ZendY\Db\Select $select
+     * @return \ZendY\Db\DataSet\Query
+     */
+    public function setSelect(\ZendY\Db\Select $select) {
+        $this->_select = $select;
+        return $this;
+    }
+    
+    /**
+     * Zwraca obiekt zapytania sql
+     * 
+     * @return \ZendY\Db\Select
+     */
+    public function getSelect() {
+        return $this->_select;
     }
 
 }

@@ -19,6 +19,46 @@ use ZendY\Exception;
 class Radio extends \ZendY\Form\Element\Radio implements ColumnInterface {
 
     use ColumnTrait;
+    
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_DATASOURCE = 'dataSource';
+    const PROPERTY_DATAFIELD = 'dataField';
+    const PROPERTY_LISTSOURCE = 'listSource';
+    const PROPERTY_LISTFIELD = 'listField';
+    const PROPERTY_KEYFIELD = 'keyField';
+    const PROPERTY_STATICRENDER = 'staticRender';    
+    
+    /**
+     * Tablica właściwości
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DATAFIELD,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_KEYFIELD,
+        self::PROPERTY_LISTFIELD,
+        self::PROPERTY_LISTSOURCE,
+        self::PROPERTY_STATICRENDER,
+        
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_COLUMNSPACE,
+        self::PROPERTY_CONDITIONALROWFORMATS,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );    
 
     /**
      * Licznik instancji
@@ -110,7 +150,8 @@ class Radio extends \ZendY\Form\Element\Radio implements ColumnInterface {
             }
             $options[$keyValueString] = $option;
         }
-        $this->setMultiOptions($options);
+        $this->clearMultiOptions();
+        $this->addMultiOptions($options);
     }
 
     /**

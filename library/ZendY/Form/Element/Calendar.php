@@ -32,11 +32,42 @@ class Calendar extends CustomList {
     const RANGE_MONTH = 'month';
 
     /**
-     * Inicjalizacja obiektu
+     * Właściwości komponentu
+     */
+    const PROPERTY_CURRENTDATE = 'currentDate';
+    const PROPERTY_RANGE = 'range';
+
+    /**
+     * Tablica właściwości
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_CONDITIONALROWFORMATS,
+        self::PROPERTY_CURRENTDATE,
+        self::PROPERTY_DISABLED,        
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MULTIOPTIONS,
+        self::PROPERTY_NAME,
+        self::PROPERTY_RANGE,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'calendar';
         $this->setRegisterInArrayValidator(false);
         $this->addClasses(array(
@@ -47,6 +78,26 @@ class Calendar extends CustomList {
         ));
         $this->setRange(self::RANGE_MONTH);
         $this->setCurrentDate(new \Zend_Date());
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setEmptyValue($empty = true) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setColumnSpace($space) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
     }
 
     /**

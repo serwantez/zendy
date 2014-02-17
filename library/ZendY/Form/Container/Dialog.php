@@ -10,6 +10,7 @@ namespace ZendY\Form\Container;
 
 use ZendY\Form\Element;
 use ZendY\Css;
+use ZendY\Exception;
 
 /**
  * Klasa okna dialogowego jako kontenera w formularzu
@@ -19,9 +20,17 @@ use ZendY\Css;
  */
 class Dialog extends Base {
     /**
-     * opcje
+     * Właściwości komponentu
      */
 
+    const PROPERTY_AUTOOPEN = 'autoOpen';
+    const PROPERTY_MODAL = 'modal';
+    const PROPERTY_OPENERS = 'openers';
+    const PROPERTY_TITLE = 'title';
+
+    /**
+     * Opcje
+     */
     const PARAM_AUTOOPEN = 'autoOpen';
     const PARAM_BUTTONS = 'buttons';
     const PARAM_CLOSEONESCAPE = 'closeOnEscape';
@@ -69,12 +78,28 @@ class Dialog extends Base {
     static protected $count = 0;
 
     /**
-     * Inicjalizacja obiektu
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_AUTOOPEN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_MODAL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_OPENERS,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->_events = array(
             self::PARAM_EVENT_BEFORECLOSE,
             self::PARAM_EVENT_CLOSE,
@@ -93,13 +118,43 @@ class Dialog extends Base {
     }
 
     /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setAlign($align) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setWidgetClass($widgetClass) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setSpace($space = 2) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
      * Odświeża dekoratory po zmianach wykonanych na formularzu po dołaczeniu go do innego kontenera
      * 
      * @return \ZendY\Form\Container\Dialog
      */
     public function refreshDecorators() {
         $attribs = \ZendY\View\Helper\Widget::prepareCSS($this->getAttribs());
-        $attribs['id'] = $this->getId();
+        $attribs['id'] = $this->getName();
         $this->_prepareRenderEventParams();
         $attribs['jQueryParams'] = $this->getJQueryParams();
         $this->setDecorators(array(

@@ -9,6 +9,7 @@
 namespace ZendY\Db\DataSet;
 
 use ZendY\Msg;
+use ZendY\Exception;
 
 /**
  * Zbiór stałych klasy
@@ -17,9 +18,14 @@ use ZendY\Msg;
  */
 class ClassConst extends ArraySet {
     /**
-     * Kolumny zbioru
+     * Właściwości komponentu
      */
 
+    const PROPERTY_CLASS = 'class';
+
+    /**
+     * Kolumny zbioru
+     */
     const COL_NAME = 'name';
     const COL_VALUE = 'value';
 
@@ -38,17 +44,22 @@ class ClassConst extends ArraySet {
     protected $_class;
 
     /**
-     * Konstruktor
+     * Tablica właściwości komponentu
      * 
-     * @param null|string $id
-     * @param string $class
-     * @param null|array|Zend_Config $options
-     * @return void
+     * @var array
      */
-    public function __construct($id = null, $class, $options = null) {
-        parent::__construct($id, $options);
-        $this->_class = $class;
-        $this->_reflection = new \Zend_Reflection_Class($class);
+    protected $_properties = array(
+        self::PROPERTY_CLASS,
+        self::PROPERTY_MASTER,
+        self::PROPERTY_NAME
+    );
+
+    /**
+     * Ustawia wartości domyślne
+     */
+    protected function _setDefaults() {
+        parent::_setDefaults();
+        $this->_primary = array(1 => self::COL_VALUE);
     }
 
     /**
@@ -80,13 +91,44 @@ class ClassConst extends ArraySet {
     }
 
     /**
-     * Zakaz używania metody setData
+     * Ustawia nazwę klasy
+     * 
+     * @param string $class
+     * @return \ZendY\Db\DataSet\ClassConst
+     */
+    public function setClass($class) {
+        $this->_class = (string) $class;
+        $this->_reflection = new \Zend_Reflection_Class($class);
+        return $this;
+    }
+
+    /**
+     * Zwraca nazwę klasy
+     * 
+     * @return string
+     */
+    public function getClass() {
+        return $this->_class;
+    }
+
+    /**
+     * Zakaz używania metody
      * 
      * @param array $data
      * @throws Exception
      */
     final public function setData(array $data) {
-        throw new Exception("You mustn't use method setData");
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param array $primary
+     * @throws Exception
+     */
+    final public function setPrimary($primary) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
     }
 
     /**

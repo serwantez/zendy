@@ -28,6 +28,36 @@ class LinkEdit extends IconEdit {
     const PROTOCOL_SKYPE = 'skype:';
 
     /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_PROTOCOL = 'protocol';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_ICON,
+        self::PROPERTY_ICON_POSITION,
+        self::PROPERTY_MAXLENGTH,
+        self::PROPERTY_PLACEHOLDER,
+        self::PROPERTY_PROTOCOL,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
      * Licznik instancji
      * 
      * @var int
@@ -35,12 +65,12 @@ class LinkEdit extends IconEdit {
     static protected $count = 0;
 
     /**
-     * Inicjalizuje obiekt
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'linkEdit';
     }
 

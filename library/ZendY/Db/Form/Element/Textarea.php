@@ -20,6 +20,37 @@ class Textarea extends \ZendY\Form\Element\Textarea implements CellInterface {
     use CellTrait;
 
     /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_DATASOURCE = 'dataSource';
+    const PROPERTY_DATAFIELD = 'dataField';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DATAFIELD,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MAXLENGTH,
+        self::PROPERTY_NAME,
+        self::PROPERTY_PLACEHOLDER,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
      * Licznik instancji
      * 
      * @var int
@@ -36,7 +67,7 @@ class Textarea extends \ZendY\Form\Element\Textarea implements CellInterface {
         $this->setFrontEditParam('dataField', $this->getDataField());
         return parent::getFrontEditParams();
     }
-    
+
     /**
      * Renderuje kontrolkę
      * 
@@ -47,6 +78,6 @@ class Textarea extends \ZendY\Form\Element\Textarea implements CellInterface {
         if ($this->hasDataSource())
             $this->getDataSource()->addEditControl($this);
         return parent::render($view);
-    }    
+    }
 
 }

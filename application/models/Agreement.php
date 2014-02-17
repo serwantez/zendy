@@ -35,10 +35,10 @@ class Agreement extends DataSet\EditableQuery {
      * @return void
      */
     public function init() {
-        $this->_name = self::TABLE_NAME;
         parent::init();
+        $this->setTableName(self::TABLE_NAME);
         $this->setPrimary(self::COL_ID);
-        $this->from(array('ag' => $this->_name), array(
+        $this->from(array('ag' => $this->_tableName), array(
                     self::COL_ID,
                     self::COL_WORKER_ID,
                     self::COL_AGREEMENT_TYPE_ID,

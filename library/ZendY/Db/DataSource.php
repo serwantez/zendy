@@ -35,6 +35,12 @@ class DataSource extends Component {
     const STATE_UNSERIALIZED = 3;
 
     /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_DATASET = 'dataSet';
+    const PROPERTY_DIALOG = 'dialog';
+
+    /**
      * Zbiór danych
      * 
      * @var \ZendY\Db\DataSet\Base 
@@ -147,6 +153,17 @@ class DataSource extends Component {
     protected $_dialog = true;
 
     /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DATASET,
+        self::PROPERTY_DIALOG,
+        self::PROPERTY_NAME,
+    );
+
+    /**
      * Inicjalizacja obiektu
      * 
      * @return void
@@ -164,8 +181,8 @@ class DataSource extends Component {
      */
     public function setDataSet(DataSet $dataSet) {
         $this->_dataSet = $dataSet;
-        if (!isset($this->_id)) {
-            $this->_id = $this->_dataSet->getId() . 'DataSource';
+        if (!isset($this->_name)) {
+            $this->_name = $this->_dataSet->getName() . 'DataSource';
         }
         return $this;
     }
@@ -205,7 +222,7 @@ class DataSource extends Component {
      * @return string
      */
     public function getFormId() {
-        return $this->_form->getId();
+        return $this->_form->getName();
     }
 
     /**
@@ -261,7 +278,8 @@ class DataSource extends Component {
 
         if (isset($dataField)) {
             if (($dataSet instanceof TableInterface) &&
-                    !($control instanceof Element\Filter\FilterInterface)) {
+                    !($control instanceof Element\Filter\FilterInterface) &&
+                    !($control instanceof Element\PresentationInterface)) {
                 if ($col = $dataSet->describeField($dataSet->getTableField($dataField))) {
                     //jeśli przypisane pole w tabeli nie może mieć wartości null, dodaje do kontrolki "wymagalność"
                     if (!$col['NULLABLE']) {
@@ -273,18 +291,20 @@ class DataSource extends Component {
                     }
                 }
             }
-            //zbiór jest w(y)łączony
-            if ($dataSet->getState() == DataSet::STATE_OFF) {
-                $control->setDisabled(true);
-            } else {
-                $control->setDisabled(false);
-            }
+            if (!$control instanceof Element\PresentationInterface) {
+                //zbiór jest w(y)łączony
+                if ($dataSet->getState() == DataSet::STATE_OFF) {
+                    $control->setDisabled(true);
+                } else {
+                    $control->setDisabled(false);
+                }
 
-            //zbiór jest tylko do odczytu
-            if ($dataSet->getReadOnly() || $dataSet->getState() == Editable::STATE_VIEW) {
-                $control->setReadOnly(true);
-            } else {
-                $control->setReadOnly(false);
+                //zbiór jest tylko do odczytu
+                if ($dataSet->getReadOnly() || $dataSet->getState() == Editable::STATE_VIEW) {
+                    $control->setReadOnly(true);
+                } else {
+                    $control->setReadOnly(false);
+                }
             }
         }
         return $this;
@@ -457,7 +477,7 @@ class DataSource extends Component {
      * @return void
      */
     protected function _serializeControls() {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         foreach ($this->_editControls as $key => $control) {
             if (is_object($control)) {
                 $this->_editControls[$key] = array('dataField' => $control->getDataField());
@@ -493,7 +513,7 @@ class DataSource extends Component {
      * @return array
      */
     public function __sleep() {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
 
         if (is_object($this->_dataSet)) {
             $this->_dataSet = serialize($this->_dataSet);
@@ -510,7 +530,7 @@ class DataSource extends Component {
         }
 
         $this->_state = self::STATE_SERIALIZED;
-        Msg::add($this->getId() . '-> koniec usypiania');
+        Msg::add($this->getName() . '-> koniec usypiania');
         return array_keys(get_object_vars($this));
     }
 
@@ -520,7 +540,7 @@ class DataSource extends Component {
      * @return void
      */
     public function __wakeup() {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         if (is_string($this->_dataSet)) {
             $this->_dataSet = unserialize($this->_dataSet);
         }
@@ -535,7 +555,7 @@ class DataSource extends Component {
 
         $this->setView();
         $this->_state = self::STATE_UNSERIALIZED;
-        Msg::add('Zakończona deserializacja źródła: ' . $this->getId());
+        Msg::add('Zakończona deserializacja źródła: ' . $this->getName());
     }
 
     /**
@@ -545,9 +565,9 @@ class DataSource extends Component {
      * @return \ZendY\Db\DataSource
      */
     public function loadObject($id = null) {
-        if (!isset($id) && ($this->getId()))
-            $id = $this->getId();
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        if (!isset($id) && ($this->getName()))
+            $id = $this->getName();
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $dbs = new \Zend_Session_Namespace('db');
         if (isset($dbs->datasource)) {
             if (isset($id)) {
@@ -566,14 +586,14 @@ class DataSource extends Component {
      * @return \ZendY\Db\DataSource 
      */
     public function saveObject() {
-        Msg::add('Stan źródła ' . $this->getId() . ' przed zapisaniem ' . $this->_state);
+        Msg::add('Stan źródła ' . $this->getName() . ' przed zapisaniem ' . $this->_state);
         if ($this->_state == self::STATE_CREATED || $this->_state == self::STATE_UNSERIALIZED) {
-            Msg::add($this->getId() . '->' . __FUNCTION__);
+            Msg::add($this->getName() . '->' . __FUNCTION__);
             $dbs = new \Zend_Session_Namespace('db');
-            $id = $this->getId();
+            $id = $this->getName();
             $dbs->form[$this->getFormId()][] = $id;
             $dbs->datasource[$id] = serialize($this);
-            Msg::add($this->getId() . '-> Koniec ' . __FUNCTION__);
+            Msg::add($this->getName() . '-> Koniec ' . __FUNCTION__);
         }
         return $this;
     }
@@ -584,7 +604,7 @@ class DataSource extends Component {
      * @return string|false
      */
     public function render() {
-        $id = $this->getId();
+        $id = $this->getName();
 
         if (!$this->isRendered()) {
             $formId = $this->getFormId();
@@ -593,7 +613,7 @@ class DataSource extends Component {
             Msg::add(strtoupper('rozpoczynam renderowanie ' . $id));
             $result = '';
             $js[] = sprintf('var ds = new dataSource("%s","%s",%s,"%s","%s","%s");'
-                    , $this->getId()
+                    , $this->getName()
                     , self::$controller . self::$dataAction
                     , $formClass
                     , $formId
@@ -622,7 +642,7 @@ class DataSource extends Component {
                                     , Css::DIALOG_TITLEBAR))
                 );
                 $result .= $this->getView()->dialogContainer(
-                        $this->getId() . '_dialog'
+                        $this->getName() . '_dialog'
                         , $text
                         , $params
                         , array('class' => Css::DIALOG_LOADING)

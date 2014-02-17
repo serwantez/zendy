@@ -20,6 +20,31 @@ class Expr extends \ZendY\Form\Element\CustomEdit implements DataInterface {
 
     use \ZendY\Db\DataTrait;
 
+    const PROPERTY_DATASOURCE = 'dataSource';
+    const PROPERTY_DATAEXPR = 'expr';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DATAEXPR,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
     /**
      * Wyrażenie związane ze zbiorem danych
      * 
@@ -35,20 +60,41 @@ class Expr extends \ZendY\Form\Element\CustomEdit implements DataInterface {
     static protected $count = 0;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->addClasses(array(
             Css::EDIT,
             Css::TEXT_ALIGN_HORIZONTAL_CENTER,
             Css::WIDGET,
             Css::WIDGET_CONTENT,
             Css::CORNER_ALL
-        ));        
+        ));
+        $this->setWidth(30);
     }
+    
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setMaxLength($maxlength) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }    
+    
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setPlaceHolder($placeHolder) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }    
 
     /**
      * Ustawia wyrażenie

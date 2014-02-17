@@ -67,7 +67,7 @@ class Calendar extends Widget {
         if (isset($listSource)) {
             $js[] = sprintf('dc["ca"]["%s"].setNavigating("%s", "%s")'
                     , $id
-                    , $listSource->getId()
+                    , $listSource->getName()
                     , $listSource->getFormId());
         }
 

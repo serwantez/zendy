@@ -16,6 +16,27 @@ use ZendY\Css;
  * @author Piotr Zając
  */
 class Box extends Base {
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_TITLE = 'title';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_SPACE,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_WIDGETCLASS,
+        self::PROPERTY_WIDTH
+    );
 
     /**
      * Licznik instancji
@@ -42,19 +63,20 @@ class Box extends Base {
      */
     public function refreshDecorators() {
         $attribs = \ZendY\View\Helper\Widget::prepareCSS($this->getAttribs());
-        $boxAttribs['id'] = $this->getId();
+        $boxAttribs['id'] = $this->getName();
         $boxAttribs['jQueryParams'] = $this->getJQueryParams();
         $boxAttribs['class'] = array(
-            Css::DIALOG,
+            Css::BOX,
             Css::WIDGET,
             Css::WIDGET_CONTENT,
             Css::CORNER_ALL,
-            Css::FRONT,
-            Css::DIALOG_BUTTONS,
             Css::ALIGN_CLIENT
         );
         unset($attribs['id']);
         unset($attribs['name']);
+
+        $space = $this->_space['value'] . $this->_space['unit'];
+
         $this->setDecorators(array(
             array('FormElements'),
             array(array('Inner' => 'HtmlTag'), array(
@@ -63,10 +85,10 @@ class Box extends Base {
             array('Box', $boxAttribs),
             array(array('Space' => 'HtmlTag'), array(
                     'style' => sprintf('position: absolute; left: %s; top: %s; right: %s; bottom: %s;'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px')
+                            , $space
+                            , $space
+                            , $space
+                            , $space)
             )),
             array(array('Outer' => 'HtmlTag'), $attribs)
         ));
@@ -74,7 +96,7 @@ class Box extends Base {
     }
 
     /**
-     * Ustawia tytuł okna
+     * Ustawia tytuł dla części nagłówkowej
      * 
      * @param string $title
      * @return \ZendY\Form\Container\Box
@@ -85,7 +107,7 @@ class Box extends Base {
     }
 
     /**
-     * Zwraca tytuł okna
+     * Zwraca tytuł dla części nagłówkowej
      *
      * @return string
      */

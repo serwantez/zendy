@@ -18,6 +18,11 @@ class HelpController extends Zend_Controller_Action {
         if (isset($userData[User::COL_USERNAME])) {
             $contact['name'] = $userData[User::COL_FIRSTNAME] . ' ' . $userData[User::COL_SURNAME];
             $contact['email'] = $userData[User::COL_EMAIL];
+        } else {
+            $contact = array(
+                'name' => '',
+                'email' => ''
+            );
         }
         $this->view->contact = $contact;
     }

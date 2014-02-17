@@ -38,10 +38,10 @@ class Worker extends DataSet\EditableQuery {
      * @return void
      */
     public function init() {
-        $this->_name = self::TABLE_NAME;
         parent::init();
+        $this->setTableName(self::TABLE_NAME);
         $this->setPrimary(self::COL_ID);
-        $this->from(array('wo' => $this->_name), array(
+        $this->from(array('wo' => $this->_tableName), array(
                     self::COL_ID,
                     self::COL_FIRSTNAME,
                     self::COL_SURNAME,

@@ -4,7 +4,6 @@
   overflow: hidden;
   padding: 3px;
   vertical-align: middle;
-  height: 15px;
 }
 .ui-text span {
   padding: 0px;
@@ -24,16 +23,17 @@
   padding: 5px;
   margin-top: 5px;
   margin-bottom: 5px;
-  border: 1px solid #dddddd;
-  background-color: #EEFFCC;
+  border: 1px solid #d9d9d9;
+  background-color: #EBEBEB;
+  font-size: 12px;
+}
+.ui-longtext code span {
+  font-size: 12px;
 }
 
 .ui-document {
   padding: 15px;
   overflow: auto;
-}
-.ui-document * {
-  font-size: 12px;
 }
 .ui-document div {
   line-height: 170%;
@@ -67,7 +67,6 @@
 .ui-document-title {
   font-size: 14px;
   text-align: center;
-  height: 20px;
 }
 .ui-document-title span {
   font-size: 14px;
@@ -116,6 +115,6 @@
   padding-left: 10px;
 }
 .ui-textfileview .ui-textfileview-content code span {
-  font-family: Consolas,Courier,monospace;
-  font-size: 12px;
+  /*font-family: Consolas,Courier,monospace;*/
+  /*font-size: 12px;*/
 }

@@ -32,16 +32,6 @@ abstract class Editable extends Base {
     const ACTION_TRUNCATE = 'truncateAction';
 
     /**
-     * Stan dodawania rekordu
-     */
-    const STATE_INSERT = 2;
-
-    /**
-     * Stan edycji rekordu
-     */
-    const STATE_EDIT = 3;
-
-    /**
      * Ustawia parametry akcji
      * 
      * @return \ZendY\Db\DataSet\Editable
@@ -112,36 +102,6 @@ abstract class Editable extends Base {
                 , true
                 , Base::ACTION_PRIVILEGE_DELETE
         );
-
-        return $this;
-    }
-
-    /**
-     * Ustawia stan przycisków nawigacyjnych
-     * 
-     * @param array|null $params
-     * @return \ZendY\Db\DataSet\Editable
-     */
-    protected function _setActionState($params = array()) {
-        parent::_setActionState($params);
-        $this->_navigator[self::ACTION_ADD] = ($this->_state == self::STATE_VIEW
-                && !$this->_readOnly);
-        $this->_navigator[self::ACTION_EDIT] = ($this->_state == self::STATE_VIEW
-                && !$this->_readOnly
-                && $this->_recordCount > 0);
-        $this->_navigator[self::ACTION_CANCEL] = ($this->_state == self::STATE_EDIT
-                || $this->_state == self::STATE_INSERT);
-        $this->_navigator[self::ACTION_ADDCOPY] = $this->_navigator[self::ACTION_EDIT];
-        $this->_navigator[self::ACTION_SAVE] = (($this->_state == self::STATE_INSERT
-                || $this->_state == self::STATE_EDIT)
-                && !$this->_readOnly);
-        $this->_navigator[self::ACTION_DELETE] = (($this->_state == self::STATE_VIEW
-                || $this->_state == self::STATE_EDIT)
-                && $this->_recordCount > 0
-                && !$this->_readOnly);
-        $this->_navigator[self::ACTION_TRUNCATE] = (($this->_state == self::STATE_VIEW
-                || $this->_state == self::STATE_EDIT)
-                && !$this->_readOnly);
 
         return $this;
     }

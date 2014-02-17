@@ -20,6 +20,37 @@ class IconButton extends Button {
 
     const PARAM_ICONS = 'icons';
 
+    /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_ICONS = 'icons';
+    const PROPERTY_VISIBLETEXT = 'visibleText';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_ICONS,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_SHORTKEY,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VISIBLETEXT,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
+     * 
+     * @return void
+     */
     protected function _setDefaults() {
         parent::_setDefaults();
         $this->setVisibleText(false);

@@ -22,9 +22,16 @@ class Grid extends CustomList {
     use \ZendY\ControlTrait;
 
     /**
-     * Parametry
+     * Właściwości komponentu
      */
 
+    const PROPERTY_COLUMNS = 'columns';
+    const PROPERTY_PAGER = 'pager';
+    const PROPERTY_SORTER = 'sorter';
+
+    /**
+     * Parametry
+     */
     const PARAM_RECORDPERPAGE = 'recordPerPage';
     const PARAM_FIRSTCOLWIDTH = 'firstColWidth';
 
@@ -40,6 +47,33 @@ class Grid extends CustomList {
     const DEFAULT_FIRSTCOLWIDTH = 19;
 
     /**
+     * Tablica właściwości
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_COLUMNS,
+        self::PROPERTY_COLUMNSPACE,
+        self::PROPERTY_CONDITIONALROWFORMATS,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_EMPTYVALUE,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MULTIOPTIONS,
+        self::PROPERTY_NAME,
+        self::PROPERTY_PAGER,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_SORTER,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
      * Obiekt zarządzający wtyczkami do grida
      * 
      * @var \ZendY\Form\Element\Grid\Plugin\Broker
@@ -47,11 +81,12 @@ class Grid extends CustomList {
     protected $_plugins;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->_events = array(
             self::PARAM_EVENT_DBLCLICKROW,
         );
@@ -80,7 +115,7 @@ class Grid extends CustomList {
      */
     public function addColumn(Column $column) {
         $columns = $this->getColumns();
-        $columns[$column->getId()] = $column;
+        $columns[$column->getName()] = $column;
         $this->setAttrib('columns', $columns);
         return $this;
     }
@@ -95,6 +130,28 @@ class Grid extends CustomList {
         foreach ($columns as $column) {
             $this->addColumn($column);
         }
+        return $this;
+    }
+
+    /**
+     * Usuwa wszystkie kolumny
+     * 
+     * @return \ZendY\Form\Element\Grid
+     */
+    public function clearColumns() {
+        $this->setAttrib('columns', null);
+        return $this;
+    }
+
+    /**
+     * Ustawia wszystkie kolumny na raz
+     * 
+     * @param array $columns
+     * @return \ZendY\Form\Element\Grid
+     */
+    public function setColumns(array $columns) {
+        $this->clearColumns();
+        $this->addColumns($columns);
         return $this;
     }
 
@@ -277,13 +334,36 @@ class Grid extends CustomList {
     }
 
     /**
+     * Zwraca liczbę rekordów na stronę, alias dla getRecordPerPage()
+     * 
+     * @return int
+     */
+    public function getPager() {
+        return $this->getRecordPerPage();
+    }
+
+    /**
      * Rejestruje wtyczkę sortującą dane
      * 
+     * @param bool $sorter
      * @return \ZendY\Form\Element\Grid
      */
-    public function setSorter() {
-        $this->registerPlugin(new Plugin\Sorter());
+    public function setSorter($sorter = true) {
+        if ($sorter) {
+            $this->registerPlugin(new Plugin\Sorter());
+        } else {
+            $this->unregisterPlugin('ZendY\Form\Element\Grid\Plugin\Sorter');
+        }
         return $this;
+    }
+
+    /**
+     * Zwraca informację o zarejestrowaniu wtyczki sortującej
+     * 
+     * @return bool
+     */
+    public function getSorter() {
+        return $this->hasPlugin('ZendY\Form\Element\Grid\Plugin\Sorter');
     }
 
     /**

@@ -58,16 +58,19 @@ class Accordion extends Panel {
         $attribs = \ZendY\View\Helper\Widget::prepareCSS($this->getAttribs());
         $accordionAttribs['id'] = $this->getId();
         $accordionAttribs['jQueryParams'] = $this->getJQueryParams();
+
+        $space = $this->_space['value'] . $this->_space['unit'];
+
         $this->setDecorators(array(
             array('FormElements'),
             array('HtmlTag', array('tag' => 'div', 'id' => $this->getId())),
             array('AccordionContainer', $accordionAttribs),
             array(array('Space' => 'HtmlTag'), array(
                     'style' => sprintf('position: absolute; left: %s; top: %s; right: %s; bottom: %s;'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px')
+                            , $space
+                            , $space
+                            , $space
+                            , $space)
             )),
             array(array('Outer' => 'HtmlTag'), $attribs)
         ));

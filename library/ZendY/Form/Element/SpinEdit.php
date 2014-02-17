@@ -9,6 +9,7 @@
 namespace ZendY\Form\Element;
 
 use ZendY\Css;
+use ZendY\Exception;
 
 /**
  * Kontrolka wyboru liczby z policzalnego przedziału liczb dyskretnych
@@ -38,6 +39,41 @@ class SpinEdit extends CustomEdit {
     const FORMAT_DECIMALDIGITS = 'd';
     const FORMAT_PERCENTAGE = 'p';
     const FORMAT_CURRENCY = 'c';
+    
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_MIN = 'min';
+    const PROPERTY_MAX = 'max';
+    const PROPERTY_STEP = 'step';
+    const PROPERTY_NUMBERFORMAT = 'numberFormat';    
+    const PROPERTY_PAGE = 'page';    
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MAX,
+        self::PROPERTY_MIN,
+        self::PROPERTY_NAME,
+        self::PROPERTY_NUMBERFORMAT,
+        self::PROPERTY_PAGE,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_STEP,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
 
     /**
      * Szerokość przycisków
@@ -47,11 +83,12 @@ class SpinEdit extends CustomEdit {
     protected $_buttonWidth = 21;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'spinEdit';
         $this->setMin(0);
         $this->setMax(100);
@@ -62,6 +99,26 @@ class SpinEdit extends CustomEdit {
         if (\Zend_Registry::isRegistered('Zend_Locale')) {
             $this->setLocale(\Zend_Registry::get('Zend_Locale')->getLanguage());
         }
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setMaxLength($maxlength) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setPlaceHolder($placeHolder) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
     }
 
     /**

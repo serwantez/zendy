@@ -11,6 +11,7 @@ namespace ZendY\Form\Container;
 use ZendY\Css;
 use ZendY\JQuery;
 use ZendY\Db\Form;
+use ZendY\Exception;
 
 /**
  * Klasa bazowa dla kontenerów formularza
@@ -20,6 +21,12 @@ use ZendY\Db\Form;
 abstract class Base extends Form {
 
     use \ZendY\JQueryTrait;
+
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_WIDGETCLASS = 'widgetClass';
 
     /**
      * Licznik instancji
@@ -36,18 +43,26 @@ abstract class Base extends Form {
     protected $_events = array();
 
     /**
-     * Wolna przestrzeń wokół krawędzi
-     * 
-     * @var integer
-     */
-    protected $_space = 0;
-
-    /**
-     * Klasa widżetu
+     * Klasa wewnętrznego dekoratora
      * 
      * @var string
      */
     protected $_widgetClass;
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_SPACE,
+        self::PROPERTY_WIDGETCLASS,
+        self::PROPERTY_WIDTH
+    );
 
     /**
      * Konstruktor
@@ -56,30 +71,51 @@ abstract class Base extends Form {
      * @param array|Zend_Config|null $options
      * @return void
      */
-    public function __construct($id = null, $options = null) {
-        if (isset($id)) {
-            $this->setName($id);
+    public function __construct($options = null) {
+        if (isset($options['id'])) {
+            $this->setName($options['id']);
+            unset($options['id']);
         } else {
             $this::$count++;
             $this->setName(get_class($this) . '_' . $this::$count);
         }
         parent::__construct($options);
+        $this->removeDecorator('Form');
     }
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        $this->setWidgetClass(Css::WIDGET);
-        parent::init();
-        $this->removeDecorator('Form');
+    protected function _setDefaults() {
+        parent::_setDefaults();
+        $this->_widgetClass = Css::WIDGET;
         $this->setIsSubForm(true);
     }
 
     /**
-     * Ustawia klasę widżetu
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setAction($action) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setAjaxValidator($ajaxValidator = true) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Ustawia klasę wewnętrznego dekoratora
      * 
      * @param string $widgetClass
      * @return \ZendY\Form\Container\Base
@@ -87,6 +123,15 @@ abstract class Base extends Form {
     public function setWidgetClass($widgetClass) {
         $this->_widgetClass = $widgetClass;
         return $this;
+    }
+
+    /**
+     * Zwraca klasę wewnętrznego dekoratora
+     * 
+     * @return string
+     */
+    public function getWidgetClass() {
+        return $this->_widgetClass;
     }
 
     /**
@@ -122,17 +167,6 @@ abstract class Base extends Form {
     }
 
     /**
-     * Ustawia przestrzeń wokół krawędzi
-     * 
-     * @param integer $space
-     * @return \ZendY\Form\Container\Base
-     */
-    public function setSpace($space = 2) {
-        $this->_space = $space;
-        return $this;
-    }
-
-    /**
      * Odświeża dekoratory po zmianach wykonanych na formularzu 
      * po dołaczeniu go do innego kontenera
      * 
@@ -140,6 +174,8 @@ abstract class Base extends Form {
      */
     public function refreshDecorators() {
         $attribs = \ZendY\View\Helper\Widget::prepareCSS($this->getAttribs());
+
+        $space = $this->_space['value'] . $this->_space['unit'];
 
         $this->setDecorators(array(
             'FormElements',
@@ -149,10 +185,10 @@ abstract class Base extends Form {
             array(array('Space' => 'HtmlTag'), array(
                     'class' => $this->_widgetClass,
                     'style' => sprintf('position: absolute; left: %s; top: %s; right: %s; bottom: %s;'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px')
+                            , $space
+                            , $space
+                            , $space
+                            , $space)
             )),
             array(array('Outer' => 'HtmlTag'), $attribs)
         ));

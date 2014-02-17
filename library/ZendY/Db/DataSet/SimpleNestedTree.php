@@ -191,27 +191,27 @@ class SimpleNestedTree extends Table implements TreeSetInterface {
                 $this->_navigator[self::ACTION_ADD]
                 && $cur[$this->_leftField] > 1);
         $this->_navigator[self::ACTION_ADDBEFORE] = (
-                $this->_state == self::STATE_VIEW
+                $this->_state >= self::STATE_VIEW
                 && !$this->_readOnly
                 && $this->_recordCount > 0
                 && $cur[$this->_leftField] > 1);
         $this->_navigator[self::ACTION_ADDUNDER] = (
-                $this->_state == self::STATE_VIEW
+                $this->_state >= self::STATE_VIEW
                 && !$this->_readOnly
                 && $this->_recordCount > 0);
         $this->_navigator[self::ACTION_CUT] = (
-                $this->_state == self::STATE_VIEW
+                $this->_state >= self::STATE_VIEW
                 && !$this->_readOnly
                 && $cur[$this->_leftField] > 1);
         $this->_navigator[self::ACTION_PASTEBEFORE] = (
-                $this->_state == self::STATE_VIEW
+                $this->_state >= self::STATE_VIEW
                 && !$this->_readOnly
                 && $cur[$this->_leftField] > 1
                 && isset($this->_cutRecord)
                 );
         $this->_navigator[self::ACTION_PASTEAFTER] = $this->_navigator[self::ACTION_PASTEBEFORE];
         $this->_navigator[self::ACTION_PASTEUNDER] = (
-                $this->_state == self::STATE_VIEW
+                $this->_state >= self::STATE_VIEW
                 && !$this->_readOnly
                 && isset($this->_cutRecord)
                 );
@@ -359,14 +359,14 @@ class SimpleNestedTree extends Table implements TreeSetInterface {
         if ($getDepth) {
             //podzapytanie zliczające głębokość elementu drzewa
             $depthSubq = new \Zend_Db_Expr('(' . $this->_db->select()
-                                    ->from(array("d" => $this->_name), "count(*)-1")
+                                    ->from(array("d" => $this->_tableName), "count(*)-1")
                                     ->where("node.$this->_leftField BETWEEN d.$this->_leftField AND d.$this->_rightField") . ')');
 
             $columns[$this->_depthField] = $depthSubq;
         }
 
         /* $q1 = $this->_db->select()
-          ->from(array("node" => $this->_name), $this->getColumns())
+          ->from(array("node" => $this->_tableName), $this->getColumns())
           ; */
 
         //dodaje pola rodzica
@@ -374,30 +374,30 @@ class SimpleNestedTree extends Table implements TreeSetInterface {
             $primary = $this->getPrimary();
             //podzapytanie obliczające id rodzica
             $parentSubq1 = new \Zend_Db_Expr('(' . $this->_db->select()
-                                    ->from(array("sp" => $this->_name), $primary[0])
+                                    ->from(array("sp" => $this->_tableName), $primary[0])
                                     ->where("sp.$this->_leftField < node.$this->_leftField AND sp.$this->_rightField > node.$this->_rightField")
                                     ->order(new \Zend_Db_Expr("sp.$this->_rightField - node.$this->_rightField"))
                                     ->limit(1) . ')');
             $parentSubq2 = new \Zend_Db_Expr('(' . $this->_db->select()
-                                    ->from(array("p" => $this->_name), $this->_getParentField())
+                                    ->from(array("p" => $this->_tableName), $this->_getParentField())
                                     ->where($parentSubq1 . " = `p`.`" . $primary[0] . "`")
                             . ')'
             );
             $columns[$this->_parentField . $primary[0]] = $parentSubq2;
-            //$q->joinLeft(array('p' => $this->_name), $cond, $this->_getParentField());
-            //$q1->joinLeft(array('p' => $this->_name), $cond, $this->_getParentField());
+            //$q->joinLeft(array('p' => $this->_tableName), $cond, $this->_getParentField());
+            //$q1->joinLeft(array('p' => $this->_tableName), $cond, $this->_getParentField());
         }
 
         $q = $this->_db->select()
-                ->from(array("node" => $this->_name), $columns);
+                ->from(array("node" => $this->_tableName), $columns);
 
         //drzewo od wskazanego miejsca (wybrana gałąź)
         if (isset($root)) {
             $left = new \Zend_Db_Expr('(' . $this->_db->select()
-                                    ->from($this->_name, $this->_leftField)
+                                    ->from($this->_tableName, $this->_leftField)
                                     ->where("$this->_primary = ?", $root) . ')');
             $right = new \Zend_Db_Expr('(' . $this->_db->select()
-                                    ->from($this->_name, $this->_rightField)
+                                    ->from($this->_tableName, $this->_rightField)
                                     ->where("$this->_primary = ?", $root) . ')');
             $q->where("node.$this->_leftField > $left AND node.$this->_leftField < $right");
         }
@@ -446,7 +446,7 @@ class SimpleNestedTree extends Table implements TreeSetInterface {
     protected function _count() {
         Msg::add($this->getId() . '->' . __FUNCTION__);
         /* $select = $this->_db->select();
-          $select->from($this->_name, 'COUNT(*) AS num'); */
+          $select->from($this->_tableName, 'COUNT(*) AS num'); */
 
         $select = $this->_getTreeSelect();
 
@@ -752,7 +752,7 @@ class SimpleNestedTree extends Table implements TreeSetInterface {
      * @return array
      */
     public function describe() {
-        return $this->_db->describeTable($this->_name);
+        return $this->_db->describeTable($this->_tableName);
     }
 
     /**
@@ -809,7 +809,10 @@ class SimpleNestedTree extends Table implements TreeSetInterface {
                         $ret = $this->_insert($data, $this->_insertType);
                     $this->_recordCount = $this->_count();
                 }
-                $this->_state = self::STATE_VIEW;
+                if ($this->_editMode)
+                    $this->_state = self::STATE_EDIT;
+                else
+                    $this->_state = self::STATE_VIEW;
 
                 $primaryKey = $this->getPrimary();
                 foreach ($primaryKey as $key) {
@@ -863,7 +866,10 @@ class SimpleNestedTree extends Table implements TreeSetInterface {
         $this->_recordCount = $this->_count();
         if ($this->_offset >= $this->_recordCount && $this->_recordCount > 0)
             $this->_offset = $this->_recordCount - 1;
-        $this->_state = self::STATE_VIEW;
+        if ($this->_editMode)
+            $this->_state = self::STATE_EDIT;
+        else
+            $this->_state = self::STATE_VIEW;
         if (!$compositePart) {
             $this->_setActionState();
         }
@@ -1210,15 +1216,15 @@ class SimpleNestedTree extends Table implements TreeSetInterface {
         $primary = $this->getPrimary();
 
         $this->_db->query(
-                "UPDATE `" . $this->_name . "` 
+                "UPDATE `" . $this->_tableName . "` 
 LEFT JOIN (
 SELECT " . $primary[0] . " as pid, 
-(SELECT `sp`.`" . $primary[0] . "` FROM `" . $this->_name . "` AS `sp` 
-        WHERE (sp." . $this->_leftField . " < p" . $this->_name . "." . $this->_leftField . " 
-            AND sp." . $this->_rightField . " > p" . $this->_name . "." . $this->_rightField . ") 
-            ORDER BY sp." . $this->_rightField . " - p" . $this->_name . "." . $this->_rightField . " LIMIT 1) as parent
-FROM `" . $this->_name . "` as `p" . $this->_name . "`
-) AS `p` ON (`" . $this->_name . "`.`" . $primary[0] . "` = `p`.`pid`)
+(SELECT `sp`.`" . $primary[0] . "` FROM `" . $this->_tableName . "` AS `sp` 
+        WHERE (sp." . $this->_leftField . " < p" . $this->_tableName . "." . $this->_leftField . " 
+            AND sp." . $this->_rightField . " > p" . $this->_tableName . "." . $this->_rightField . ") 
+            ORDER BY sp." . $this->_rightField . " - p" . $this->_tableName . "." . $this->_rightField . " LIMIT 1) as parent
+FROM `" . $this->_tableName . "` as `p" . $this->_tableName . "`
+) AS `p` ON (`" . $this->_tableName . "`.`" . $primary[0] . "` = `p`.`pid`)
 SET `parent_id` = `p`.`parent`"
         );
 

@@ -20,12 +20,36 @@ class Submit extends CustomButton {
     use \ZendY\ControlTrait;
 
     /**
-     * Inicjalizacja obiektu
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_CAPTION = 'caption';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CAPTION,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_SHORTKEY,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'submit';
         $this->addClasses(array(
             Css::WIDGET,
@@ -33,6 +57,16 @@ class Submit extends CustomButton {
             Css::SUBMIT
         ));
     }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setLabel($label, $width = null) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }    
 
     /**
      * Ustawia tekst przycisku.

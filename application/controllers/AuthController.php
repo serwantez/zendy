@@ -36,12 +36,18 @@ class AuthController extends Zend_Controller_Action {
     }
 
     public function profileAction() {
-        $form = new Form\Profile();
+        $form = new Form\Profile(array(
+                    'name' => 'profileForm',
+                    'action' => ''
+                ));
         $this->view->form = $form;
     }
 
     public function loginAction() {
-        $form = new Form\Auth();
+        $form = new Form\Auth(array(
+                    'name' => 'loginForm',
+                    'action' => ''
+                ));
         $request = $this->getRequest();
         if ($request->isPost() && $request->getParam('login')) {
             if ($form->isValid($request->getPost())) {
@@ -116,7 +122,10 @@ class AuthController extends Zend_Controller_Action {
     }
 
     public function signupAction() {
-        $form = new Form\Signup();
+        $form = new Form\Signup(array(
+                    'name' => 'signupForm',
+                    'action' => ''
+                ));
         $request = $this->getRequest();
         if ($request->isPost() && $request->getParam('signup')) {
             if ($form->isValid($request->getPost())) {
@@ -161,7 +170,10 @@ class AuthController extends Zend_Controller_Action {
     }
 
     public function changepasswordAction() {
-        $form = new Form\ChangePassword();
+        $form = new Form\ChangePassword(array(
+                    'name' => 'changePasswordForm',
+                    'action' => ''
+                ));
         $request = $this->getRequest();
         if ($request->isPost() && $request->getParam('changePassword')) {
             if ($form->isValid($request->getPost())) {
@@ -178,7 +190,10 @@ class AuthController extends Zend_Controller_Action {
     }
 
     public function recoverpasswordAction() {
-        $form = new Form\RecoverPassword();
+        $form = new Form\RecoverPassword(array(
+                    'name' => 'recoverPasswordForm',
+                    'action' => ''
+                ));
         $request = $this->getRequest();
         if ($request->isPost() && $request->getParam('recoverPassword')) {
             if ($form->isValid($request->getPost())) {
@@ -201,7 +216,10 @@ class AuthController extends Zend_Controller_Action {
     }
 
     public function newpasswordAction() {
-        $form = new Form\ChangePassword();
+        $form = new Form\ChangePassword(array(
+                    'name' => 'changePasswordForm',
+                    'action' => ''
+                ));
         $request = $this->getRequest();
         if ($request->isPost() && $request->getParam('changePassword')) {
             if ($form->isValid($request->getPost())) {

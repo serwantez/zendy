@@ -20,121 +20,156 @@ use Application\Model;
 class Worker extends Form {
 
     public function init() {
-        //ustawienia ogólne
-        $this->setAttrib('id', 'demoForm');
-        $this->setAlign(Css::ALIGN_CLIENT);
-        $this->setAjaxValidator(false);
-
         //zbiory i źródła danych
-        $dataSet = new Model\Worker('worker');
-        $dataSourceWorker = new DataSource('dataSourceWorker', $dataSet);
+        $dataSetW = new Model\Worker(array(
+                    Model\Worker::PROPERTY_NAME => 'worker'
+                ));
+        $dataSourceWorker = new DataSource(array(
+                    DataSource::PROPERTY_NAME => 'dataSourceWorker',
+                    DataSource::PROPERTY_DATASET => $dataSetW
+                ));
 
-        $dataSet = new Model\Sex('workerSex');
-        $dataSourceSex = new DataSource('dataSourceSex', $dataSet);
+        $dataSetS = new Model\Sex(array(
+                    Model\Sex::PROPERTY_NAME => 'workerSex'
+                ));
+        $dataSourceSex = new DataSource(array(
+                    DataSource::PROPERTY_NAME => 'dataSourceSex',
+                    DataSource::PROPERTY_DATASET => $dataSetS
+                ));
 
-        $dataSet = new Model\Agreement('workerAgreement');
-        $dataSet->setMasterSource($dataSourceWorker)
-                ->setMasterField(Model\Worker::COL_ID)
-                ->setIndexField('ag.' . Model\Agreement::COL_WORKER_ID)
-        ;
-        $dataSourceAgreement = new DataSource('dataSourceAgreement', $dataSet);
+        $dataSetA = new Model\Agreement(array(
+                    Model\Agreement::PROPERTY_NAME => 'workerAgreement',
+                    Model\Agreement::PROPERTY_MASTER => array(
+                        array(
+                            'masterSource' => $dataSourceWorker,
+                            'masterField' => Model\Worker::COL_ID,
+                            'detailField' => 'ag.' . Model\Agreement::COL_WORKER_ID
+                        )
+                    )
+                ));
+        $dataSourceAgreement = new DataSource(array(
+                    DataSource::PROPERTY_NAME => 'dataSourceAgreement',
+                    DataSource::PROPERTY_DATASET => $dataSetA
+                ));
 
-        $dataSet = new DataSet\App\ListItem('agreementType');
-        $dataSet->setList(16);
-        $dataSourceAgreementType = new DataSource('dataSourceAgreementType', $dataSet);
+        $dataSetL = new DataSet\App\ListItem(array(
+                    DataSet\App\ListItem::PROPERTY_NAME => 'agreementType',
+                    DataSet\App\ListItem::PROPERTY_LIST => 16
+                ));
+        $dataSourceAgreementType = new DataSource(array(
+                    DataSource::PROPERTY_NAME => 'dataSourceAgreementType',
+                    DataSource::PROPERTY_DATASET => $dataSetL
+                ));
 
-        $dataSet = new DataSet\App\Country('workerCountry');
-        $dataSourceCountry = new DataSource('dataSourceCountry', $dataSet);
+        $dataSetC = new DataSet\App\Country(array(
+                    DataSet\App\Country::PROPERTY_NAME => 'workerCountry'
+                ));
+        $dataSourceCountry = new DataSource(array(
+                    DataSource::PROPERTY_NAME => 'dataSourceCountry',
+                    DataSource::PROPERTY_DATASET => $dataSetC
+                ));
 
         //własne przyciski akcji
-        $btnAdd = new DbElement\Button('addButton');
-        $btnAdd
-                ->setDataSource($dataSourceWorker)
-                ->setDataAction(DataSet\Editable::ACTION_ADD)
-                ->setShortKey('Ctrl+N')
-        ;
+        $btnAdd = new DbElement\Button(array(
+                    DbElement\Button::PROPERTY_NAME => 'addButton',
+                    DbElement\Button::PROPERTY_SHORTKEY => 'Ctrl+N',
+                    DbElement\Button::PROPERTY_DATASOURCE => $dataSourceWorker,
+                    DbElement\Button::PROPERTY_DATAACTION => DataSet\Editable::ACTION_ADD,
+                ));
 
-        $btnOpenDetails = new Element\IconButton('btnOpenDetails');
-        $btnOpenDetails
-                ->setLabel('Open details')
-                ->setShortKey('F3')
-                ->setIcons(Css::ICON_PENCIL)
-        ;
+        $btnOpenDetails = new Element\IconButton(array(
+                    DbElement\Button::PROPERTY_NAME => 'btnOpenDetails',
+                    DbElement\Button::PROPERTY_LABEL => 'Open details',
+                    DbElement\Button::PROPERTY_SHORTKEY => 'F3',
+                    DbElement\Button::PROPERTY_ICONS => array(Css::ICON_PENCIL)
+                ));
 
-        $btnOpenFilter = new Element\IconButton('btnOpenFilter');
-        $btnOpenFilter
-                ->setLabel('Filter')
-                ->setShortKey('Ctrl+F')
-                ->setIcons(Css::ICON_SEARCH)
-        ;
+        $btnOpenFilter = new Element\IconButton(array(
+                    Element\IconButton::PROPERTY_NAME => 'btnOpenFilter',
+                    Element\IconButton::PROPERTY_LABEL => 'Filter',
+                    Element\IconButton::PROPERTY_SHORTKEY => 'Ctrl+F',
+                    Element\IconButton::PROPERTY_ICONS => Css::ICON_SEARCH
+                ));
 
-        $btnOpenAgreement = new Element\IconButton('btnOpenAgreement');
-        $btnOpenAgreement
-                ->setLabel('Agreements')
-                ->setVisibleText(true)
-        ;
+        $btnOpenAgreement = new Element\IconButton(array(
+                    Element\IconButton::PROPERTY_NAME => 'btnOpenAgreement',
+                    Element\IconButton::PROPERTY_LABEL => 'Agreements',
+                    Element\IconButton::PROPERTY_VISIBLETEXT => true
+                ));
 
         //główny panel z gridem
-        $gridWorker = new DbElement\Grid('gridWorker');
+        $gridWorker = new DbElement\Grid(array(
+                    DbElement\Grid::PROPERTY_NAME => 'gridWorker',
+                    DbElement\Grid::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                    DbElement\Grid::PROPERTY_LISTSOURCE => $dataSourceWorker,
+                    DbElement\Grid::PROPERTY_KEYFIELD => Model\Worker::COL_ID,
+                    DbElement\Grid::PROPERTY_PAGER => 30,
+                    DbElement\Grid::PROPERTY_SORTER => true,
+                    DbElement\Grid::PROPERTY_COLUMNS => array(
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Worker::COL_ID,
+                                    'label' => 'ID',
+                                    'width' => 45,
+                                    'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
+                                )
+                        ),
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Worker::COL_SURNAME,
+                                    'label' => 'Surname',
+                                    'width' => 180
+                                )
+                        ),
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Worker::COL_FIRSTNAME,
+                                    'label' => 'Firstname',
+                                    'width' => 180
+                                )
+                        ),
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Worker::COL_COUNTRY_NAME,
+                                    'label' => 'Country',
+                                    'width' => 160
+                                )
+                        ),
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Worker::COL_ADDRESS,
+                                    'label' => 'Address',
+                                    'width' => 220
+                                )
+                        ),
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Worker::COL_POSTAL_CODE,
+                                    'label' => 'Postal code',
+                                    'width' => 70
+                                )
+                        ),
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Worker::COL_POST,
+                                    'label' => 'Postal locality',
+                                    'width' => 170
+                                )
+                        )
+                    ),
+                ));
         $gridWorker
-                ->setListSource($dataSourceWorker)
-                ->setKeyField(Model\Worker::COL_ID)
-                ->addColumn(new Element\Grid\Column(
-                                Model\Worker::COL_ID
-                                , array(
-                            'label' => 'ID',
-                            'width' => 45,
-                            'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
-                        )))
-                ->addColumn(new Element\Grid\Column(
-                                Model\Worker::COL_SURNAME
-                                , array(
-                            'label' => 'Surname',
-                            'width' => 180
-                        )))
-                ->addColumn(new Element\Grid\Column(
-                                Model\Worker::COL_FIRSTNAME
-                                , array(
-                            'label' => 'Firstname',
-                            'width' => 180
-                        )))
-                ->addColumn(new Element\Grid\Column(
-                                Model\Worker::COL_COUNTRY_NAME
-                                , array(
-                            'label' => 'Country',
-                            'width' => 160
-                        )))
-                ->addColumn(new Element\Grid\Column(
-                                Model\Worker::COL_ADDRESS
-                                , array(
-                            'label' => 'Address',
-                            'width' => 220
-                        )))
-                ->addColumn(new Element\Grid\Column(
-                                Model\Worker::COL_POSTAL_CODE
-                                , array(
-                            'label' => 'Postal code',
-                            'width' => 70
-                        )))
-                ->addColumn(new Element\Grid\Column(
-                                Model\Worker::COL_POST
-                                , array(
-                            'label' => 'Postal locality',
-                            'width' => 170
-                        )))
-                ->setAlign(Css::ALIGN_CLIENT)
-                ->setPager(30)
-                ->setSorter()
                 ->setJQueryParam(
                         Element\Grid::PARAM_EVENT_DBLCLICKROW
-                        , sprintf('$("#%s").trigger("click");', $btnOpenDetails->getId())
+                        , sprintf('$("#%s").trigger("click");', $btnOpenDetails->getName())
                 )
         ;
-        $panelMain = new Container\Panel();
-        $panelMain
-                ->addElement($gridWorker)
-                ->setAlign(Css::ALIGN_CLIENT)
-        ;
+        $panelMain = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'panelMain',
+                    Container\Panel::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                    Container\Panel::PROPERTY_SPACE => 2,
+                ));
+        $panelMain->setElements(array($gridWorker));
 
         //dolny panel nawigatora z przyciskami akcji
         $actions = array(
@@ -143,16 +178,19 @@ class Worker extends Form {
             array('action' => DataSet\Base::ACTION_PRINT, 'shortkey' => 'Ctrl+P')
         );
 
-        $nav = new DbContainer\Navigator();
-        $nav
-                ->setActions($actions)
-                ->setDataSource($dataSourceWorker)
-                ->addElement($btnOpenFilter)
-                ->addElement($btnAdd)
-                ->addElement($btnOpenDetails)
-                ->addElement($btnOpenAgreement)
-                ->setAlign(Css::ALIGN_BOTTOM)
-        ;
+        $nav = new DbContainer\Navigator(array(
+                    DbContainer\Navigator::PROPERTY_NAME => 'nav',
+                    DbContainer\Navigator::PROPERTY_ACTIONS => $actions,
+                    DbContainer\Navigator::PROPERTY_DATASOURCE => $dataSourceWorker,
+                    DbContainer\Navigator::PROPERTY_ALIGN => Css::ALIGN_BOTTOM,
+                    DbContainer\Navigator::PROPERTY_SPACE => array('value' => 0.2, 'unit' => 'em'),
+                ));
+        $nav->setElements(array(
+            $btnOpenFilter,
+            $btnAdd,
+            $btnOpenDetails,
+            $btnOpenAgreement
+        ));
 
         //okno szczegółów i edycji
         $i = 0;
@@ -204,6 +242,7 @@ class Worker extends Form {
                 ->setKeyField(DataSet\App\Country::COL_ID)
                 ->setListField(DataSet\App\Country::COL_NAME)
                 ->setStaticRender(true)
+                ->setWidth(250)
         ;
 
         $i++;
@@ -262,26 +301,34 @@ class Worker extends Form {
                 ->setWidth(250)
         ;
 
-        $detailsPanel = new Container\Panel();
+        $detailsPanel = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'panelDetails'
+                ));
         $detailsPanel->addElements($elements)
                 ->setAlign(Css::ALIGN_CLIENT)
                 ->addClass(Css::SCROLL_AUTO)
         ;
 
-        $dialog = new DbContainer\EditDialog('countryDetails');
+        $dialog = new DbContainer\EditDialog(array(
+                    Container\Panel::PROPERTY_NAME => 'countryDetails'
+                ));
         $dialog
                 ->setDataSource($dataSourceWorker)
                 ->setTitle('Worker details')
-                ->setWidth(480)
-                ->setHeight(490)
+                ->setWidth(520)
+                ->setHeight(520)
                 ->addContainer($detailsPanel)
                 ->addOpener($btnOpenDetails)
                 ->addOpener($btnAdd)
         ;
 
         //okno filtrowania
-        $dialogWorkerFilter = new DbContainer\FilterDialog('dialogWorkerFilter');
-        $panelWorkerFilters = new Container\Panel('panelWorkerFilters');
+        $dialogWorkerFilter = new DbContainer\FilterDialog(array(
+                    DbContainer\FilterDialog::PROPERTY_NAME => 'dialogWorkerFilter'
+                ));
+        $panelWorkerFilters = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'panelWorkerFilters'
+                ));
 
         $filterElements[0] = new DbElement\Filter\IconEdit('filterSurname');
         $filterElements[0]
@@ -333,58 +380,62 @@ class Worker extends Form {
                 ->setDataSource($dataSourceWorker)
                 ->setTitle('Worker filter')
                 ->setWidth(350)
-                ->setHeight(250)
+                ->setHeight(330)
                 ->addContainer($panelWorkerFilters)
                 ->addOpener($btnOpenFilter)
         ;
 
         //okno z umowami pracownika
-        $gridAgreement = new DbElement\Grid('gridAgreement');
-        $gridAgreement
-                ->setListSource($dataSourceAgreement)
-                ->setKeyField(Model\Agreement::COL_ID)
-                ->addColumn(new Element\Grid\Column(
-                                Model\Agreement::COL_ID
-                                , array(
-                            'label' => 'ID',
-                            'width' => 45,
-                            'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
-                        )))
-                ->addColumn(new Element\Grid\Column(
-                                Model\Agreement::COL_AGREEMENT_TYPE_NAME
-                                , array(
-                            'label' => 'Agreement type',
-                            'width' => 180
-                        )))
-                ->addColumn(new Element\Grid\Column(
-                                Model\Agreement::COL_JOB_TIME
-                                , array(
-                            'label' => 'Job time',
-                            'width' => 50
-                        )))
-                ->addColumn(new Element\Grid\Column(
-                                Model\Agreement::COL_DATE_SIGNING
-                                , array(
-                            'label' => 'Signing date',
-                            'width' => 70
-                        )))
-                ->addColumn(new Element\Grid\Column(
-                                Model\Agreement::COL_DATE_START
-                                , array(
-                            'label' => 'Start date',
-                            'width' => 70
-                        )))
-                ->addColumn(new Element\Grid\Column(
-                                Model\Agreement::COL_DATE_END
-                                , array(
-                            'label' => 'End date',
-                            'width' => 70
-                        )))
-                ->setAlign(Css::ALIGN_CLIENT)
-                ->setPager(30)
-                ->setSorter()
-        ;
-        $panelGridAgreement = new Container\Panel();
+        $gridAgreement = new DbElement\Grid(array(
+                    DbElement\Grid::PROPERTY_NAME => 'gridAgreement',
+                    DbElement\Grid::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                    DbElement\Grid::PROPERTY_LISTSOURCE => $dataSourceAgreement,
+                    DbElement\Grid::PROPERTY_KEYFIELD => Model\Agreement::COL_ID,
+                    DbElement\Grid::PROPERTY_PAGER => 30,
+                    DbElement\Grid::PROPERTY_SORTER => true,
+                    DbElement\Grid::PROPERTY_COLUMNS => array(
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Agreement::COL_ID,
+                                    'label' => 'ID',
+                                    'width' => 45,
+                                    'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
+                        )),
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Agreement::COL_AGREEMENT_TYPE_NAME,
+                                    'label' => 'Agreement type',
+                                    'width' => 180
+                        )),
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Agreement::COL_JOB_TIME,
+                                    'label' => 'Job time',
+                                    'width' => 50
+                        )),
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Agreement::COL_DATE_SIGNING,
+                                    'label' => 'Signing date',
+                                    'width' => 90
+                        )),
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Agreement::COL_DATE_START,
+                                    'label' => 'Start date',
+                                    'width' => 90
+                        )),
+                        new Element\Grid\Column(
+                                array(
+                                    'name' => Model\Agreement::COL_DATE_END,
+                                    'label' => 'End date',
+                                    'width' => 90
+                        ))
+                    ),
+                ));
+        $panelGridAgreement = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'panelGridAgreement'
+                ));
         $panelGridAgreement
                 ->addElement($gridAgreement)
                 ->setAlign(Css::ALIGN_CLIENT)
@@ -448,14 +499,18 @@ class Worker extends Form {
                 ->setWidth(120)
         ;
 
-        $panelAgreementDetails = new Container\Panel();
+        $panelAgreementDetails = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'panelAgreementDetails'
+                ));
         $panelAgreementDetails
                 ->addElements($agreementElement)
                 ->setAlign(Css::ALIGN_LEFT)
                 ->setWidth(250)
         ;
 
-        $dialogAgreement = new DbContainer\EditDialog('dialogAgreement');
+        $dialogAgreement = new DbContainer\EditDialog(array(
+                    DbContainer\EditDialog::PROPERTY_NAME => 'dialogAgreement'
+                ));
         $dialogAgreement
                 ->setDataSource($dataSourceAgreement)
                 ->setTitle('Worker agreements')
@@ -479,15 +534,15 @@ class Worker extends Form {
         ;
 
         //zakładka opisu
-        $tabpanel[0] = new Container\TabPane();
-        $tabpanel[0]
+        $tabPanel0 = new Container\TabPane();
+        $tabPanel0
                 ->setTitle('Description')
                 ->addElement($description)
         ;
 
         //zakładka demo
-        $tabpanel[1] = new Container\TabPane();
-        $tabpanel[1]
+        $tabPanel1 = new Container\TabPane();
+        $tabPanel1
                 ->setTitle('Demo')
                 ->addContainer($panelMain)
                 ->addContainer($nav)
@@ -497,19 +552,19 @@ class Worker extends Form {
         ;
 
         //zakładka kodu
-        $tabpanel[2] = new Container\TabPane();
-        $tabpanel[2]
+        $tabPanel2 = new Container\TabPane();
+        $tabPanel2
                 ->setTitle('Code')
                 ->addElement($code);
 
         //główny kontener zakładek
-        $tab = new Container\Tab();
-        $tab
-                ->setAlign(Css::ALIGN_CLIENT)
-                ->addContainers($tabpanel)
-        ;
+        $tab = new Container\Tab(array(
+                    Container\Tab::PROPERTY_NAME => 'tab',
+                    Container\Tab::PROPERTY_ALIGN => Css::ALIGN_CLIENT
+                ));
+        $tab->setContainers(array($tabPanel0, $tabPanel1, $tabPanel2));
 
-        $this->addContainer($tab);
+        $this->setContainers(array($tab));
     }
 
 }

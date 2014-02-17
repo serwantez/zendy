@@ -33,7 +33,9 @@
         dodanie do listy obiektu filtrującego wraz z podaniem nazwy klasy css, 
         która zostanie użyta przy wyświetleniu rekordu spełniającego podany warunek:
         [code]<?php
-        $listL->addConditionalRowFormat($cityFilter, 'row-bold');
+        DbElement\Listbox::PROPERTY_CONDITIONALROWFORMATS => array(
+                        array($cityFilter, 'row-bold')
+                    )
 ?>[/code]
     </li>
 </ul>

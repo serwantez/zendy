@@ -22,7 +22,7 @@ trait TableTrait {
      * 
      * @var string
      */
-    protected $_name;
+    protected $_tableName;
 
     /**
      * Pomocniczy obiekt tabeli - do wykonywania operacji CUD
@@ -139,6 +139,29 @@ trait TableTrait {
     }
 
     /**
+     * Ustawia nazwę tabeli
+     * 
+     * @param string $tableName
+     */
+    public function setTableName($tableName) {
+        $this->_tableName = $tableName;
+        $this->_table->setOptions(array(\Zend_Db_Table_Abstract::NAME => $tableName));
+        return $this;
+    }
+
+    /**
+     * Zwraca nazwę tabeli
+     * 
+     * @return string
+     */
+    public function getTableName() {
+        if (isset($this->_tableName))
+            return $this->_tableName;
+        else
+            return $this->_table->info(\Zend_Db_Table_Abstract::NAME);
+    }
+
+    /**
      * Usuwa rekord
      * 
      * @return array
@@ -180,7 +203,10 @@ trait TableTrait {
         $this->_recordCount = $this->_count();
         if ($this->_offset >= $this->_recordCount && $this->_recordCount > 0)
             $this->_offset--;
-        $this->_state = self::STATE_VIEW;
+        if ($this->_editMode)
+            $this->_state = self::STATE_EDIT;
+        else
+            $this->_state = self::STATE_VIEW;
         if (!$compositePart) {
             $this->_setActionState();
         }
@@ -303,7 +329,11 @@ trait TableTrait {
                     $ret = $this->_table->createRow()->setFromArray($data)->save();
                     $this->_recordCount = $this->_count();
                 }
-                $this->_state = self::STATE_VIEW;
+                if ($this->_editMode)
+                    $this->_state = self::STATE_EDIT;
+                else
+                    $this->_state = self::STATE_VIEW;
+
 
                 $primaryKey = $this->getPrimary();
                 foreach ($primaryKey as $key) {

@@ -90,9 +90,9 @@ class Rule extends EditableQuery {
      * @return void
      */
     public function init() {
-        $this->_name = self::TABLE_NAME;
         parent::init();
-        $this->from(array('ru' => $this->_name), array(
+        $this->setTableName(self::TABLE_NAME);
+        $this->from(array('ru' => $this->_tableName), array(
                     self::COL_ID,
                     self::COL_ROLE_ID,
                     self::COL_RULE_TYPE,

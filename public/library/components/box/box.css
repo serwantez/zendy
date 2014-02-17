@@ -1,0 +1,28 @@
+.ui-box {
+  left: 0;
+  outline: 0 none;
+  padding: 0.2em;
+  position: absolute;
+  top: 0;
+}
+.ui-box .ui-box-titlebar {
+  padding: 0.4em 1em;
+  position: relative;
+}
+.ui-box .ui-box-title {
+  float: left;
+  margin: 0.1em 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 90%;
+}
+.ui-box .ui-box-content {
+  top: 2.9em;
+  bottom: 0.2em;
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+  border: 0 none;
+  overflow: auto;
+  padding: 0.5em 1em;
+  position: relative;
+}

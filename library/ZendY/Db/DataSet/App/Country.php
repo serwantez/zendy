@@ -118,9 +118,9 @@ class Country extends EditableQuery {
      * @return void
      */
     public function init() {
-        $this->_name = self::TABLE_NAME;
         parent::init();
-        $this->from(array('co' => $this->_name), array(
+        $this->setTableName(self::TABLE_NAME);
+        $this->from(array('co' => $this->_tableName), array(
                     self::COL_ID,
                     self::COL_NAME,
                     self::COL_NAME_PL,

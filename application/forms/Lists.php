@@ -15,18 +15,24 @@ use ZendY\Db\Form\Element as DbElement;
 class Lists extends Form {
 
     public function init() {
-        $this->setAttrib('id', 'sortForm');
-        $this->setAlign(Css::ALIGN_CLIENT);
-        $this->setAjaxValidator(false);
+        $dataSetL = new App\Lists(array(
+                    'name' => 'lists'
+                ));
+        $dataSourceLists = new DataSource(array(
+                    'name' => 'listsSource',
+                    'dataSet' => $dataSetL
+                ));
 
-        $dataSet = new App\Lists('lists');
-        $dataSourceLists = new DataSource('listsSource', $dataSet);
-
-        $dataSet = new App\ListItem('list');
-        $dataSet->setMasterSource($dataSourceLists)
-                ->setMasterField(App\Lists::COL_ID)
-                ->setIndexField(App\ListItem::COL_LIST_ID);
-        $dataSourceListItems = new DataSource('listSource', $dataSet);
+        $dataSetLI = new App\ListItem(array(
+                    'name' => 'list'
+                ));
+        $dataSetLI->addMaster($dataSourceLists
+                , App\Lists::COL_ID
+                , App\ListItem::COL_LIST_ID);
+        $dataSourceListItems = new DataSource(array(
+                    'name' => 'listSource',
+                    'dataSet' => $dataSetLI
+                ));
 
         $comboLists = new DbElement\Combobox('lists');
         $comboLists
@@ -126,7 +132,7 @@ class Lists extends Form {
         $nav
                 ->setActions($actions)
                 ->setDataSource($dataSourceListItems)
-                ->setSpace()
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'))
         ;
 
         $this->addContainer($nav);
@@ -153,11 +159,13 @@ class Lists extends Form {
                 ->setAlign(Css::ALIGN_CLIENT)
         ;
 
-        $dialog = new DbContainer\EditDialog('listsDetails');
+        $dialog = new DbContainer\EditDialog(array(
+                    'name' => 'listsDetails'
+                ));
         $dialog
                 ->setDataSource($dataSourceLists)
                 ->setTitle('Lists details')
-                ->setWidth(450)
+                ->setWidth(500)
                 ->setHeight(180)
                 ->addContainer($detailsPanel)
                 ->addOpener($btnOpenLists)

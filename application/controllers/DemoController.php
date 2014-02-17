@@ -14,17 +14,26 @@ use Application\Form\Teryt;
 class DemoController extends Zend_Controller_Action {
 
     public function workerAction() {
-        $form = new Worker();
+        $form = new Worker(array(
+                    Worker::PROPERTY_NAME => 'workerForm',
+                    Worker::PROPERTY_AJAXVALIDATOR => false
+                ));
         $this->view->form = $form;
     }
 
     public function airportAction() {
-        $form = new Airport();
+        $form = new Airport(array(
+                    Airport::PROPERTY_NAME => 'airportForm',
+                    Airport::PROPERTY_AJAXVALIDATOR => false
+                ));
         $this->view->form = $form;
     }
 
     public function terytAction() {
-        $form = new Teryt();
+        $form = new Teryt(array(
+                    Teryt::PROPERTY_NAME => 'terytForm',
+                    Teryt::PROPERTY_AJAXVALIDATOR => false
+                ));
         $this->view->form = $form;
     }
 

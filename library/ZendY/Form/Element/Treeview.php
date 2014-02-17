@@ -18,13 +18,37 @@ use ZendY\Css;
 class Treeview extends CustomList {
 
     use \ZendY\ControlTrait;
+    
+    /**
+     * Tablica właściwości
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_COLUMNSPACE,
+        self::PROPERTY_CONDITIONALROWFORMATS,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MULTIOPTIONS,
+        self::PROPERTY_NAME,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );    
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'treeview';
         $this->addClasses(array(
             Css::TREEVIEW,
@@ -42,6 +66,16 @@ class Treeview extends CustomList {
         $this->setIcons($icons);
         $this->setRegisterInArrayValidator(false);
     }
+    
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setEmptyValue($empty = true) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }    
 
     /**
      * Ustawia ikony stosowane w kontrolce

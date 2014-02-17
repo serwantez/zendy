@@ -17,9 +17,15 @@ use ZendY\Css;
  */
 class DocFileView extends Widget {
     /**
-     * Parametry
+     * Właściwości komponentu
      */
 
+    const PROPERTY_CODEHIGHLIGHT = 'codeHighlight';
+    const PROPERTY_FILENAME = 'fileName';
+
+    /**
+     * Parametry
+     */
     const PARAM_CODE_HIGHLIGHT = 'codeHighlight';
 
     /**
@@ -37,11 +43,34 @@ class DocFileView extends Widget {
     protected $_fileName;
 
     /**
-     * Inicjalizacja obiektu
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_CODEHIGHLIGHT,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_FILENAME,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'docFileView';
         $this->addClasses(array(
             Css::LONGTEXT,

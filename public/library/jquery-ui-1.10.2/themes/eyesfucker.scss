@@ -1,0 +1,76 @@
+$iconSize: 16px;
+
+/* Ustawienia czcionki */
+$ffDefault: 'Open Sans', Tahoma, Arial, sans-serif;
+$fwDefault: normal;
+$fsDefault: 1em;
+
+/* Zaokrąglenia */
+$cornerRadius: 0px;
+
+/* Nagłówki/paski narzędziowe */
+$bgColorHeader: #eaeaea;
+$borderColorHeader: #cfcfcf;
+$fcHeader: #222222;
+$bgImgUrlHeader: none /*url(images/ui-bg_highlight-soft_50_dddddd_1x100.png)*/;
+$bgImgUrlHeaderVertical: none /*url(images/ui-bg_highlight-soft_50_dddddd_100x1.png)*/;
+$iconsHeader: url(images/ui-icons_222222_256x240.png);
+
+/* Zawartość */
+$bgColorContent: rgb(255, 255, 255);
+$borderColorContent: #cfcfcf;
+$fcContent: #222222;
+$bgImgUrlContent: none /*url(images/ui-bg_flat_75_ffffff_40x100.png)*/;
+$iconsContent: url(images/ui-icons_222222_256x240.png);
+
+/* Klikalne: stan domyślny */
+$bgColorDefault: #e6e6e6;
+$borderColorDefault: #cfcfcf;
+$fcDefault: #333333;
+$bgImgUrlDefault: none /*url(images/ui-bg_glass_75_e6e6e6_1x400.png)*/;
+$iconsDefault: url(images/ui-icons_888888_256x240.png);
+
+/* Klikalne: stan po najechaniu kursorem */
+$bgColorHover: #29abe2;
+$borderColorHover: #199bd2;
+$fcHover: #ffffff;
+$bgImgUrlHover: none;
+$iconsHover: url(images/ui-icons_ffffff_256x240.png);
+
+/* Klikalne: stan aktywności */
+$bgColorActive: #29abe2;
+$borderColorActive: #199bd2;
+$fcActive: #ffffff;
+$bgImgUrlActive: none /*url(images/ui-bg_highlight-soft_25_0073ea_1x100.png)*/;
+$iconsActive: url(images/ui-icons_ffffff_256x240.png);
+
+/* Zaznaczone */
+$bgColorHighlight: #ffffff;
+$borderColorHighlight: #aaaaaa;
+$fcHighlight: #000000;
+$bgImgUrlHighlight: none /*url(images/ui-bg_glass_65_ffffff_1x400.png)*/;
+$iconsHighlight: url(images/ui-icons_454545_256x240.png);
+
+/* Błędy */
+$bgColorError: #fef1ec;
+$borderColorError: #cd0a0a;
+$fcError: #cd0a0a;
+$bgImgUrlError: none /*url(images/ui-bg_glass_95_fef1ec_1x400.png)*/;
+$iconsError: url(images/ui-icons_cd0a0a_256x240.png);
+
+/* Ekran modalny przesłonięty */
+$bgColorOverlay: #aaaaaa;
+$opacityOverlay: 30;
+$bgImgUrlOverlay: url(images/ui-bg_flat_0_aaaaaa_40x100.png);
+
+/* Efekt cienia */
+$bgColorShadow: #aaaaaa;
+$opacityShadow: 30%;
+$thicknessShadow: 8px;
+$offsetTopShadow: -8px;
+$offsetLeftShadow: -8px;
+$cornerRadiusShadow: 8px;
+$bgImgUrlShadow: url(images/ui-bg_flat_0_aaaaaa_40x100.png);
+
+/* Link */
+$linkColor: #199bd2;

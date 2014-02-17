@@ -84,7 +84,7 @@ interface ColumnInterface extends CellInterface {
      * 
      * @return array
      */
-    public function getConditionalRowFormat();
+    public function getConditionalRowFormats();
 
     /**
      * Zwraca pola ze zbioru danych potrzebne do wyrenderowania kontrolki

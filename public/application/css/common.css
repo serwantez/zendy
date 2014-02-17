@@ -1,32 +1,12 @@
 * {
   margin: 0;
   padding: 0;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 h2 {
-  font-size: 14px;
-}
-
-.ui-accordion-header {
-  margin-top: 0 !important;
-}
-
-.ui-tabs {
-  position: absolute !important;
-  padding: 0 !important;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
-.ui-tabs .ui-tabs-panel {
-  position: absolute;
-  height: auto !important;
-  left: 0;
-  right: 0;
-  top: 33px;
-  bottom: 0;
+  font-size: 18px;
+  font-weight: normal;
 }
 
 tr.row-red td {
@@ -73,7 +53,7 @@ dt {
 
 .info-block {
   display: inline-block;
-  width: 290px;
+  width: 280px;
   height: 80px;
 }
 .info-block a {
@@ -89,10 +69,61 @@ dt {
   float: left;
 }
 .info-block a div div {
+  width: 180px;
   float: left;
-  width: 200px;
   display: inline-block;
+  line-height: 110%;
 }
 .info-block a div div h3 {
   margin: 2px 0px;
+}
+
+.ui-widget-header {
+  font-weight: normal;
+}
+
+.ui-dialog-title, .ui-document-title, .ui-box-title {
+  text-transform: uppercase;
+}
+
+#nav .ui-widget-content {
+  background-color: #333333;
+}
+#nav .ui-menu {
+  border: none;
+  z-index: 99;
+}
+#nav .ui-menu .ui-menu-item {
+  min-width: 200px;
+}
+#nav .ui-menu .ui-menu-item a {
+  font-size: 12px;
+  color: #aeb2b7;
+  padding: 0.5em 0 0.5em 2.5em;
+}
+#nav .ui-menu .ui-menu-item a span.ui-icon {
+  background-image: url("../../library/jquery-ui-1.10.2/themes/base/images/ui-icons_888888_256x240.png");
+}
+#nav .ui-menu .ui-menu-item a span.ui-menu-icon-left {
+  left: 0.5em;
+  top: 0.5em;
+}
+#nav .ui-menu a.ui-state-active, #nav .ui-menu a.ui-state-focus {
+  background-color: #28282e !important;
+  border-color: #28282e !important;
+  color: white !important;
+}
+#nav .ui-menu a.ui-state-active span.ui-icon, #nav .ui-menu a.ui-state-focus span.ui-icon {
+  background-image: url("../../library/jquery-ui-1.10.2/themes/base/images/ui-icons_ffffff_256x240.png") !important;
+}
+#nav .ui-menu li.active > a {
+  color: #29abe2 !important;
+}
+#nav .ui-menu li.active > a span.ui-icon {
+  background-image: url("../../library/jquery-ui-1.10.2/themes/base/images/ui-icons_29abe2_256x240.png") !important;
+}
+
+code, pre {
+  font-family: inherit;
+  font-weight: normal;
 }

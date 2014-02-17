@@ -18,6 +18,12 @@ use ZendY\Db\Form\Element\Filter\FilterInterface;
  * @author Piotr Zając
  */
 class IconEdit extends \ZendY\Db\Form\Element\IconEdit implements FilterInterface {
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_DATAFIELD = 'dataField';
+    const PROPERTY_OPERATOR = 'operator';
 
     /**
      * Operator porównania
@@ -34,12 +40,31 @@ class IconEdit extends \ZendY\Db\Form\Element\IconEdit implements FilterInterfac
     protected $_frontFilterParams = array();
 
     /**
-     * Inicjalizacja obiektu
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DATAFIELD,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_ICON,
+        self::PROPERTY_NAME,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MAXLENGTH,
+        self::PROPERTY_OPERATOR,
+        self::PROPERTY_PLACEHOLDER,
+        self::PROPERTY_WIDTH,
+    );
+
+    /**
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    public function _setDefaults() {
+        parent::_setDefaults();
         $this->setIcon(Css::ICON_SEARCH);
     }
 
@@ -111,7 +136,7 @@ class IconEdit extends \ZendY\Db\Form\Element\IconEdit implements FilterInterfac
             $this->getDataSource()->addFilterControl($this);
         return parent::render($view);
     }
-    
+
     /**
      * Renderuje kod js odpowiedzialny za dostarczanie danych do kontrolki
      * 
@@ -124,6 +149,6 @@ class IconEdit extends \ZendY\Db\Form\Element\IconEdit implements FilterInterfac
                 , \ZendY\JQuery::encodeJson($this->getFrontFilterParams())
         );
         return $js;
-    }    
+    }
 
 }

@@ -19,6 +19,11 @@ use ZendY\Exception;
 class Table extends Editable implements TableInterface {
 
     use TableTrait;
+    
+    /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_TABLENAME = 'tableName';   
 
     /**
      * Obiekt adaptera bazodanowego
@@ -26,6 +31,19 @@ class Table extends Editable implements TableInterface {
      * @var \Zend_Db_Adapter_Abstract
      */
     protected $_db;
+    
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_MASTER,
+        self::PROPERTY_NAME,
+        self::PROPERTY_PRIMARY,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_TABLENAME
+    );    
 
     /**
      * Ustawia wartości domyślne
@@ -48,34 +66,10 @@ class Table extends Editable implements TableInterface {
      * @return void
      */
     public function __wakeup() {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $this->_db = \Zend_Registry::get('db');
         $this->_table->setOptions(array(\Zend_Db_Table_Abstract::ADAPTER => $this->_db));
         parent::__wakeup();
-    }
-
-    /**
-     * Ustawia nazwę tabeli
-     * 
-     * @param string $tableName
-     * @return \ZendY\Db\DataSet\Table
-     */
-    public function setTableName($tableName) {
-        $this->_name = $tableName;
-        $this->_table->setOptions(array(\Zend_Db_Table_Abstract::NAME => $tableName));
-        return $this;
-    }
-
-    /**
-     * Zwraca nazwę tabeli
-     * 
-     * @return string
-     */
-    public function getTableName() {
-        if (isset($this->_name))
-            return $this->_name;
-        else
-            return $this->_table->info(\Zend_Db_Table_Abstract::NAME);
     }
 
     /**
@@ -123,7 +117,7 @@ class Table extends Editable implements TableInterface {
      * @return array
      */
     public function getItems($offset = null, $itemCount = null, $columns = '*', $conditionalFormats = null) {
-        Msg::add(sprintf('Table %s ->%s', $this->getId(), __FUNCTION__));
+        Msg::add(sprintf('Table %s ->%s', $this->getName(), __FUNCTION__));
         if (!count($columns))
             $columns = '*';
         $select = $this->_db->select();
@@ -197,7 +191,7 @@ class Table extends Editable implements TableInterface {
      */
     public function fetchCol($col, $where = null, $order = null) {
         $select = $this->_table->select();
-        $select->from($this->_name, $col);
+        $select->from($this->_tableName, $col);
 
         if (count($this->_filter->getFilters())) {
             $select->where($this->_filter->toSelect());
@@ -228,7 +222,7 @@ class Table extends Editable implements TableInterface {
      */
     public function fetchOne($col, $where = null, $order = null) {
         $select = $this->_table->select();
-        $select->from($this->_name, $col);
+        $select->from($this->_tableName, $col);
 
         if (count($this->_filter->getFilters())) {
             $select->where($this->_filter->toSelect());
@@ -258,9 +252,9 @@ class Table extends Editable implements TableInterface {
      * @return int
      */
     protected function _count() {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $select = $this->_db->select();
-        $select->from($this->_name, 'COUNT(*) AS num');
+        $select->from($this->_tableName, 'COUNT(*) AS num');
 
         if (count($this->_filter->getFilters())) {
             $select->where($this->_filter->toSelect());
@@ -281,7 +275,7 @@ class Table extends Editable implements TableInterface {
      * @return array
      */
     public function getCurrent($filterBlobs = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         if ($this->_state && $this->_offset >= 0) {
             $select = $this->_table->select(true);
 
@@ -382,7 +376,7 @@ class Table extends Editable implements TableInterface {
      * @return \ZendY\Db\DataSet\Table
      */
     public function dropPrimaryKey() {
-        $q = "alter table `" . $this->_name . "` drop primary key";
+        $q = "alter table `" . $this->_tableName . "` drop primary key";
         $this->_db->query($q);
         return $this;
     }
@@ -394,7 +388,7 @@ class Table extends Editable implements TableInterface {
      * @return \ZendY\Db\DataSet\Table
      */
     public function addPrimaryKey($field) {
-        $q = "ALTER TABLE `" . $this->_name . "` ADD PRIMARY KEY (`" . $field . "`)";
+        $q = "ALTER TABLE `" . $this->_tableName . "` ADD PRIMARY KEY (`" . $field . "`)";
         $this->_db->query($q);
         return $this;
     }
@@ -407,7 +401,7 @@ class Table extends Editable implements TableInterface {
      * @return array
      */
     public function searchAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if (isset($params['searchValues'])) {
             $select1 = $this->_table->select(true);

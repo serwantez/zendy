@@ -20,7 +20,7 @@ abstract class Object {
      * 
      * @var string
      */
-    protected $_id = null;
+    protected $_name = null;
 
     /**
      * Licznik instancji
@@ -35,12 +35,12 @@ abstract class Object {
      * @param string $id 
      * @return void
      */
-    public function __construct($id = null) {
+    public function __construct($name = null) {
         self::$_count++;
-        if (isset($id))
-            $this->setId($id);
+        if (isset($name))
+            $this->setName($name);
         else
-            $this->setId($this->getClassName() . '_' . self::$_count);
+            $this->setName($this->getClassName() . '_' . self::$_count);
     }
 
     /**
@@ -59,23 +59,23 @@ abstract class Object {
     }
 
     /**
-     * Ustawia identyfikator obiektu
+     * Ustawia nazwę obiektu
      * 
-     * @param string $id
+     * @param string $name
      * @return \ZendY\Object 
      */
-    public function setId($id) {
-        $this->_id = $this->filterName($id);
+    public function setName($name) {
+        $this->_name = $this->filterName($name);
         return $this;
     }
 
     /**
-     * Zwraca identyfikator obiektu
+     * Zwraca nazwę obiektu
      * 
      * @return string
      */
-    public function getId() {
-        return $this->_id;
+    public function getName() {
+        return $this->_name;
     }
 
     /**

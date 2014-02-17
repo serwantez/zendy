@@ -18,9 +18,14 @@ use ZendY\Db\Filter;
  */
 class ListItem extends Sortable {
     /**
-     * Domyślne kolumny zbioru
+     * Właściwości komponentu
      */
 
+    const PROPERTY_LIST = 'list';
+
+    /**
+     * Domyślne kolumny zbioru
+     */
     const COL_LIST_ID = 'list_id';
     const COL_ITEM_ID = 'item_id';
     const COL_FLAG = 'flag';
@@ -38,15 +43,17 @@ class ListItem extends Sortable {
     const TABLE_NAME = 'list_item';
 
     /**
-     * Ustawia wartoßci domyślne
+     * Inicjalizacja obiektu
      * 
      * @return void
      */
-    protected function _setDefaults() {
-        parent::_setDefaults();
-        $this->setTableName(self::TABLE_NAME)
+    public function init() {
+        parent::init();
+        $this
+                ->setTableName(self::TABLE_NAME)
                 ->setPrimary(array(self::COL_LIST_ID, self::COL_ITEM_ID))
-                ->setSortField(self::COL_SORT);
+                ->setSortField(self::COL_SORT)
+        ;
     }
 
     /**

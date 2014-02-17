@@ -21,11 +21,12 @@ class Calendar extends Form {
 
     public function init() {
         $this->setAttrib('id', 'calendarForm');
-        $this->setAlign(Css::ALIGN_CLIENT);
         $this->setAjaxValidator(false);
 
         $dataSet = new DbCalendar('calendar');
-        $dataSourceCalendar = new DataSource('dataSourceCalendar', $dataSet);
+        $dataSourceCalendar = new DataSource('dataSourceCalendar', array(
+                    'dataSet' => $dataSet
+                ));
 
         $localFeastFilter = new Filter();
         $localFeastFilter->addFilter(DbCalendar::COL_WEIGHT_NUMBER, array(4, 8, 11, 14), DataSet::OPERATOR_IN);

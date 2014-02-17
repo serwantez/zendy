@@ -18,63 +18,75 @@ use ZendY\Db\Form\Element as DbElement;
 class User extends Form {
 
     public function init() {
-        $this->setAttrib('id', 'userForm');
-        $this->setAlign(Css::ALIGN_CLIENT);
-        $this->setAjaxValidator(false);
+        $dataSetU = new DbUser(array(
+                    'name' => 'user'
+                ));
+        $dataSourceDbUser = new DataSource(array(
+                    'name' => 'userSource',
+                    'dataSet' => $dataSetU
+                ));
 
-        $dataSourceDbUser = new DataSource('userSource', new DbUser('user'));
-
-        $dataSet = new ArraySet('activity');
-        $dataSet->setData(array(
-                    array('id' => 0, 'flag' => 'no'),
-                    array('id' => 1, 'flag' => 'yes')
-                ))
-                ->setPrimary('id');
-        $dataSourceActivity = new DataSource('activitySource', $dataSet);
+        $dataSetA = new ArraySet(array(
+                    'name' => 'activity',
+                    'data' => array(
+                        array('id' => 0, 'flag' => 'no'),
+                        array('id' => 1, 'flag' => 'yes')
+                    ),
+                    'primary' => 'id'
+                ));
+        $dataSourceActivity = new DataSource(array(
+                    'name' => 'activitySource',
+                    'dataSet' => $dataSetA
+                ));
 
         $grid = new DbElement\Grid('userGrid');
         $grid
                 ->setListSource($dataSourceDbUser)
                 ->setKeyField('id')
                 ->addColumn(new Column(
-                                DbUser::COL_ID,
                                 array(
+                                    'name' => DbUser::COL_ID,
                                     'label' => 'ID',
                                     'width' => 40,
                                     'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
                         )))
                 ->addColumn(new Column(
-                                DbUser::COL_USERNAME,
                                 array(
-                                    'label' => 'Username',
+                                    'name' => DbUser::COL_USERNAME,
+                                    'label' => 'User name',
                                     'width' => 140,
                         )))
                 ->addColumn(new Column(
-                                DbUser::COL_FIRSTNAME,
                                 array(
-                                    'label' => 'First name',
+                                    'name' => DbUser::COL_FIRSTNAME,
+                                    'label' => 'Firstname',
                                     'width' => 140,
                         )))
                 ->addColumn(new Column(
-                                DbUser::COL_SURNAME,
                                 array(
+                                    'name' => DbUser::COL_SURNAME,
                                     'label' => 'Surname',
                                     'width' => 140,
                         )))
                 ->addColumn(new Column(
-                                DbUser::COL_EMAIL,
                                 array(
+                                    'name' => DbUser::COL_EMAIL,
                                     'label' => 'Email',
                                     'width' => 180,
                         )))
                 ->addColumn(new Column(
-                                DbUser::COL_ACTIVE,
                                 array(
+                                    'name' => DbUser::COL_ACTIVE,
                                     'label' => 'Active',
                                     'width' => 55,
                                     'align' => Css::TEXT_ALIGN_HORIZONTAL_CENTER,
                                     'decorators' => array(
-                                        array('Icon', array('icons' => array(0 => 'ui-icon-cancel', 1 => 'ui-icon-check')))
+                                        array('Icon', array(
+                                                'icons' => array(
+                                                    0 => 'ui-icon-cancel',
+                                                    1 => 'ui-icon-check'
+                                                )
+                                        ))
                                     )
                         )))
                 ->setAlign(Css::ALIGN_CLIENT)
@@ -85,22 +97,22 @@ class User extends Form {
         $panel1 = new Panel();
         $panel1->addElement($grid)
                 ->setAlign(Css::ALIGN_CLIENT)
+                ->setSpace()
         ;
-        $this->addContainer($panel1);
 
         $elements[0] = new DbElement\Edit('username');
         $elements[0]
                 ->setDataSource($dataSourceDbUser)
                 ->setDataField(DbUser::COL_USERNAME)
                 ->setWidth(170)
-                ->setLabel('Username');
+                ->setLabel('User name');
 
         $elements[1] = new DbElement\Edit('firstname');
         $elements[1]
                 ->setDataSource($dataSourceDbUser)
                 ->setDataField(DbUser::COL_FIRSTNAME)
                 ->setWidth(170)
-                ->setLabel('First name');
+                ->setLabel('Firstname');
 
         $elements[2] = new DbElement\Edit('surname');
         $elements[2]
@@ -162,22 +174,27 @@ class User extends Form {
                 ->addElement($btnAdd)
                 ->addElement($btnEdit)
                 ->setAlign(Css::ALIGN_BOTTOM)
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'))
         ;
 
-        $this->addContainer($nav);
-
-        $dialog = new EditDialog('userDetails');
+        $dialog = new EditDialog(array(
+                    'name' => 'userDetails'
+                ));
         $dialog
                 ->setDataSource($dataSourceDbUser)
                 ->setTitle('User details')
-                ->setWidth(450)
+                ->setWidth(500)
                 ->setHeight(300)
                 ->addContainer($detailsPanel)
                 ->addOpener($btnEdit)
                 ->addOpener($btnAdd)
         ;
 
-        $this->addContainer($dialog);
+        $this->setContainers(array(
+            $panel1,
+            $nav,
+            $dialog
+        ));
     }
 
 }

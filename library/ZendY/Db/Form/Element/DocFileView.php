@@ -18,6 +18,25 @@ use ZendY\Css;
 class DocFileView extends Text {
 
     /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DATAFIELD,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+    
+    /**
      * Licznik instancji
      * 
      * @var int
@@ -25,13 +44,14 @@ class DocFileView extends Text {
     static protected $count = 0;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'docFileView';
-        $this->addClasses(array(
+        $this->setClasses(array(
             Css::LONGTEXT,
             Css::WIDGET,
             Css::WIDGET_CONTENT,
@@ -60,14 +80,16 @@ class DocFileView extends Text {
                     $value = substr_replace($value, $file, $posStart, ($posEnd - $posStart + strlen($fileEnd)));
                 }
             }
-            //podświetlanie kodu
-            $codeStart = '[code]';
-            $codeEnd = '[/code]';
-            while (($posStart = strpos($value, $codeStart)) !== false) {
-                $posEnd = strpos($value, $codeEnd, $posStart);
-                $code = substr($value, $posStart + strlen($codeStart), ($posEnd - $posStart - strlen($codeStart)));
-                $value = substr_replace($value, highlight_string($code, true), $posStart, ($posEnd - $posStart + strlen($codeEnd)));
-            }
+            //if ($this->getCodeHighlight()) {
+                //podświetlanie kodu
+                $codeStart = '[code]';
+                $codeEnd = '[/code]';
+                while (($posStart = strpos($value, $codeStart)) !== false) {
+                    $posEnd = strpos($value, $codeEnd, $posStart);
+                    $code = substr($value, $posStart + strlen($codeStart), ($posEnd - $posStart - strlen($codeStart)));
+                    $value = substr_replace($value, highlight_string($code, true), $posStart, ($posEnd - $posStart + strlen($codeEnd)));
+                }
+            //}
         } else {
             $value = '';
         }

@@ -29,8 +29,10 @@ class Classpreview extends Form {
     private $_dataset;
 
     public function __construct($options = null, $sources = null) {
-        $this->_dataset = new FilesTree('files');
-        $this->_dataset->setPath('../library/ZendY');
+        $this->_dataset = new FilesTree(array(
+                    FilesTree::PROPERTY_NAME => 'files',
+                    FilesTree::PROPERTY_PATH => '../library/ZendY'
+                ));
 
         if (isset($options['search'])) {
             $this->_dataset->openAction();
@@ -41,14 +43,11 @@ class Classpreview extends Form {
     }
 
     public function init() {
-        //ustawienia ogólne
-        $this->setAttrib('id', 'classPreviewForm');
-        $this->setAlign(Css::ALIGN_CLIENT);
-        $this->setAjaxValidator(false);
-
-        //$files = $this->getSource('files');
         //zbiory danych
-        $files = new DataSource('files', $this->_dataset);
+        $files = new DataSource(array(
+                    'name' => 'files',
+                    'dataSet' => $this->_dataset
+                ));
 
         //kontrolki
         $tree = new DbElement\Treeview('treeviewFiles');
@@ -63,7 +62,7 @@ class Classpreview extends Form {
         $panelMenu->addElement($tree)
                 ->setAlign(Css::ALIGN_LEFT)
                 ->setSpace()
-                ->setWidth(350)
+                ->setWidth(320)
         ;
 
 
@@ -98,14 +97,14 @@ class Classpreview extends Form {
 
         $actions = array(
             DataSet::ACTION_REFRESH,
-            FilesTree::ACTION_DOWNLOAD,
-            FilesTree::ACTION_DELETE
+            FilesTree::ACTION_DOWNLOAD
         );
 
         $nav = new Navigator();
         $nav
                 ->setActions($actions)
                 ->setDataSource($files)
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'))
         ;
 
         $panelMain = new Panel();
@@ -113,12 +112,10 @@ class Classpreview extends Form {
                 ->setAlign(Css::ALIGN_CLIENT)
                 ->addContainer($panelTitle)
                 ->addContainer($panelContent)
-                ->addContainer($nav)
                 ->setSpace()
         ;
 
-        $this->addContainer($panelMenu);
-        $this->addContainer($panelMain);
+        $this->setContainers(array($panelMenu, $panelMain, $nav));
     }
 
 }

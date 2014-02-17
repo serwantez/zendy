@@ -1,10 +1,9 @@
-<div class="ui-longtext ui-widget ui-widget-content ui-align-client ui-document">
+<div class="ui-longtext ui-widget ui-align-client ui-document">
     <div>
         <p>Witamy na oficjalnej stronie bilioteki ZendY.</p>
-        <p>ZendY powstała jako rozwinięcie biblioteki ZendX, ułatwiającej współpracę aplikacji napisanych w Zend Framework z biblioteką jQuery. 
-            ZendY wprowadza również zintegrowany model dostępu do danych oraz przyspiesza tworzenie formularzy. 
-            Zależność pomiędzy ZendY, a Zend Framework przedstawia poniższy schemat:</p>
-
+        <p>ZendY powstała jako rozwinięcie biblioteki ZendX, 
+            ułatwiającej współpracę aplikacji napisanych w Zend Framework z biblioteką jQuery. 
+            Zależność pomiędzy ZendY, a Zend Framework przedstawiona jest na poniższym schemacie:</p>
         <svg 
             version="1.1" 
             preserveAspectRatio="none" 
@@ -16,7 +15,7 @@
             viewBox="0 0 216027 53816">
 
             <g transform="scale(0.63472)">
-                <g id="zend" class="ui-state-hover">
+                <g id="zend" class="svg-block ui-state-default">
                     <path class="ui-svg-element"
                           d="M 28449 8322 L 102801 8322 102801 59598 28449 59598 Z"/>
                     <g pointer-events="none" transform="matrix(381,0,0,381,32106,22911)">
@@ -35,7 +34,7 @@
                     </g>
                 </g>
 
-                <g id="zendx" class="ui-state-hover">
+                <g id="zendx" class="svg-block ui-state-default">
                     <path class="ui-svg-element"
                           d="M 142340 8322 L 216692 8322 216692 59598 142340 59598 Z"/>
                     <g pointer-events="none" transform="matrix(381,0,0,381,145997,28435.5)">
@@ -47,7 +46,7 @@
                     </g>
                 </g>
 
-                <g id="zendy" class="ui-state-hover">
+                <g id="zendy" class="svg-block ui-state-default">
                     <g/>
                     <path class="ui-svg-element"
                           d="M 256491 8322 L 330843 8322 330843 59598 256491 59598 Z"/>
@@ -60,18 +59,23 @@
                     </g>
                 </g>
 
-                <g id="arrow1" class="ui-state-hover">
+                <g id="arrow1" class="ui-state-default">
                     <path class="ui-svg-element"
                           d="M 108410 35792 L 115370 28832 115370 32312 132578 32312 132578 39272 115370 39272 115370 42752 Z"/>
                 </g>
 
-                <g id="arrow2" class="ui-state-hover">
+                <g id="arrow2" class="ui-state-default">
                     <path class="ui-svg-element"
                           d="M 224234 35792 L 231194 28832 231194 32312 248402 32312 248402 39272 231194 39272 231194 42752 Z"/>
                 </g>
             </g>
 
         </svg>
+
+        <p>
+            ZendY wprowadza zintegrowany model dostępu do danych, 
+            w którym elementy formularza można łączyć bezpośrednio ze zbiorami danych.
+        </p>
 
         <p>Główne części biblioteki:
             <ul>
@@ -81,5 +85,68 @@
                 <li><tt>View</tt> - pakiet pomocników widoku, odpowiednik Zend_View</li>
             </ul></p>
         <p>Biblioteka powstała w firmie EFISH Sp. z o.o. w 2013 roku.</p>
+
+    </div>
+    <div class="info-container">
+        <div class="info-block ui-state-default">
+            <a href="/zendy/manual">
+                <div>
+                    <img src="/application/images/icons/info.png" />
+                    <div>
+                        <h3>Manual</h3>
+                        <span>Dowiedz się więcej o bibliotece</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="info-block ui-state-default">
+            <a href="/zendy/classpreview">
+                <div>
+                    <img src="/application/images/icons/notes.png" />
+                    <div>
+                        <h3>Przegląd klas</h3>
+                        <span>Zobacz kod poszczególnych klas</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="info-block ui-state-default">
+            <a href="/demo/airport">
+                <div>
+                    <img src="/application/images/icons/preview.png" />
+                    <div>
+                        <h3>Demo</h3>
+                        <span>Uruchom formularz demonstracyjny</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="info-block ui-state-default">
+            <a href="/zendy/download">
+                <div>
+                    <img src="/application/images/icons/download.png" />
+                    <div>
+                        <h3>Pobieranie</h3>
+                        <span>Pobierz bibliotekę</span>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
+<script>
+    $(function() {
+        $(".info-block").hover(function(){
+            $(this).addClass("ui-state-hover");
+        },
+        function(){
+            $(this).removeClass("ui-state-hover");
+        });
+        
+        $('.svg-block').hover(function() {
+            $(this).attr('class', 'svg-block ui-state-default ui-state-hover');
+        }, function() {
+            $(this).attr('class', 'svg-block ui-state-default');
+        });
+    });
+</script>

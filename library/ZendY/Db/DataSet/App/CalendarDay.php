@@ -44,9 +44,9 @@ class CalendarDay extends EditableQuery {
      * @return void
      */
     public function init() {
-        $this->_name = self::TABLE_NAME;
         parent::init();
-        $this->from(array('c' => $this->_name), array(
+        $this->setTableName(self::TABLE_NAME);
+        $this->from(array('c' => $this->_tableName), array(
                     self::COL_ID,
                     self::COL_MOVABILITY,
                     self::COL_NAME,

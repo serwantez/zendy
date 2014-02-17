@@ -4,7 +4,6 @@
     overflow: hidden;
     padding: 3px;
     vertical-align: middle;
-    height: 15px;
     span {
         padding: 0px;
         white-space: nowrap;
@@ -24,8 +23,12 @@
         padding: 5px;
         margin-top: 5px;
         margin-bottom: 5px;
-        border: 1px solid #DDDDDD;
-        background-color: #EEFFCC; 
+        border: 1px solid #D9D9D9;
+        background-color: #EBEBEB;
+        font-size: 12px;
+        span {
+            font-size: 12px;
+        }
     }
     
 }
@@ -33,9 +36,6 @@
 .ui-document {
     padding: 15px;
     overflow: auto;
-    * {
-        font-size: 12px;
-    }
     div {
         line-height: 170%;
     }
@@ -70,7 +70,6 @@
 .ui-document-title {
     font-size: 14px;
     text-align: center;
-    height: 20px;
     span {
         font-size: 14px;
     }
@@ -116,8 +115,8 @@
             white-space: nowrap;
             padding-left: 10px;
             span {
-                font-family: Consolas,Courier,monospace;
-                font-size: 12px;
+                /*font-family: Consolas,Courier,monospace;*/
+                /*font-size: 12px;*/
             }
         }
     }

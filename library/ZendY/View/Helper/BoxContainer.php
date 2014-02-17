@@ -34,20 +34,22 @@ class BoxContainer extends \ZendX_JQuery_View_Helper_UiWidget {
             $attribs['id'] = $id;
         }
 
+        $this->view->headLink()->appendStylesheet($this->view->host . '/library/components/box/box.css');
+
         $html = '<div'
                 . $this->_htmlAttribs($attribs)
                 . '>'
                 . sprintf('<div class="%s %s %s %s">'
-                        , Css::DIALOG_TITLEBAR
+                        , Css::BOX_TITLEBAR
                         , Css::WIDGET_HEADER
                         , Css::CORNER_ALL
                         , Css::HELPER_CLEARFIX)
-                . sprintf('<span class="%s">', Css::DIALOG_TITLE)
+                . sprintf('<span class="%s">', Css::BOX_TITLE)
                 . $params['title']
                 . '</span>
                     </div>'
-                . sprintf('<div class="%s %s %s" style="top: 30px; bottom: 1px;">'
-                        , Css::DIALOG_CONTENT
+                . sprintf('<div class="%s %s %s">'
+                        , Css::BOX_CONTENT
                         , Css::WIDGET_CONTENT
                         , Css::ALIGN_CLIENT)
                 . $content

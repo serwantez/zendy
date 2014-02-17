@@ -34,11 +34,50 @@ class DatePicker extends IconEdit {
     const DURATION_FAST = 'fast';
 
     /**
-     * Inicjalizacja obiektu
+     * Właściwości komponentu
+     */
+    const PROPERTY_DATEFORMAT = 'dateFormat';
+    const PROPERTY_DURATION = 'duration';
+    const PROPERTY_LOCALE = 'locale';
+    const PROPERTY_MAXDATE = 'maxDate';
+    const PROPERTY_MINDATE = 'minDate';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DATEFORMAT,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_DURATION,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_ICON,
+        self::PROPERTY_ICON_POSITION,
+        self::PROPERTY_LOCALE,
+        self::PROPERTY_MAXDATE,
+        self::PROPERTY_MAXLENGTH,
+        self::PROPERTY_MINDATE,
+        self::PROPERTY_PLACEHOLDER,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'datePicker';
         $this->addClasses(array(
             Css::ICONEDIT,

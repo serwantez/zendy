@@ -16,6 +16,38 @@ namespace ZendY\Form\Element;
  * @author Piotr Zając
  */
 class RegisterEmail extends Email {
+    /**
+     * Własciwości komponentu
+     */
+
+    const PROPERTY_FIELD = 'field';
+    const PROPERTY_TABLE = 'table';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_FIELD,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_ICON,
+        self::PROPERTY_ICON_POSITION,
+        self::PROPERTY_MAXLENGTH,
+        self::PROPERTY_PLACEHOLDER,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TABLE,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
 
     /**
      * Licznik instancji
@@ -32,12 +64,12 @@ class RegisterEmail extends Email {
     protected $_validatorOptions;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->setRequired(true);
     }
 
@@ -65,6 +97,46 @@ class RegisterEmail extends Email {
      */
     public function getTableAndField() {
         return $this->_validatorOptions;
+    }
+
+    /**
+     * Ustawia tabelę walidatora
+     * 
+     * @param string $table
+     * @return \ZendY\Form\Element\RegisterEmail
+     */
+    public function setTable($table) {
+        $this->_validatorOptions['table'] = $table;
+        return $this;
+    }
+
+    /**
+     * Zwraca tabelę walidatora
+     * 
+     * @return string
+     */
+    public function getTable() {
+        return $this->_validatorOptions['table'];
+    }
+
+    /**
+     * Ustawia kolumnę w tabeli walidatora
+     * 
+     * @param string $field
+     * @return \ZendY\Form\Element\RegisterEmail
+     */
+    public function setField($field) {
+        $this->_validatorOptions['field'] = $field;
+        return $this;
+    }
+
+    /**
+     * Zwraca kolumnę w tabeli walidatora
+     * 
+     * @return string
+     */
+    public function getField() {
+        return $this->_validatorOptions['field'];
     }
 
 }

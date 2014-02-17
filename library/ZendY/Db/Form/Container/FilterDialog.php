@@ -22,6 +22,11 @@ use ZendY\Db\Form\Element as DbElement;
  * @author Piotr Zając
  */
 class FilterDialog extends Dialog implements DataInterface {
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_DATASOURCE = 'dataSource';
 
     /**
      * Licznik instancji
@@ -45,6 +50,40 @@ class FilterDialog extends Dialog implements DataInterface {
     protected $_navigator;
 
     /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_AUTOOPEN,        
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_MODAL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_OPENERS,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
+     * 
+     * @return void
+     */
+    protected function _setDefaults() {
+        parent::_setDefaults();
+        $this->_navigator = new Navigator();
+        $actions = array(
+            array('action' => DataSet::ACTION_FILTER, 'text' => true)
+        );
+        $this->_navigator->setActions($actions);
+        $this->setModal(true)
+                ->setJQueryParam(self::PARAM_RESIZABLE, false)
+        ;
+    }
+
+    /**
      * Ustawia źródło danych
      * 
      * @param \ZendY\Db\DataSource|null $dataSource
@@ -65,24 +104,6 @@ class FilterDialog extends Dialog implements DataInterface {
     }
 
     /**
-     * Inicjalizacja obiektu
-     * 
-     * @return void
-     */
-    public function init() {
-        $this->_navigator = new Navigator();
-        $actions = array(
-            array('action' => DataSet::ACTION_FILTER, 'text' => true)
-        );
-        $this->_navigator->setActions($actions);
-
-        parent::init();
-        $this->setModal(true)
-                ->setJQueryParam(self::PARAM_RESIZABLE, false)
-        ;
-    }
-
-    /**
      * Zwraca identyfikatory elementów filtrujących
      * 
      * @return string
@@ -94,7 +115,7 @@ class FilterDialog extends Dialog implements DataInterface {
             if ($element instanceof DbElement\Filter\IconEdit) {
                 if (strlen($result) > 0)
                     $result .= ', ';
-                $result .= '#' . $element->getId();
+                $result .= '#' . $element->getName();
             }
         }
         return $result;
@@ -112,7 +133,7 @@ class FilterDialog extends Dialog implements DataInterface {
                 ->setDataAction(DataSet::ACTION_CLEARFILTER)
                 ->setVisibleText(TRUE);
 
-        $btnCancel = new Element\IconButton($this->_navigator->getId() . '_closeDialog');
+        $btnCancel = new Element\IconButton($this->_navigator->getName() . '_closeDialog');
         $btnCancel->setLabel('Close')
                 ->setIcons(Css::ICON_CLOSE)
                 ->setVisibleText(TRUE)
@@ -121,12 +142,11 @@ class FilterDialog extends Dialog implements DataInterface {
                 ->setDataSource($this->_dataSource)
                 ->addElement($btnClearFilter)
                 ->addElement($btnCancel)
-                ->setHeight(38)
                 ->setAlign(Css::ALIGN_BOTTOM)
         ;
         $this->addContainer($this->_navigator);
 
-        $btnFilter = $this->_navigator->getElement($this->_navigator->getId() . '_' . DataSet::ACTION_FILTER);
+        $btnFilter = $this->_navigator->getElement($this->_navigator->getName() . '_' . DataSet::ACTION_FILTER);
 
         if (isset($btnFilter)) {
             $this->addCloser($btnFilter);
@@ -137,7 +157,7 @@ class FilterDialog extends Dialog implements DataInterface {
                 }
             });'
                     , $this->_getFilterWidgetsId()
-                    , $btnFilter->getId()
+                    , $btnFilter->getName()
             );
             $this->setJQueryParam(
                     self::PARAM_EVENT_CREATE

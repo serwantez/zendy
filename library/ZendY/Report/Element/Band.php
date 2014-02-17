@@ -36,7 +36,7 @@ class Band extends Multi implements DataInterface {
      */
     public function addColumn(Column $column) {
         $columns = $this->getColumns();
-        $columns[$column->getId()] = $column;
+        $columns[$column->getName()] = $column;
         $this->setAttrib('columns', $columns);
         return $this;
     }

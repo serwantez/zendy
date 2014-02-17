@@ -24,6 +24,39 @@ class RadioButton extends Radio {
     const PARAM_ICONS = 'icons';
 
     /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_ICONS = 'icons';
+    const PROPERTY_TOOLBUTTON = 'toolButton';
+    const PROPERTY_VISIBLETEXT = 'visibleText';
+
+    /**
+     * Tablica właściwości
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_COLUMNSPACE,
+        self::PROPERTY_CONDITIONALROWFORMATS,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_ICONS,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MULTIOPTIONS,
+        self::PROPERTY_NAME,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLBUTTON,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_VISIBLETEXT,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
      * Czy jest przycisk paska narzędziowego
      * 
      * @var bool
@@ -31,12 +64,12 @@ class RadioButton extends Radio {
     protected $isToolButton = false;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'radioButton';
         $this->setSeparator('');
         $this->setVisibleText(true);

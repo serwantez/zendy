@@ -22,6 +22,13 @@ use ZendY\Db\Form\Element as DbElement;
  * @author Piotr Zając
  */
 class Navigator extends Container implements DataInterface {
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_ACTIONS = 'actions';
+    const PROPERTY_DATASOURCE = 'dataSource';
+    const PROPERTY_EXPR = 'expr';
 
     /**
      * Licznik instancji
@@ -57,6 +64,39 @@ class Navigator extends Container implements DataInterface {
      * @var array
      */
     protected $_userElements = array();
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ACTIONS,
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_EXPR,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_SPACE,
+        self::PROPERTY_WIDGETCLASS,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
+     * 
+     * @return void
+     */
+    protected function _setDefaults() {
+        parent::_setDefaults();
+        $this
+                ->setHeight(array('value' => 3.2, 'unit' => 'em'))
+                ->setWidgetClass(Css::WIDGET_HEADER)
+                ->addClass(Css::SCROLL_DISABLE)
+                ->setAlign(Css::ALIGN_BOTTOM)
+        ;
+    }
 
     /**
      * Ustawia źródło danych
@@ -119,21 +159,6 @@ class Navigator extends Container implements DataInterface {
     }
 
     /**
-     * Inicjalizacja obiektu
-     * 
-     * @return void
-     */
-    public function init() {
-        parent::init();
-        $this
-                ->setHeight(37)
-                ->setWidgetClass(Css::WIDGET_HEADER)
-                ->addClass(Css::SCROLL_DISABLE)
-                ->setAlign(Css::ALIGN_BOTTOM)
-        ;
-    }
-
-    /**
      * Dodaje kontrolki bazodanowe
      * 
      * @return \ZendY\Db\Form\Container\Navigator
@@ -156,7 +181,7 @@ class Navigator extends Container implements DataInterface {
                         $value['text'] = false;
                 }
                 if ($this->_dataSource->getDataSet()->isRegisteredAction($value['action'])) {
-                    $name = $this->getId() . '_' . $value['action'];
+                    $name = $this->getName() . '_' . $value['action'];
                     $element = new DbElement\Button($name);
                     $element
                             ->setDataSource($this->_dataSource)
@@ -177,7 +202,7 @@ class Navigator extends Container implements DataInterface {
                     if ($value['action'] == DataSet::ACTION_PREVIOUS) {
 
                         foreach ($this->getExpr() as $expr) {
-                            $name = $this->getId() . '_' . $expr;
+                            $name = $this->getName() . '_' . $expr;
                             $element = new DbElement\Expr($name);
                             $element
                                     ->setDataSource($this->_dataSource)
@@ -234,7 +259,7 @@ class Navigator extends Container implements DataInterface {
      * @return \ZendY\Db\Form\Element\Button
      */
     public function getActionButton($action) {
-        return $this->getElement($this->getId() . '_' . $action);
+        return $this->getElement($this->getName() . '_' . $action);
     }
 
 }

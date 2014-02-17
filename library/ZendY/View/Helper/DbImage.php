@@ -54,9 +54,6 @@ class DbImage extends Widget {
         }
 
         $attribs = $this->_extractAttributes($id, $attribs);
-        $container = '<span id="%s" href="#"'
-                . $this->_htmlAttribs($attribs['outer'])
-                . '>%s%s</span>';
 
         $image = '<img id="' . $id . '-img"';
         $image .= $this->_htmlAttribs($attribs['inner']);
@@ -66,9 +63,9 @@ class DbImage extends Widget {
         $fileAttribs['value'] = $value;
         //$fileAttribs['multi'] = 'multi';
 
-        $html = sprintf($container, $id . '-img-a'
-                , $image
-                , $this->view->formFile($id . "-uploader", $fileAttribs));
+        $html = '<span id="' . $id . '-img-a" href="#"'
+                . $this->_htmlAttribs($attribs['outer'])
+                . '>' . $image . ' ' . $this->view->formFile($id . "-uploader", $fileAttribs) . '</span>';
 
         $this->view->headLink()->appendStylesheet($this->view->host . '/library/components/image/image.css');
 

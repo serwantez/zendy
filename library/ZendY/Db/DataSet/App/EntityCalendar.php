@@ -46,9 +46,9 @@ class EntityCalendar extends EditableQuery {
      * @return void
      */
     public function init() {
-        $this->_name = self::TABLE_NAME;
         parent::init();
-        $this->from(array('ec' => $this->_name), array(
+        $this->setTableName(self::TABLE_NAME);
+        $this->from(array('ec' => $this->_tableName), array(
                     self::COL_ID,
                     self::COL_ENTITY_ID,
                     self::COL_CALENDAR_ID,
@@ -101,7 +101,9 @@ class EntityCalendar extends EditableQuery {
     protected function _setActionState($params = array()) {
         parent::_setActionState($params);
 
-        $this->_navigator[self::ACTION_ADDANDSAVE] = (($this->_state == self::STATE_VIEW || $this->_state == self::STATE_EDIT) && !$this->_readOnly);
+        $this->_navigator[self::ACTION_ADDANDSAVE] = (
+                ($this->_state == self::STATE_VIEW || $this->_state == self::STATE_EDIT)
+                && !$this->_readOnly);
         return $this;
     }
 

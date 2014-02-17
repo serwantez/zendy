@@ -19,246 +19,209 @@ use ZendY\Db\Form\Element as DbElement;
 class Teryt extends Form {
 
     public function init() {
-        //ustawienia ogólne
-        $this->setAttrib('id', 'teryt');
-        $this->setAlign(Css::ALIGN_CLIENT);
-        $this->setAjaxValidator(false);
-
         //zbiory i źródła danych
-        $table = new DataSet\Table('voivodship');
-        $table->setTableName('voivodship')
-                ->setPrimary('id')
-                ->setReadOnly(true)
-        ;
+        $dataSetV = new DataSet\Table(array(
+                    DataSet\Table::PROPERTY_NAME => 'voivodship',
+                    DataSet\Table::PROPERTY_TABLENAME => 'voivodship',
+                    DataSet\Table::PROPERTY_PRIMARY => 'id',
+                    DataSet\Table::PROPERTY_READONLY => true,
+                ));
 
-        $dataSourceV = new DataSource('voivodshipSource');
-        $dataSourceV->setDataSet($table)
-                ->setDialog(false);
+        $dataSourceV = new DataSource(array(
+                    DataSource::PROPERTY_NAME => 'voivodshipSource',
+                    DataSource::PROPERTY_DATASET => $dataSetV,
+                    DataSource::PROPERTY_DIALOG => false
+                ));
 
-        $table = new DataSet\Table('powiat');
-        $table->setTableName('powiat')
-                ->setPrimary('id')
-                ->setReadOnly(true)
-                ->setMasterSource($dataSourceV)
-                ->setMasterField('id')
-                ->setIndexField('woj')
-        ;
+        $dataSetP = new DataSet\Table(array(
+                    DataSet\Table::PROPERTY_NAME => 'powiat',
+                    DataSet\Table::PROPERTY_TABLENAME => 'powiat',
+                    DataSet\Table::PROPERTY_PRIMARY => 'id',
+                    DataSet\Table::PROPERTY_READONLY => true,
+                    DataSet\Table::PROPERTY_MASTER => array(
+                        array(
+                            'masterSource' => $dataSourceV,
+                            'masterField' => 'id',
+                            'detailField' => 'woj'
+                    )),
+                ));
 
-        $dataSourceP = new DataSource('powiatSource');
-        $dataSourceP->setDataSet($table)
-        ;
+        $dataSourceP = new DataSource(array(
+                    DataSource::PROPERTY_NAME => 'powiatSource',
+                    DataSource::PROPERTY_DATASET => $dataSetP
+                ));
 
-        $table = new DataSet\Table('gmina');
-        $table->setTableName('gmina')
-                ->setPrimary('id')
-                ->setReadOnly(true)
-                ->setMasterSource($dataSourceP)
-                ->setMasterField('id')
-                ->setIndexField('wojpow')
-        ;
+        $dataSetG = new DataSet\Table(array(
+                    DataSet\Table::PROPERTY_NAME => 'gmina',
+                    DataSet\Table::PROPERTY_TABLENAME => 'gmina',
+                    DataSet\Table::PROPERTY_PRIMARY => 'id',
+                    DataSet\Table::PROPERTY_READONLY => true,
+                    DataSet\Table::PROPERTY_MASTER => array(
+                        array(
+                            'masterSource' => $dataSourceP,
+                            'masterField' => 'id',
+                            'detailField' => 'wojpow'
+                    )),
+                ));
 
-        $dataSourceG = new DataSource('gminaSource');
-        $dataSourceG->setDataSet($table);
+        $dataSourceG = new DataSource(array(
+                    DataSource::PROPERTY_NAME => 'gminaSource',
+                    DataSource::PROPERTY_DATASET => $dataSetG
+                ));
 
-        $table = new Model\Simc('simc');
-        $table->setMasterSource($dataSourceG)
-                ->setMasterField('id')
-                ->setIndexField('teryt')
-        ;
+        $dataSetS = new Model\Simc(array(
+                    DataSet\Table::PROPERTY_MASTER => array(
+                        array(
+                            'masterSource' => $dataSourceG,
+                            'masterField' => 'id',
+                            'detailField' => 'teryt'
+                    )),
+                ));
 
-        $dataSourceS = new DataSource('simcSource');
-        $dataSourceS->setDataSet($table);
-
-
-        //główny kontener list
-        $panelMain = new Container\Panel();
-        $panelMain->setAlign(Css::ALIGN_CLIENT);
+        $dataSourceS = new DataSource(array(
+                    DataSource::PROPERTY_NAME => 'simcSource',
+                    DataSource::PROPERTY_DATASET => $dataSetS
+                ));
 
         //lista województw
-        $listV = new DbElement\Listbox('voivodshipList');
-        $listV
-                ->setListSource($dataSourceV)
-                ->setKeyField('id')
-                ->setListField(array('nazwa'))
-                ->setAlign(Css::ALIGN_CLIENT)
-                ->removeClass(Css::CORNER_ALL)
-        ;
+        $listV = new DbElement\Listbox(array(
+                    DbElement\Listbox::PROPERTY_NAME => 'voivodshipList',
+                    DbElement\Listbox::PROPERTY_LISTSOURCE => $dataSourceV,
+                    DbElement\Listbox::PROPERTY_LISTFIELD => array('nazwa'),
+                    DbElement\Listbox::PROPERTY_KEYFIELD => 'id',
+                    DbElement\Listbox::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                ));
 
-        $titleV = new Element\Text('voivodshipTitle');
-        $titleV->setAlign(Css::ALIGN_CLIENT)
-                ->setValue('Voivodship')
-                ->addClass(Css::TEXT_ALIGN_HORIZONTAL_CENTER);
-
-        $headerV = new Container\Panel('voivodshipHeader');
-        $headerV->setHeight(25)
-                ->setAlign(Css::ALIGN_TOP)
-                ->addElement($titleV)
-                ->addClasses(array(Css::WIDGET_HEADER, Css::CORNER_TOP));
-
-        $bodyV = new Container\Panel();
-        $bodyV->setAlign(Css::ALIGN_CLIENT)
-                ->addElement($listV);
-
-        $panelV = new Container\Panel();
-        $panelV->addContainer($headerV)
-                ->addContainer($bodyV)
-                ->setAlign(Css::ALIGN_RIGHT)
-                ->setWidth(25, '%')
-                ->setSpace()
-        ;
-        $panelMain->addContainer($panelV);
+        $boxV = new Container\Box(array(
+                    Container\Box::PROPERTY_NAME => 'boxV',
+                    Container\Box::PROPERTY_TITLE => 'Voivodship',
+                    Container\Box::PROPERTY_ALIGN => Css::ALIGN_RIGHT,
+                    Container\Box::PROPERTY_SPACE => 2,
+                    Container\Box::PROPERTY_WIDTH => array(
+                        'value' => 25,
+                        'unit' => '%'
+                    ),
+                ));
+        $boxV->setElements(array($listV));
 
         //lista powiatów
-        $listP = new DbElement\Listbox('powiatList');
-        $listP
-                ->setListSource($dataSourceP)
-                ->setKeyField('id')
-                ->setListField(array('nazwa'))
-                ->setAlign(Css::ALIGN_CLIENT)
-                ->removeClass(Css::CORNER_ALL)
-        ;
+        $listP = new DbElement\Listbox(array(
+                    DbElement\Listbox::PROPERTY_NAME => 'powiatList',
+                    DbElement\Listbox::PROPERTY_LISTSOURCE => $dataSourceP,
+                    DbElement\Listbox::PROPERTY_LISTFIELD => array('nazwa'),
+                    DbElement\Listbox::PROPERTY_KEYFIELD => 'id',
+                    DbElement\Listbox::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                ));
 
-        $titleP = new Element\Text('powiatTitle');
-        $titleP->setAlign(Css::ALIGN_CLIENT)
-                ->setValue('Powiat')
-                ->addClass(Css::TEXT_ALIGN_HORIZONTAL_CENTER);
-
-        $headerP = new Container\Panel('powiatHeader');
-        $headerP->setHeight(25)
-                ->setAlign(Css::ALIGN_TOP)
-                ->addElement($titleP)
-                ->addClasses(array(Css::WIDGET_HEADER, Css::CORNER_TOP));
-
-        $bodyP = new Container\Panel();
-        $bodyP->setAlign(Css::ALIGN_CLIENT)
-                ->addElement($listP);
-
-        $panelP = new Container\Panel();
-        $panelP->addContainer($headerP)
-                ->addContainer($bodyP)
-                ->setAlign(Css::ALIGN_RIGHT)
-                ->setWidth(25, '%')
-                ->setSpace()
-        ;
-        $panelMain->addContainer($panelP);
-
+        $boxP = new Container\Box(array(
+                    Container\Box::PROPERTY_NAME => 'boxP',
+                    Container\Box::PROPERTY_TITLE => 'Powiat',
+                    Container\Box::PROPERTY_ALIGN => Css::ALIGN_RIGHT,
+                    Container\Box::PROPERTY_SPACE => 2,
+                    Container\Box::PROPERTY_WIDTH => array(
+                        'value' => 25,
+                        'unit' => '%'
+                    ),
+                ));
+        $boxP->setElements(array($listP));
 
         //lista gmin
-        $listG = new DbElement\Listbox('gminaList');
-        $listG
-                ->setListSource($dataSourceG)
-                ->setKeyField('id')
-                ->setListField(array('nazwa', 'nazdod'))
-                ->setColumnSpace(' - ')
-                ->setAlign(Css::ALIGN_CLIENT)
-                ->removeClass(Css::CORNER_ALL)
-        ;
+        $listG = new DbElement\Listbox(array(
+                    DbElement\Listbox::PROPERTY_NAME => 'gminaList',
+                    DbElement\Listbox::PROPERTY_LISTSOURCE => $dataSourceG,
+                    DbElement\Listbox::PROPERTY_LISTFIELD => array('nazwa', 'nazdod'),
+                    DbElement\Listbox::PROPERTY_KEYFIELD => 'id',
+                    DbElement\Listbox::PROPERTY_COLUMNSPACE => ' - ',
+                    DbElement\Listbox::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                ));
 
-        $titleG = new Element\Text('gminaTitle');
-        $titleG->setAlign(Css::ALIGN_CLIENT)
-                ->setValue('Gmina')
-                ->addClass(Css::TEXT_ALIGN_HORIZONTAL_CENTER);
+        $boxG = new Container\Box(array(
+                    Container\Box::PROPERTY_NAME => 'boxG',
+                    Container\Box::PROPERTY_TITLE => 'Gmina',
+                    Container\Box::PROPERTY_ALIGN => Css::ALIGN_RIGHT,
+                    Container\Box::PROPERTY_SPACE => 2,
+                    Container\Box::PROPERTY_WIDTH => array(
+                        'value' => 25,
+                        'unit' => '%'
+                    ),
+                ));
+        $boxG->setElements(array($listG));
 
-        $headerG = new Container\Panel('gminaHeader');
-        $headerG->setHeight(25)
-                ->setAlign(Css::ALIGN_TOP)
-                ->addElement($titleG)
-                ->addClasses(array(Css::WIDGET_HEADER, Css::CORNER_TOP));
-
-        $bodyG = new Container\Panel();
-        $bodyG->setAlign(Css::ALIGN_CLIENT)
-                ->addElement($listG);
-
-        $panelG = new Container\Panel();
-        $panelG->addContainer($headerG)
-                ->addContainer($bodyG)
-                ->setAlign(Css::ALIGN_RIGHT)
-                ->setWidth(25, '%')
-                ->setSpace()
-        ;
-        $panelMain->addContainer($panelG);
-
-
-        //lista miejscowości
-        $listL = new DbElement\Listbox('simcList');
         //filtr formatujący
         $cityFilter = new \ZendY\Db\Filter();
         $cityFilter->addFilter('s.rm', 96);
-        $listL
-                ->setListSource($dataSourceS)
-                ->setKeyField('sym')
-                ->setListField(array('nazwa', 'nazwa_rm'))
-                ->setColumnSpace(' - ')
-                ->addConditionalRowFormat($cityFilter, 'row-bold')
-                ->setAlign(Css::ALIGN_CLIENT)
-                ->removeClass(Css::CORNER_ALL)
-        ;
 
-        $titleL = new Element\Text('localityTitle');
-        $titleL->setAlign(Css::ALIGN_CLIENT)
-                ->setValue('Locality')
-                ->addClass(Css::TEXT_ALIGN_HORIZONTAL_CENTER);
+        //lista miejscowości
+        $listL = new DbElement\Listbox(array(
+                    DbElement\Listbox::PROPERTY_NAME => 'simcList',
+                    DbElement\Listbox::PROPERTY_LISTSOURCE => $dataSourceS,
+                    DbElement\Listbox::PROPERTY_LISTFIELD => array('nazwa', 'nazwa_rm'),
+                    DbElement\Listbox::PROPERTY_KEYFIELD => 'sym',
+                    DbElement\Listbox::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                    DbElement\Listbox::PROPERTY_COLUMNSPACE => ' - ',
+                    DbElement\Listbox::PROPERTY_CONDITIONALROWFORMATS => array(
+                        array($cityFilter, 'row-bold')
+                    ),
+                ));
 
-        $headerL = new Container\Panel('localityHeader');
-        $headerL->setHeight(25)
-                ->setAlign(Css::ALIGN_TOP)
-                ->addElement($titleL)
-                ->addClasses(array(Css::WIDGET_HEADER, Css::CORNER_TOP));
+        $boxL = new Container\Box(array(
+                    Container\Box::PROPERTY_NAME => 'boxL',
+                    Container\Box::PROPERTY_TITLE => 'Locality',
+                    Container\Box::PROPERTY_ALIGN => Css::ALIGN_RIGHT,
+                    Container\Box::PROPERTY_SPACE => 2,
+                    Container\Box::PROPERTY_WIDTH => array(
+                        'value' => 25,
+                        'unit' => '%'
+                    ),
+                ));
+        $boxL->setElements(array($listL));
 
-        $bodyL = new Container\Panel();
-        $bodyL->setAlign(Css::ALIGN_CLIENT)
-                ->addElement($listL);
-        
-        $panelL = new Container\Panel();
-        $panelL->addContainer($headerL)
-                ->addContainer($bodyL)
-                ->setAlign(Css::ALIGN_RIGHT)
-                ->setWidth(25, '%')
-                ->setSpace()
-        ;
-        $panelMain->addContainer($panelL);
+        //główny kontener list
+        $panelMain = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'panelMain',
+                    Container\Panel::PROPERTY_ALIGN => Css::ALIGN_CLIENT
+                ));
+        $panelMain->setContainers(array($boxV, $boxP, $boxG, $boxL));
 
-        $code = new Element\TextFileView('airportFormCode');
-        $code
-                ->setFileName('../application/forms/Teryt.php')
-                ->setAlign(Css::ALIGN_CLIENT)
-        ;
+        $code = new Element\TextFileView(array(
+                    Element\TextFileView::PROPERTY_NAME => 'airportFormCode',
+                    Element\TextFileView::PROPERTY_FILENAME => '../application/forms/Teryt.php',
+                    Element\TextFileView::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                ));
 
-        $description = new Element\DocFileView('demoDescription');
-        $description
-                ->setFileName('../application/views/scripts/demo/teryt_description.phtml')
-                ->setAlign(Css::ALIGN_CLIENT)
-        ;
+        $description = new Element\DocFileView(array(
+                    Element\TextFileView::PROPERTY_NAME => 'demoDescription',
+                    Element\TextFileView::PROPERTY_FILENAME => '../application/views/scripts/demo/teryt_description.phtml',
+                    Element\TextFileView::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                ));
 
         //zakładka opisu
-        $tabpanel[0] = new Container\TabPane();
-        $tabpanel[0]
-                ->setTitle('Description')
-                ->addElement($description)
-        ;
+        $tabPanel0 = new Container\TabPane(array(
+                    Container\TabPane::PROPERTY_TITLE => 'Description',
+                ));
+        $tabPanel0->setElements(array($description));
 
         //zakładka demo
-        $tabpanel[1] = new Container\TabPane();
-        $tabpanel[1]
-                ->setTitle('Demo')
-                ->addContainer($panelMain)
-        ;
+        $tabPanel1 = new Container\TabPane(array(
+                    Container\TabPane::PROPERTY_TITLE => 'Demo',
+                ));
+        $tabPanel1->setContainers(array($panelMain));
 
         //zakładka kodu
-        $tabpanel[2] = new Container\TabPane();
-        $tabpanel[2]
-                ->setTitle('Code')
-                ->addElement($code)
+        $tabPanel2 = new Container\TabPane(array(
+                    Container\TabPane::PROPERTY_TITLE => 'Code',
+                ));
+        $tabPanel2->setElements(array($code))
         ;
 
         //główny kontener zakładek
-        $tab = new Container\Tab('tab1');
-        $tab
-                ->setAlign(Css::ALIGN_CLIENT)
-                ->addContainers($tabpanel)
-        ;
+        $tab = new Container\Tab(array(
+                    Container\Tab::PROPERTY_NAME => 'tab1',
+                    Container\Tab::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                ));
+        $tab->setContainers(array($tabPanel0, $tabPanel1, $tabPanel2));
 
-        $this->addContainer($tab);
+        $this->setContainers(array($tab));
     }
 
 }

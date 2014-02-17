@@ -19,9 +19,14 @@ use Zend2\Code\Generator;
  */
 class FilesTree extends ArraySet implements TreeSetInterface {
     /*
-     * Akcje na zbiorze
+     * Właściwości komponentu
      */
 
+    const PROPERTY_PATH = 'path';
+
+    /*
+     * Akcje na zbiorze
+     */
     const ACTION_INSERTDOCBLOCK = 'insertDocBlockAction';
     const ACTION_DELETE = 'deleteAction';
     const ACTION_CANCEL = 'cancelAction';
@@ -64,6 +69,22 @@ class FilesTree extends ArraySet implements TreeSetInterface {
      * @var string
      */
     protected $_path;
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_MASTER,
+        self::PROPERTY_NAME,
+        self::PROPERTY_PATH,
+    );
+
+    protected function _setDefaults() {
+        parent::_setDefaults();
+        $this->_primary = array(1 => self::COL_ID);
+    }
 
     /**
      * Rejestruje akcje zbioru
@@ -276,6 +297,26 @@ class FilesTree extends ArraySet implements TreeSetInterface {
     public function refreshAction($params = array(), $compositePart = false) {
         $this->setPath($this->_path);
         return parent::refreshAction($params, $compositePart);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param array $data
+     * @throws Exception
+     */
+    final public function setData(array $data) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param array $primary
+     * @throws Exception
+     */
+    final public function setPrimary($primary) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
     }
 
     /**

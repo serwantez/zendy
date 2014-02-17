@@ -35,12 +35,42 @@ abstract class CustomMap extends Widget {
     const MAPTYPEID_TERRAIN = 'google.maps.MapTypeId.TERRAIN';
 
     /**
-     * Inicjalizuje obiekt
+     * Właściwości komponentu
+     */
+    const PROPERTY_ZOOM = 'zoom';
+    const PROPERTY_CENTER = 'center';
+    const PROPERTY_MAPTYPE = 'mapType';
+    
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CENTER,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MAPTYPE,
+        self::PROPERTY_NAME,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH,
+        self::PROPERTY_ZOOM
+    );    
+
+    /**
+     * Ustawia wartości domyślne
      * 
      * @return void 
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         //ustawia domyślne parametry i atrybuty mapy
         $this->addClasses(array(
             Css::MAP,
@@ -152,6 +182,18 @@ abstract class CustomMap extends Widget {
             return $this->jQueryParams[self::PARAM_HIDDENCONTAINER];
         else
             return FALSE;
+    }
+
+    /**
+     * Ustawia etykietę
+     * 
+     * @param string $label
+     * @param array|string|null $width
+     * @return \ZendY\Form\Element\CustomMap
+     */
+    public function setLabel($label, $width = null) {
+        $this->setAttrib('label', $label);
+        return $this;
     }
 
 }

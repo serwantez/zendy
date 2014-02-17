@@ -19,11 +19,9 @@ use ZendY\Db\Form\Element as DbElement;
 class Profile extends Form {
 
     public function init() {
-        $this->setAttrib('id', 'profileForm');
-        $this->setAction('');
-        //$this->setAlign(Css::ALIGN_CLIENT);
-
-        $dataSet = new User('user');
+        $dataSet = new User(array(
+                    'name' => 'user'
+                ));
         $auth = \Zend_Auth::getInstance();
         if ($auth->hasIdentity()) {
             $user = $auth->getIdentity()->id;
@@ -33,7 +31,10 @@ class Profile extends Form {
         $currentUser = new Db\Filter();
         $currentUser->addFilter(User::COL_ID, $user);
         $dataSet->filterAction(array('filter' => $currentUser));
-        $dataSource = new DataSource('dataSourceUser', $dataSet);
+        $dataSource = new DataSource(array(
+                    'name' => 'dataSourceUser',
+                    'dataSet' => $dataSet
+                ));
 
         $photo = new DbElement\ImageView('photo');
         $photo
@@ -59,7 +60,7 @@ class Profile extends Form {
                 ->addClasses(array(
                     Css::TEXT_ALIGN_HORIZONTAL_CENTER,
                 ))
-                ->setLabel('Login', 80)
+                ->setLabel('Login', 100)
         ;
 
         $addition = new DbElement\Text('addition');
@@ -69,7 +70,7 @@ class Profile extends Form {
                 ->addClasses(array(
                     Css::TEXT_ALIGN_HORIZONTAL_CENTER,
                 ))
-                ->setLabel('Addition time', 80)
+                ->setLabel('Addition time', 100)
         ;
 
         $panelConst = new Container\Panel('panelConst');
@@ -80,7 +81,7 @@ class Profile extends Form {
 
         $panelLeft = new Container\Panel('panelLeft');
         $panelLeft
-                ->setWidth(210)
+                ->setWidth(250)
                 ->addContainers(array($panelPhoto, $panelConst))
                 ->setWidgetClass(Css::WIDGET_CONTENT)
                 ->setAlign(Css::ALIGN_LEFT)
@@ -135,15 +136,12 @@ class Profile extends Form {
         $panelBottom
                 ->setDataSource($dataSource)
                 ->addElements(array($btnEdit, $btnSave))
-                ->setHeight(40)
-                ->setSpace()
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'))
         ;
 
         $panelAll = new Container\Panel('panelAll');
         $panelAll
                 ->addContainers(array($panelLeft, $panelMain, $panelBottom))
-                //->setWidth(600)
-                //->setHeight(400)
                 ->setAlign(Css::ALIGN_CLIENT)
                 ->setSpace()
         ;

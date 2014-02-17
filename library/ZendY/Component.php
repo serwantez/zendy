@@ -25,6 +25,11 @@ abstract class Component extends Object {
     const DECORATOR = 'DECORATOR';
 
     /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_NAME = 'name';
+
+    /**
      * Tablica dekoratorów
      * 
      * @var array 
@@ -72,6 +77,15 @@ abstract class Component extends Object {
      * @var \Zend_View_Interface 
      */
     protected $_view;
+    
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_NAME
+    );
 
     /**
      * Constructor
@@ -80,8 +94,12 @@ abstract class Component extends Object {
      * @param  array|Zend_Config|null $options
      * @return void
      */
-    public function __construct($id = null, $options = null) {
-        parent::__construct($id);
+    public function __construct($options = null) {
+        $name = NULL;
+        if (isset($options[self::PROPERTY_NAME])) {
+            $name = $options[self::PROPERTY_NAME];
+        }
+        parent::__construct($name);
 
         $this->_setDefaults();
 

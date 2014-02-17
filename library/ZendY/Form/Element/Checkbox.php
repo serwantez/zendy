@@ -18,6 +18,35 @@ class Checkbox extends Widget {
     use \ZendY\ControlTrait;
 
     /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_CHECKEDVALUE = 'checkedValue';
+    const PROPERTY_UNCHECKEDVALUE = 'uncheckedValue';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CHECKEDVALUE,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_UNCHECKEDVALUE,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
      * Is the checkbox checked?
      * @var bool
      */
@@ -51,16 +80,16 @@ class Checkbox extends Widget {
     protected $_value = '0';
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'checkbox';
         $this->setAttrib('disableHidden', true);
         $this->addClass(Css::WIDGET);
         $this->setFrontEditParam('type', 'ch');
-        parent::init();
     }
 
     /**

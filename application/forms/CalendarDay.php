@@ -30,59 +30,93 @@ use ZendY\Db\Form\Element as DbElement;
 class CalendarDay extends Form {
 
     public function init() {
-        /*
-         * Ustawienia ogólne
-         */
-        $this->setAttrib('id', 'calendarDayForm');
-        $this->addClass(Css::ALIGN_CLIENT);
         $this->setEnctype(\Zend_Form::ENCTYPE_MULTIPART);
-        $this->setAjaxValidator(false);
 
         /*
          * Źródła danych
          */
-        $dataSet = new DbCalendarDay('calendar');
+        $dataSet = new DbCalendarDay(array(
+                    'name' => 'calendar'
+                ));
         $dataSet->sortAction(array('field' => DbCalendarDay::COL_DAY));
         $dataSet->sortAction(array('field' => DbCalendarDay::COL_WEIGHT_NUMBER));
-        $dataSource['calendar'] = new DataSource('calendarSource', $dataSet);
+        $dataSource['calendar'] = new DataSource(array(
+                    'name' => 'calendarSource',
+                    'dataSet' => $dataSet
+                ));
 
         /* $y = 2013;
           print_r(DbCalendarDay::getOrdinarySundays($y));
           exit; */
 
-        $dataSet = new ListItem('weightType');
-        $dataSet->setList(10);
-        $dataSource['weight_type'] = new DataSource('weightTypeSource', $dataSet);
+        $dataSet = new ListItem(array(
+                    'name' => 'weightType',
+                    'list' => 10
+                ));
+        $dataSource['weight_type'] = new DataSource(array(
+                    'name' => 'weightTypeSource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSet = new ListItem('weightNumber');
-        $dataSet->setList(14);
-        $dataSource['weight_number'] = new DataSource('weightNumberSource', $dataSet);
+        $dataSet = new ListItem(array(
+                    'name' => 'weightNumber',
+                    'list' => 14
+                ));
+        $dataSource['weight_number'] = new DataSource(array(
+                    'name' => 'weightNumberSource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSet = new ListItem('movability');
-        $dataSet->setList(11);
-        $dataSource['movability'] = new DataSource('movabilitySource', $dataSet);
+        $dataSet = new ListItem(array(
+                    'name' => 'movability',
+                    'list' => 11
+                ));
+        $dataSource['movability'] = new DataSource(array(
+                    'name' => 'movabilitySource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSet = new ArraySet('holiday');
+        $dataSet = new ArraySet(array(
+                    'name' => 'holiday'
+                ));
         $dataSet->setData(array(
                     array('id' => 0, 'flag' => 'no'),
                     array('id' => 1, 'flag' => 'yes')
                 ))
                 ->setPrimary('id');
-        $dataSource['holiday'] = new DataSource('holidaySource', $dataSet);
+        $dataSource['holiday'] = new DataSource(array(
+                    'name' => 'holidaySource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSet = new ListItem('dependencyFunction');
-        $dataSet->setList(12);
-        $dataSource['dependency_function'] = new DataSource('dependencyFunctionSource', $dataSet);
+        $dataSet = new ListItem(array(
+                    'name' => 'dependencyFunction',
+                    'list' => 12
+                ));
+        $dataSource['dependency_function'] = new DataSource(array(
+                    'name' => 'dependencyFunctionSource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSet = new Entity('entity');
-        $dataSource['entity'] = new DataSource('entitySource', $dataSet);
+        $dataSet = new Entity(array(
+                    'name' => 'entity'
+                ));
+        $dataSource['entity'] = new DataSource(array(
+                    'name' => 'entitySource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSet = new EntityCalendar('entityCalendarFunction');
-        $dataSet->setMasterSource($dataSource['calendar'])
-                ->setMasterField(DbCalendarDay::COL_ID)
-                ->setIndexField(EntityCalendar::COL_CALENDAR_ID)
+        $dataSet = new EntityCalendar(array(
+                    'name' => 'entityCalendarFunction'
+                ));
+        $dataSet->addMaster($dataSource['calendar']
+                , DbCalendarDay::COL_ID
+                , EntityCalendar::COL_CALENDAR_ID)
         ;
-        $dataSource['entity_calendar'] = new DataSource('entityCalendarSource', $dataSet);
+        $dataSource['entity_calendar'] = new DataSource(array(
+                    'name' => 'entityCalendarSource',
+                    'dataSet' => $dataSet
+                ));
 
 
         /*
@@ -161,66 +195,66 @@ class CalendarDay extends Form {
                 ->setListSource($dataSource['calendar'])
                 ->setKeyField(DbCalendarDay::COL_ID)
                 ->addColumn(new Column(
-                                DbCalendarDay::COL_ID
-                                , array(
-                            'label' => 'ID',
-                            'width' => 35,
-                            'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
+                                array(
+                                    'name' => DbCalendarDay::COL_ID,
+                                    'label' => 'ID',
+                                    'width' => 35,
+                                    'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
                         )))
                 ->addColumn(new Column(
-                                DbCalendarDay::COL_NAME
-                                , array(
-                            'label' => 'Polish name',
-                            'width' => 270
+                                array(
+                                    'name' => DbCalendarDay::COL_NAME,
+                                    'label' => 'Polish name',
+                                    'width' => 270
                         )))
                 ->addColumn(new Column(
-                                DbCalendarDay::COL_WEIGHT_TYPE_NAME
-                                , array(
-                            'label' => 'Weight type',
-                            'width' => 180
+                                array(
+                                    'name' => DbCalendarDay::COL_WEIGHT_TYPE_NAME,
+                                    'label' => 'Weight type',
+                                    'width' => 180
                         )))
                 ->addColumn(new Column(
-                                DbCalendarDay::COL_WEIGHT_NUMBER
-                                , array(
-                            'label' => 'Weight no.',
-                            'width' => 70,
-                            'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
+                                array(
+                                    'name' => DbCalendarDay::COL_WEIGHT_NUMBER,
+                                    'label' => 'Weight no.',
+                                    'width' => 70,
+                                    'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
                         )))
                 ->addColumn(new Column(
-                                DbCalendarDay::COL_MOVABILITY_NAME
-                                , array(
-                            'label' => 'Movability',
-                            'width' => 100,
+                                array(
+                                    'name' => DbCalendarDay::COL_MOVABILITY_NAME,
+                                    'label' => 'Movability',
+                                    'width' => 120,
                         )))
                 ->addColumn(new Column(
-                                DbCalendarDay::COL_DAY
-                                , array(
-                            'label' => 'Date',
-                            'width' => 100,
-                            'align' => Css::TEXT_ALIGN_HORIZONTAL_CENTER
+                                array(
+                                    'name' => DbCalendarDay::COL_DAY,
+                                    'label' => 'Date',
+                                    'width' => 100,
+                                    'align' => Css::TEXT_ALIGN_HORIZONTAL_CENTER
                         )))
                 ->addColumn(new Column(
-                                DbCalendarDay::COL_DEPENDENCY_FUNCTION_NAME
-                                , array(
-                            'label' => 'Dep.function',
-                            'width' => 150
+                                array(
+                                    'name' => DbCalendarDay::COL_DEPENDENCY_FUNCTION_NAME,
+                                    'label' => 'Dep.function',
+                                    'width' => 150
                         )))
                 ->addColumn(new Column(
-                                DbCalendarDay::COL_DEPENDENCY_PARAM
-                                , array(
-                            'label' => 'Dep.param',
-                            'width' => 80,
-                            'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
+                                array(
+                                    'name' => DbCalendarDay::COL_DEPENDENCY_PARAM,
+                                    'label' => 'Dep.param',
+                                    'width' => 80,
+                                    'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
                         )))
                 ->addColumn(new Column(
-                                DbCalendarDay::COL_HOLIDAY
-                                , array(
-                            'label' => 'Holiday',
-                            'width' => 50,
-                            'decorators' => array(
-                                array('Icon', array('icons' => $icons))
-                            ),
-                            'align' => Css::TEXT_ALIGN_HORIZONTAL_CENTER
+                                array(
+                                    'name' => DbCalendarDay::COL_HOLIDAY,
+                                    'label' => 'Holiday',
+                                    'width' => 50,
+                                    'decorators' => array(
+                                        array('Icon', array('icons' => $icons))
+                                    ),
+                                    'align' => Css::TEXT_ALIGN_HORIZONTAL_CENTER
                         )))
                 ->setALign(Css::ALIGN_CLIENT)
                 ->setPager(30)
@@ -228,13 +262,15 @@ class CalendarDay extends Form {
                 ->addConditionalRowFormat($localFeastFilter, 'row-italic row-grey')
                 ->setJQueryParam(
                         Element\Grid::PARAM_EVENT_DBLCLICKROW
-                        , sprintf('$("#%s").trigger("click");', $btnEdit->getId())
+                        , sprintf('$("#%s") . trigger("click");
+        ', $btnEdit->getId())
                 )
         ;
 
         $panel1 = new Panel();
         $panel1->addElement($grid)
                 ->setAlign(Css::ALIGN_CLIENT)
+                ->setSpace()
         ;
         $this->addContainer($panel1);
 
@@ -359,16 +395,20 @@ class CalendarDay extends Form {
         $nav = new Navigator();
         $nav->setActions($actions)
                 ->setDataSource($dataSource['calendar'])
-                ->addElement($btnOpenFilter)
-                ->addElement($btnAdd)
-                ->addElement($btnAddCopy)
-                ->addElement($btnEdit)
-                ->addElement($btnOpenEntities)
+                ->addElements(array(
+                    $btnOpenFilter,
+                    $btnAdd,
+                    $btnAddCopy,
+                    $btnEdit,
+                    $btnOpenEntities))
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'))
         ;
 
         $this->addContainer($nav);
 
-        $dialogCalendar = new EditDialog('calendarDetails');
+        $dialogCalendar = new EditDialog(array(
+                    'name' => 'calendarDetails'
+                ));
         $dialogCalendar
                 ->setDataSource($dataSource['calendar'])
                 ->setTitle('Calendar day details')
@@ -419,36 +459,44 @@ class CalendarDay extends Form {
                 ->setListSource($dataSource['entity_calendar'])
                 ->setKeyField(EntityCalendar::COL_ID)
                 ->addColumn(new Column(
-                                EntityCalendar::COL_ENTITY_NAME
-                                , array(
-                            'label' => 'Entity name',
-                            'width' => 235,
+                                array(
+                                    'name' => EntityCalendar::COL_ENTITY_NAME,
+                                    'label' => 'Entity name',
+                                    'width' => 235,
                         )))
                 ->addColumn(new Column(
-                                EntityCalendar::COL_DESCRIPTION
-                                , array(
-                            'label' => 'Feast description',
-                            'width' => 235,
+                                array(
+                                    'name' => EntityCalendar::COL_DESCRIPTION,
+                                    'label' => 'Feast description',
+                                    'width' => 235,
                         )))
         ;
 
-        $panelEntityCalendarTreeview = new Panel('panelEntityCalendarTreeview');
+        $panelEntityCalendarTreeview = new Panel(array(
+                    'name' => 'panelEntityCalendarTreeview'
+                ));
         $panelEntityCalendarTreeview
                 ->addContainer($panelDescription)
                 ->addContainer($panelTreeview)
                 ->setAlign(Css::ALIGN_LEFT)
-                ->setWidth(280)
+                ->setWidth(310)
                 ->addClass(Css::SCROLL_DISABLE)
+                ->setSpace()
         ;
 
-        $panelEntityCalendarGrid = new Panel('panelEntityCalendarGrid');
+        $panelEntityCalendarGrid = new Panel(array(
+                    'name' => 'panelEntityCalendarGrid'
+                ));
         $panelEntityCalendarGrid
                 ->addElement($gridEntity)
                 ->setAlign(Css::ALIGN_CLIENT)
                 ->addClass(Css::SCROLL_DISABLE)
+                ->setSpace()
         ;
 
-        $panelEntityCalendarDetails = new Panel('panelEntityCalendarDetails');
+        $panelEntityCalendarDetails = new Panel(array(
+                    'name' => 'panelEntityCalendarDetails'
+                ));
         $panelEntityCalendarDetails
                 ->addContainer($panelEntityCalendarTreeview)
                 ->addContainer($panelEntityCalendarGrid)
@@ -498,7 +546,9 @@ class CalendarDay extends Form {
                 ->setVisibleText(TRUE)
         ;
 
-        $panelEntityCalendarNav = new Navigator('panelEntityCalendarNav');
+        $panelEntityCalendarNav = new Navigator(array(
+                    'name' => 'panelEntityCalendarNav'
+                ));
         $panelEntityCalendarNav
                 ->setDataSource($dataSource['entity_calendar'])
                 ->setAlign(Css::ALIGN_BOTTOM)
@@ -508,14 +558,17 @@ class CalendarDay extends Form {
                 ->addElement($btnDelEntity)
                 ->addElement($btnCancelEntity)
                 ->addElement($btnCloseEntity)
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'))
         ;
 
-        $dialogEntityCalendar = new Dialog('dialogEntityCalendar');
+        $dialogEntityCalendar = new Dialog(array(
+                    'name' => 'dialogEntityCalendar',
+                ));
         $dialogEntityCalendar
                 ->setTitle('Entities')
                 ->setModal(true)
-                ->setWidth(600)
-                ->setHeight(400)
+                ->setWidth(720)
+                ->setHeight(500)
                 ->addContainer($panelEntityCalendarDetails)
                 ->addContainer($panelEntityCalendarNav)
                 ->addOpener($btnOpenEntities)
@@ -527,8 +580,12 @@ class CalendarDay extends Form {
         $this->addContainer($dialogEntityCalendar);
 
         // okno filtrowania
-        $dialogCalendarFilter = new FilterDialog('dialogCalendarFilter');
-        $panelCalendarFilters = new Panel('panelCalendarFilters');
+        $dialogCalendarFilter = new FilterDialog(array(
+                    'name' => 'dialogCalendarFilter'
+                ));
+        $panelCalendarFilters = new Panel(array(
+                    'name' => 'panelCalendarFilters'
+                ));
         $filterElements[0] = new DbElement\Filter\IconEdit('filterFeastName');
         $filterElements[0]
                 ->setDataSource($dataSource['calendar'])

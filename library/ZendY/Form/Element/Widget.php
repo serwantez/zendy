@@ -40,6 +40,22 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
     const SIDE_LEFT = 'left';
 
     /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_ALIGN = 'align';
+    const PROPERTY_CLASSES = 'classes';
+    const PROPERTY_DISABLED = 'disabled';
+    const PROPERTY_HEIGHT = 'height';
+    const PROPERTY_LABEL = 'label';
+    const PROPERTY_NAME = 'name';
+    const PROPERTY_READONLY = 'readOnly';
+    const PROPERTY_REQUIRED = 'required';
+    const PROPERTY_TITLE = 'title';
+    const PROPERTY_TOOLTIP = 'tooltip';
+    const PROPERTY_VALUE = 'value';
+    const PROPERTY_WIDTH = 'width';
+
+    /**
      * Tablica nazw zdarzeń
      * 
      * @var array
@@ -68,16 +84,36 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
     protected $_frontEditParams = array();
 
     /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
      * Konstruktor uzupełniony o funkcję automatycznego dodawania nazwy kontrolki
      * 
-     * @param string|null $spec
+     * @param string|array|null $spec
      * @param type|null $options 
      * @return void
      */
     public function __construct($spec = null, $options = null) {
         $this->addPrefixPath('ZendY\Form\Decorator', 'ZendY/Form/Decorator', \Zend_Form::DECORATOR);
         $this::$count++;
-        if (!isset($spec)) {
+        if (!isset($spec) && !isset($options['id'])) {
             $spec = get_class($this) . '_' . $this::$count;
         }
         $this->_setDefaults();
@@ -190,10 +226,10 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
      * @param string $id
      * @return \ZendY\Form\Element\Widget
      */
-    public function setId($id) {
-        $this->id = $id;
-        return $this;
-    }
+    /* public function setId($id) {
+      $this->id = $id;
+      return $this;
+      } */
 
     /**
      * Ustawia atrybut tytuł
@@ -244,6 +280,7 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
      * Ustawia etykietę
      * 
      * @param string $label
+     * @param array|string|null $width
      * @return \ZendY\Form\Element\Widget
      */
     public function setLabel($label, $width = null) {
@@ -285,31 +322,6 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
         $this->_subLabel = $subLabel;
         $this->_label .= '<br /><small>' . $this->_subLabel . '</small>';
         return $this;
-    }
-
-    /**
-     * Sumuje rozmiary tablicowe z wydzieloną wartością i jednostką
-     * 
-     * @param array $sizes
-     * @return array
-     */
-    static public function sumSizes(array $sizes) {
-        $result = 0;
-        $actualUnit = NULL;
-        foreach ($sizes as $size) {
-            if (is_array($size)) {
-                if (!isset($actualUnit)) {
-                    $actualUnit = $size['unit'];
-                }
-                if ($size['unit'] == $actualUnit) {
-                    $result += $size['value'];
-                } else {
-                    throw new Exception(sprintf('Invalid unit (%s) of size', $size['unit']));
-                }
-                $actualUnit = $size['unit'];
-            }
-        }
-        return array('value' => $result, 'unit' => $actualUnit);
     }
 
     /**
@@ -539,7 +551,7 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
      * @return string
      */
     public function render(\Zend_View_Interface $view = null) {
-        \ZendY\Msg::add(sprintf('Widget %s ->%s', $this->getId(), __FUNCTION__));
+        \ZendY\Msg::add(sprintf('Widget %s ->%s', $this->getName(), __FUNCTION__));
         $this->_prepareRenderEventParams();
         return parent::render($view);
     }

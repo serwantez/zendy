@@ -183,7 +183,7 @@ class ViewHelper extends Base {
         $value = $this->getValue($element);
         $attribs = $this->getElementAttribs();
         $name = $element->getFullyQualifiedName();
-        $id = $element->getId();
+        $id = $element->getName();
         $attribs['id'] = $id;
 
         $helperObject = $view->getHelper($helper);

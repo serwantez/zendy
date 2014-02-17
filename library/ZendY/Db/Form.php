@@ -51,25 +51,12 @@ class Form extends \ZendY\Form {
     protected $_dialog = true;
 
     /**
-     * Konstruktor
-     * @param array|Zend_Config|null $options
-     * @param array|null $dataSources
-     * @return void
-     */
-    public function __construct($options = null, $sources = null) {
-        if (isset($sources) && is_array($sources)) {
-            $this->_sources = $sources;
-        }
-        parent::__construct($options);
-    }
-
-    /**
      * Zaznacza, że formularz poddany jest serializacji
      * 
      * @return array
      */
     public function __sleep() {
-        Msg::add('Formularz ' . $this->getId() . '->' . __FUNCTION__);
+        Msg::add('Formularz ' . $this->getName() . '->' . __FUNCTION__);
         return array_keys(get_object_vars($this));
     }
 
@@ -79,7 +66,7 @@ class Form extends \ZendY\Form {
      * @return void
      */
     public function __wakeup() {
-        Msg::add('Formularz ' . $this->getId() . '->' . __FUNCTION__);
+        Msg::add('Formularz ' . $this->getName() . '->' . __FUNCTION__);
     }
 
     /**
@@ -106,7 +93,7 @@ class Form extends \ZendY\Form {
      */
     protected function _addDataSource(DataSource $dataSource) {
         $dataSource->setForm($this);
-        $this->_dataSources[$dataSource->getId()] = $dataSource;
+        $this->_dataSources[$dataSource->getName()] = $dataSource;
 
         return $this;
     }
@@ -156,7 +143,7 @@ class Form extends \ZendY\Form {
     public function getDataSourcesId() {
         $result = array();
         foreach ($this->_dataSources as $dataSource) {
-            $result[] = $dataSource->getId();
+            $result[] = $dataSource->getName();
         }
         return $result;
     }
@@ -169,7 +156,7 @@ class Form extends \ZendY\Form {
      */
     protected function _addListSource(DataSource $listSource) {
         $listSource->setForm($this);
-        $this->_listSources[$listSource->getId()] = $listSource;
+        $this->_listSources[$listSource->getName()] = $listSource;
         return $this;
     }
 
@@ -203,7 +190,7 @@ class Form extends \ZendY\Form {
     public function getListSourcesId() {
         $result = array();
         foreach ($this->_listSources as $listSource) {
-            $result[] = $listSource->getId();
+            $result[] = $listSource->getName();
         }
         return $result;
     }
@@ -221,13 +208,13 @@ class Form extends \ZendY\Form {
         if ($element instanceof Element\CellInterface) {
             $dataSource = $element->getDataSource();
 //jeśli kontrolka ma ustawione źródło danych i źródła tego nie ma jeszcze w spisie (w tablicy źródeł danych)
-            if (isset($dataSource) && !array_key_exists($dataSource->getId(), $this->_dataSources))
+            if (isset($dataSource) && !array_key_exists($dataSource->getName(), $this->_dataSources))
                 $this->_addDataSource($dataSource);
 //jeśli element jest listą bazodanową
             if ($element instanceof Element\ColumnInterface && !$element->getStaticRender()) {
                 $listSource = $element->getListSource();
 //jeśli źródła listy nie ma jeszcze w spisie (w tablicy źródeł listy)
-                if (isset($listSource) && !array_key_exists($listSource->getId(), $this->_listSources))
+                if (isset($listSource) && !array_key_exists($listSource->getName(), $this->_listSources))
                     $this->_addListSource($listSource);
             }
         }
@@ -260,7 +247,7 @@ class Form extends \ZendY\Form {
             if ($element instanceof Element\CellInterface
                     && (!$element instanceof Element\PresentationInterface)) {
                 $ds = $element->getDataSource();
-                if (isset($ds) && $ds->getId() == $dataSourceId) {
+                if (isset($ds) && $ds->getName() == $dataSourceId) {
                     if (null !== $translator && $this->hasTranslator()
                             && !$element->hasTranslator()) {
                         $element->setTranslator($translator);
@@ -319,9 +306,10 @@ class Form extends \ZendY\Form {
      * @return string
      */
     public function render(\Zend_View_Interface $view = null) {
-        Msg::add('Formularz db ' . $this->getId() . '->' . __FUNCTION__);
+        Msg::add('Formularz db ' . $this->getName() . '->' . __FUNCTION__);
         $result = '';
         $js = array();
+        $name = $this->getName();
 
         $result .= parent::render($view);
 
@@ -343,7 +331,7 @@ class Form extends \ZendY\Form {
                                     , Css::DIALOG_TITLEBAR))
                 );
                 $result .= $this->getView()->dialogContainer(
-                        $this->getId() . '_dialog'
+                        $name . '_dialog'
                         , $this->_renderDialogContent()
                         , $params
                         , array('class' => Css::DIALOG_LOADING)
@@ -354,8 +342,8 @@ class Form extends \ZendY\Form {
 
 //otwarcie formularza po stronie przeglądarki
             $js[] = sprintf('df["%s"] = new dataForm("%s",%s,"%s","%s");'
-                    , $this->getId()
-                    , $this->getId()
+                    , $name
+                    , $name
                     , $formClass
                     , DataSource::$controller . DataSource::$dataAction
                     , $this->getView()->translate(Msg::MSG_FORM_VALIDATION_ERRORS));
@@ -384,7 +372,7 @@ class Form extends \ZendY\Form {
                 $dataSource->saveObject();
             }
 
-            $js = sprintf('df["%s"].open();', $this->getId());
+            $js = sprintf('df["%s"].open();', $name);
             if (\Zend_Controller_Front::getInstance()->getRequest()->isXmlHttpRequest()) {
                 $result .= '<script>' . $js . '</script>';
             } else {

@@ -51,7 +51,7 @@ trait CssTrait {
      * @param string|array $class
      * @return \ZendY\Form\CssTrait
      */
-    public function setClass($class) {
+    public function setClasses($class) {
         $this->setAttrib('class', (array) $class);
         return $this;
     }
@@ -91,6 +91,17 @@ trait CssTrait {
             $this->removeClass($class);
         }
         return $this;
+    }
+
+    /**
+     * Informuje czy komponent posiada daną klasę css
+     * 
+     * @param string $class
+     * @return bool
+     */
+    public function hasClass($class) {
+        $classes = (array) $this->getAttrib('class');
+        return array_search($class, $classes);
     }
 
     /**
@@ -144,7 +155,11 @@ trait CssTrait {
      */
     public function setWidth($value, $unit = 'px') {
         if (isset($value)) {
-            $this->setStyle('width', array('value' => $value, 'unit' => $unit));
+            if (is_array($value)) {
+                $this->setStyle('width', $value);
+            } else {
+                $this->setStyle('width', array('value' => $value, 'unit' => $unit));
+            }
         } else {
             $this->removeStyle('width');
         }
@@ -172,7 +187,11 @@ trait CssTrait {
      */
     public function setHeight($value, $unit = 'px') {
         if (isset($value)) {
-            $this->setStyle('height', array('value' => $value, 'unit' => $unit));
+            if (is_array($value)) {
+                $this->setStyle('height', $value);
+            } else {
+                $this->setStyle('height', array('value' => $value, 'unit' => $unit));
+            }
         } else {
             $this->removeStyle('height');
         }
@@ -216,11 +235,37 @@ trait CssTrait {
      * @return \ZendY\Form\CssTrait
      */
     public function addAlignMargin($side, array $alignMargin) {
-        $this->setStyle($side, \ZendY\Form\Element\Widget::sumSizes(array(
+        $this->setStyle($side, self::sumSizes(array(
                     $this->getStyle($side),
                     $alignMargin
                 )));
         return $this;
+    }
+
+    /**
+     * Sumuje rozmiary tablicowe z wydzieloną wartością i jednostką
+     * 
+     * @param array $sizes
+     * @return array
+     */
+    static public function sumSizes(array $sizes) {
+        $result = 0;
+        $actualUnit = NULL;
+        foreach ($sizes as $size) {
+            if (is_array($size)) {
+                if (!isset($actualUnit)) {
+                    $actualUnit = $size['unit'];
+                }
+                if ($size['unit'] == $actualUnit) {
+                    $result += $size['value'];
+                } else {
+//throw new \ZendY\Exception(sprintf('Invalid unit (%s) of size', $size['unit']));
+                    break;
+                }
+                $actualUnit = $size['unit'];
+            }
+        }
+        return array('value' => $result, 'unit' => $actualUnit);
     }
 
 }

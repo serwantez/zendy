@@ -2,33 +2,46 @@
 
 namespace Application\Form;
 
-use ZendY\Db\Form;
-use ZendY\Form\Container\Panel;
-use ZendY\Db\Form\Container\Navigator;
-use ZendY\Db\Form\Container\EditDialog;
-use ZendY\Css;
-use ZendY\Form\Element\Grid\Column;
-use ZendY\Db\DataSource;
-use ZendY\Db\DataSet\Base as DataSet;
-use ZendY\Db\DataSet\Editable;
-use ZendY\Db\DataSet\App\Role;
-use ZendY\Db\DataSet\App\User;
-use ZendY\Db\DataSet\App\UserRole as DbUserRole;
-use ZendY\Db\Form\Element as DbElement;
+use ZendY\Db\Form,
+    ZendY\Form\Container\Panel,
+    ZendY\Db\Form\Container\Navigator,
+    ZendY\Db\Form\Container\EditDialog,
+    ZendY\Css,
+    ZendY\Form\Element\Grid\Column,
+    ZendY\Db\DataSource,
+    ZendY\Db\DataSet\Base as DataSet,
+    ZendY\Db\DataSet\Editable,
+    ZendY\Db\DataSet\App\Role,
+    ZendY\Db\DataSet\App\User,
+    ZendY\Db\DataSet\App\UserRole as DbUserRole,
+    ZendY\Db\Form\Element as DbElement;
 
 class UserRole extends Form {
 
     public function init() {
-        $this->setAttrib('id', 'userRoleForm');
-        $this->setAlign(Css::ALIGN_CLIENT);
-        $this->setAjaxValidator(false);
+        $dataSet = new DbUserRole(array(
+                    'name' => 'userRole'
+                ));
+        $dataSources[0] = new DataSource(array(
+                    'name' => 'userRoleSource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSet = new DbUserRole('userrole');
-        $dataSources[0] = new DataSource('userroleSource', $dataSet);
+        $dataSet = new Role(array(
+                    'name' => 'role'
+                ));
+        $dataSourceRole = new DataSource(array(
+                    'name' => 'roleSource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSourceRole = new DataSource('roleSource', new Role('role'));
-
-        $dataSourceUser = new DataSource('userSource', new User('user'));
+        $dataSet = new User(array(
+                    'name' => 'user'
+                ));
+        $dataSourceUser = new DataSource(array(
+                    'name' => 'userSource',
+                    'dataSet' => $dataSet
+                ));
 
 
         //przyciski akcji
@@ -62,21 +75,21 @@ class UserRole extends Form {
                 ->setListSource($dataSources[0])
                 ->setKeyField('id')
                 ->addColumn(new Column(
-                                DbUserRole::COL_ID,
                                 array(
+                                    'name' => DbUserRole::COL_ID,
                                     'label' => 'ID',
                                     'width' => 40,
                                     'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
                         )))
                 ->addColumn(new Column(
-                                DbUserRole::COL_USER_NAME,
                                 array(
+                                    'name' => DbUserRole::COL_USER_NAME,
                                     'label' => 'Username',
                                     'width' => 160,
                         )))
                 ->addColumn(new Column(
-                                DbUserRole::COL_ROLE_NAME,
                                 array(
+                                    'name' => DbUserRole::COL_ROLE_NAME,
                                     'label' => 'Role name',
                                     'width' => 160,
                         )))
@@ -92,6 +105,7 @@ class UserRole extends Form {
         $panel1 = new Panel();
         $panel1->addElement($grid)
                 ->setAlign(Css::ALIGN_CLIENT)
+                ->setSpace()
         ;
         $this->addContainer($panel1);
 
@@ -103,7 +117,7 @@ class UserRole extends Form {
                 ->setKeyField(User::COL_ID)
                 ->setListField(array(User::COL_USERNAME))
                 ->setWidth(220)
-                ->setLabel('Username', 120);
+                ->setLabel('Username');
 
         $elements[1] = new DbElement\Treeview('roleList');
         $elements[1]
@@ -115,7 +129,7 @@ class UserRole extends Form {
                 ->setIconField(Role::COL_CLASS)
                 ->setWidth(220)
                 ->setHeight(200)
-                ->setLabel('Role', 120)
+                ->setLabel('Role')
         ;
 
         $detailsPanel = new Panel();
@@ -129,17 +143,19 @@ class UserRole extends Form {
                 ->setDataSource($dataSources[0])
                 ->addElement($btnAdd)
                 ->addElement($btnEdit)
-                ->setAlign(Css::ALIGN_BOTTOM)
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'))
         ;
 
         $this->addContainer($nav);
 
-        $dialog = new EditDialog('userDetails');
+        $dialog = new EditDialog(array(
+                    'name' => 'userDetails'
+                ));
         $dialog
                 ->setDataSource($dataSources[0])
-                ->setTitle('User details')
-                ->setWidth(400)
-                ->setHeight(320)
+                ->setTitle('User role details')
+                ->setWidth(460)
+                ->setHeight(360)
                 ->addContainer($detailsPanel)
                 ->addOpener($btnEdit)
                 ->addOpener($btnAdd)

@@ -17,6 +17,38 @@ use ZendY\Css;
  * @author Piotr Zając
  */
 abstract class CustomList extends Widget {
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_COLUMNSPACE = 'columnSpace';
+    const PROPERTY_EMPTYVALUE = 'emptyValue';
+    const PROPERTY_MULTIOPTIONS = 'multiOptions';
+    const PROPERTY_CONDITIONALROWFORMATS = 'conditionalRowFormats';
+
+    /**
+     * Tablica właściwości
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_COLUMNSPACE,
+        self::PROPERTY_CONDITIONALROWFORMATS,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_EMPTYVALUE,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MULTIOPTIONS,
+        self::PROPERTY_NAME,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
 
     /**
      * Tablica opcji (pozycji listy)
@@ -433,11 +465,22 @@ abstract class CustomList extends Widget {
     }
 
     /**
+     * Ustawia wszystkie warunki formatujące wiersze
+     * 
+     * @param array $rowFormats
+     * @return \ZendY\Form\Element\CustomList
+     */
+    public function setConditionalRowFormats(array $rowFormats) {
+        $this->_conditionalRowFormat = $rowFormats;
+        return $this;
+    }
+
+    /**
      * Zwraca warunki formatujące wiersze
      * 
      * @return array
      */
-    public function getConditionalRowFormat() {
+    public function getConditionalRowFormats() {
         return $this->_conditionalRowFormat;
     }
 

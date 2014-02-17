@@ -9,9 +9,6 @@ use ZendY\Form\Element;
 class RecoverPassword extends \ZendY\Form {
 
     public function init() {
-        $this->setAttrib('id', 'recoverPasswordForm');
-        $this->setAction('');
-
         $description = 'Give your e-mail address';
         $email = new Element\Email('email');
         $email
@@ -26,16 +23,18 @@ class RecoverPassword extends \ZendY\Form {
                 ->setCaption('Recover password')
         ;
 
-        $btnPanel = new Container\Panel('btnPanel');
+        $btnPanel = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'btnPanel',
+                    Container\Panel::PROPERTY_ALIGN => Css::ALIGN_BOTTOM,
+                    Container\Panel::PROPERTY_SPACE => array('value' => 0.2, 'unit' => 'em'),
+                    Container\Panel::PROPERTY_HEIGHT => array('value' => 3.2, 'unit' => 'em'),
+                    Container\Panel::PROPERTY_CLASSES => array(
+                        Css::SCROLL_DISABLE
+                    )
+                ));
         $btnPanel
-                ->setHeight(35)
                 ->addElements(array($submit))
-                ->addClasses(array(
-                    Css::DIALOG_BUTTONPANE,
-                    Css::WIDGET_CONTENT,
-                    Css::HELPER_CLEARFIX
-                ))
-                ->setAlign(Css::ALIGN_BOTTOM);
+        ;
 
         $panel = new Container\Box('panel');
         $panel->setWidth(450)

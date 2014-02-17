@@ -26,6 +26,19 @@ class Form extends \ZendX_JQuery_Form {
     use Form\CssTrait;
 
     /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_ACTION = 'action';
+    const PROPERTY_AJAXVALIDATOR = 'ajaxValidator';
+    const PROPERTY_ALIGN = 'align';
+    const PROPERTY_HEIGHT = 'height';
+    const PROPERTY_NAME = 'name';
+    const PROPERTY_CLASSES = 'classes';
+    const PROPERTY_SPACE = 'space';
+    const PROPERTY_WIDTH = 'width';
+
+    /**
      * Status walidacji ajaxowej: 0-wyłączona, 1-włączona
      * 
      * @var bool 
@@ -40,11 +53,27 @@ class Form extends \ZendX_JQuery_Form {
     protected $_isSubForm = false;
 
     /**
-     * Odstęp od krawędzi
+     * Wolna przestrzeń wokół krawędzi
      * 
-     * @var integer
+     * @var array
      */
-    protected $_space = 0;
+    protected $_space = array('value' => 0, 'unit' => 'px');
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ACTION,
+        self::PROPERTY_AJAXVALIDATOR,
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_SPACE,
+        self::PROPERTY_WIDTH
+    );
 
     /**
      * Konstruktor
@@ -57,9 +86,34 @@ class Form extends \ZendX_JQuery_Form {
                 ->addPrefixPath('ZendY\Form\Element', 'ZendY/Form/Element', \Zend_Form::ELEMENT)
                 ->addElementPrefixPath('ZendY\Form\Decorator', 'ZendY/Form/Decorator', \Zend_Form::DECORATOR)
                 ->addDisplayGroupPrefixPath('ZendY\Form\Decorator', 'ZendY/Form/Decorator');
-        $this->setAjaxValidator();
-        $this->setMethod(\Zend_Form::METHOD_POST);
+        $this->_setDefaults();
         parent::__construct($options);
+    }
+
+    /**
+     * Ustawia wartości domyślne
+     * 
+     * @return void
+     */
+    protected function _setDefaults() {
+        $this->_ajaxValidator = TRUE;
+        $this->setMethod(\Zend_Form::METHOD_POST);
+    }
+
+    /**
+     * Dodaje element do formularza
+     * 
+     * @param  string|Zend_Form_Element $element
+     * @param  string $name
+     * @param  array|Zend_Config $options
+     * @return \ZendY\Form
+     */
+    public function addElement($element, $name = null, $options = null) {
+        if ($element instanceof \ZendY\Form\Element\CustomImage) {
+            $this->setEnctype(\Zend_Form::ENCTYPE_MULTIPART);
+        }
+        parent::addElement($element, $name, $options);
+        return $this;
     }
 
     /**
@@ -200,10 +254,29 @@ class Form extends \ZendX_JQuery_Form {
         return $this;
     }
 
+    /**
+     * Ustawia przestrzeń wokół krawędzi
+     * 
+     * @param integer|array $space
+     * @return \ZendY\Form
+     */
     public function setSpace($space = 2) {
-        $this->_space = $space;
+        if (!is_array($space)) {
+            $this->_space = array(
+                'value' => $space,
+                'unit' => 'px'
+            );
+        } else {
+            $this->_space = $space;
+        }
+        return $this;
     }
 
+    /**
+     * Zwraca przestrzeń wokół krawędzi
+     * 
+     * @return array
+     */
     public function getSpace() {
         return $this->_space;
     }
@@ -217,7 +290,7 @@ class Form extends \ZendX_JQuery_Form {
      */
     public function addContainer(Container $container, $name = null) {
         if (!isset($name)) {
-            $name = $container->getId();
+            $name = $container->getName();
         }
 
         /**
@@ -225,6 +298,21 @@ class Form extends \ZendX_JQuery_Form {
          */
         $align = $container->getAlign();
         if ($align) {
+            //uwzględnia odstęp od krawędzi
+            $space = $container->getSpace();
+            if ($space['value'] > 0) {
+                switch ($align) {
+                    case Css::ALIGN_BOTTOM:
+                    case Css::ALIGN_TOP:
+                        $height = self::sumSizes(array(
+                                    $container->getHeight(),
+                                    $space,
+                                    $space
+                                ));
+                        $container->setHeight($height);
+                        break;
+                }
+            }
             // pobranie wszystkich dodanych już kontenerów
             $existingContainers = $this->getSubForms();
 
@@ -364,7 +452,7 @@ class Form extends \ZendX_JQuery_Form {
      * @return string
      */
     public function render(\Zend_View_Interface $view = null) {
-        Msg::add('Formularz ' . $this->getId() . '->' . __FUNCTION__);
+        Msg::add('Formularz ' . $this->getName() . '->' . __FUNCTION__);
         //Walidacja ajaxowa
         if ($this->_ajaxValidator && !$this->_isSubForm) {
             $formClass = \ZendX_JQuery::encodeJson(explode('\\', get_class($this)));

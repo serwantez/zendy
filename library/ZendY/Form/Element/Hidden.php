@@ -18,11 +18,12 @@ class Hidden extends Widget {
     use \ZendY\ControlTrait;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'formHidden';
     }
 

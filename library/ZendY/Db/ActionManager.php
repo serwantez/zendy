@@ -141,7 +141,7 @@ final class ActionManager {
         $formClass = $this->_request->getParam('form');
         if (!isset($this->_form) && class_exists($formClass)) {
             $this->_form = new $formClass();
-            $this->_form->setAttrib('id', $this->_request->getParam('formId'));
+            $this->_form->setName($this->_request->getParam('formId'));
         }
 
         return $this->_form;
@@ -185,7 +185,7 @@ final class ActionManager {
      * @return array 
      */
     protected function _getDetailSources($masterSource) {
-        Msg::add($masterSource->getId() . '->' . __FUNCTION__);
+        Msg::add($masterSource->getName() . '->' . __FUNCTION__);
         $details = array();
         foreach ($this->_dataSources as $dataSource) {
             $dataSet = $dataSource->getDataSet();
@@ -215,7 +215,7 @@ final class ActionManager {
                 if (isset($formId)) {
                     foreach ($this->_dataSources as $dataSource) {
                         if ($dataSource->getFormId() == $formId)
-                            $result[$dataSource->getId()] = $dataSource;
+                            $result[$dataSource->getName()] = $dataSource;
                     }
                 }
                 else {
@@ -228,9 +228,9 @@ final class ActionManager {
         //filtrowanie po źródłach przypisanych do podanego formularza
         if (isset($formId)) {
             if ($masterSource->getFormId() == $formId)
-                $result[$masterSource->getId()] = $masterSource;
+                $result[$masterSource->getName()] = $masterSource;
         } else {
-            $result[$masterSource->getId()] = $masterSource;
+            $result[$masterSource->getName()] = $masterSource;
         }
         $detailSources = $this->_getDetailSources($masterSource);
         foreach ($detailSources as $dataSource) {
@@ -246,7 +246,7 @@ final class ActionManager {
      * @return bool
      */
     protected function _refilterDetail($masterSource = null) {
-        Msg::add($masterSource->getId() . '->' . __FUNCTION__);
+        Msg::add($masterSource->getName() . '->' . __FUNCTION__);
         if (!isset($masterSource)) {
             if (isset($this->_dataSourceId))
                 $masterSource = $this->_dataSources[$this->_dataSourceId];
@@ -300,7 +300,7 @@ final class ActionManager {
             $dataSet = $this->_dataSources[$this->_dataSourceId]->getDataSet();
             if (isset($dataSet)) {
                 $dataAction = $this->_dataAction;
-                $resource = $dataSet->getId();
+                $resource = $dataSet->getName();
                 $privilege = $dataSet->getActionPrivilege($this->_dataAction);
                 if (self::allowed($resource, $privilege)) {
                     if ($dataSet->isRegisteredAction($dataAction)) {
@@ -399,7 +399,7 @@ final class ActionManager {
                                         $offset
                                         , $recordPerPage
                                         , $control->getFields()
-                                        , $control->getConditionalRowFormat()
+                                        , $control->getConditionalRowFormats()
                                 ));
             }
         }
@@ -423,7 +423,7 @@ final class ActionManager {
         foreach ($masterDetail as $dataSource) {
             $dataSet = $dataSource->getDataSet();
             if (isset($dataSet)) {
-                $id = $dataSource->getId();
+                $id = $dataSource->getName();
                 $this->_resultData[$id]['data'] = array();
                 if (in_array($dataSet->getState(), array(DataSet\Base::STATE_VIEW, DataSet\Editable::STATE_EDIT))
                         || ($this->_dataAction == DataSet\Editable::ACTION_ADDCOPY)) {

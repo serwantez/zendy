@@ -28,19 +28,13 @@ class Column extends Component {
     protected $_name = null;
 
     /**
-     * Konstruktor
+     * Ustawia wartości domyślne
      * 
-     * @param string|null $id
-     * @param array|Zend_Config|null $options
      * @return void
      */
-    public function __construct($id = null, $options = null) {
-        $this->setName($id);
-        if (is_array($id)) {
-            $id = $id[0];
-        }
+    public function _setDefaults() {
+        parent::_setDefaults();
         $this->setSortable();
-        parent::__construct($id, $options);
     }
 
     /**
@@ -87,7 +81,7 @@ class Column extends Component {
     public function getLabel() {
         $label = $this->getAttrib('label');
         if (!isset($label))
-            $label = $this->getId();
+            $label = $this->getName();
 
         if (null !== ($translator = $this->getTranslator())) {
             return $translator->translate($label);
@@ -167,15 +161,15 @@ class Column extends Component {
      * @return string 
      */
     public function cellValue(array $row) {
-        if (array_key_exists($this->getId(), $row)) {
-            $row[$this->getId()] = htmlspecialchars($row[$this->getId()]);
+        if (array_key_exists($this->getName(), $row)) {
+            $row[$this->getName()] = htmlspecialchars($row[$this->getName()]);
             $decorators = $this->getDecorators();
             foreach ($decorators as $decorator) {
                 if ($decorator instanceof Column\Decorator\Custom) {
-                    $row[$this->getId()] = $decorator->cellValue($row);
+                    $row[$this->getName()] = $decorator->cellValue($row);
                 }
             }
-            return $row[$this->getId()];
+            return $row[$this->getName()];
         } else
             return null;
     }

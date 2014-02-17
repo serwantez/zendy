@@ -33,18 +33,17 @@ class PrintDataSet extends Report {
 
         $subtitle = new Caption('subtitle');
         $subtitle->setAttrib('class', Css::REPORT_SUBTITLE);
-        $subtitle->setValue($this->_dataSource->getDataSet()->getId());
+        $subtitle->setValue($this->_dataSource->getDataSet()->getName());
 
         $band = new Band('main');
         $fields = $this->_dataSource->getDataSet()->getColumns();
         foreach ($fields as $key => $field) {
-            $band->addColumn(new Column(
-                            $field
-                            , array(
+            $band->addColumn(new Column(array(
+                        'name' => $field
                     )));
         }
 
-        $this->addElements(array($title, $subtitle, $band));
+        $this->setElements(array($title, $subtitle, $band));
     }
 
 }

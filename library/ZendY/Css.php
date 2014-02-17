@@ -28,6 +28,14 @@ class Css {
     const ALIGN_VCENTER = 'ui-align-vcenter';
 
     /**
+     * Style dotyczące okna panelowego
+     */
+    const BOX = 'ui-box';
+    const BOX_TITLEBAR = 'ui-box-titlebar';
+    const BOX_TITLE = 'ui-box-title';
+    const BOX_CONTENT = 'ui-box-content';
+
+    /**
      * Style dotyczące przycisków
      */
     const BUTTON = 'ui-button';
@@ -336,13 +344,18 @@ class Css {
     const MAP = 'ui-map';
     const MAP_CANVAS = 'ui-map-canvas';
     const MAP_HEADER = 'ui-map-header';
+    const MAP_TITLE = 'ui-map-title';
+    const MAP_BUTTON = 'ui-map-button';
 
     /**
      * Style dotyczące menu
      */
     const MENU = 'ui-menu';
+    const MENU_ICON = 'ui-menu-icon';
+    const MENU_ICON_LEFT = 'ui-menu-icon-left';    
     const MENU_ICONS = 'ui-menu-icons';
     const MENU_ITEM = 'ui-menu-item';
+
     /**
      * Style dotyczące odstępów wewnętrznych
      */

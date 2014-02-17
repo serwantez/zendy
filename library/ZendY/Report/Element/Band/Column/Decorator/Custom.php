@@ -41,7 +41,9 @@ abstract class Custom extends Column {
     public function __construct(Column $column, array $options = array()) {
         $this->_column = $column;
         $this->_options = $options;
-        parent::__construct($column->getName(), $column->getAttribs());
+        $_options = $column->getAttribs();
+        $_options['name'] = $column->getName();
+        parent::__construct($_options);
         $this->decorate();
     }
 

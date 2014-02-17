@@ -78,7 +78,7 @@ class Report extends Base {
         $helper = $this->getHelper();
         $attribs = $this->getOptions();
         $name = $report->getFullyQualifiedName();
-        $attribs['id'] = $report->getId();
+        $attribs['id'] = $report->getName();
         return $view->$helper($name, $attribs, $content);
     }
 

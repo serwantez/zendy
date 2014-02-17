@@ -19,9 +19,17 @@ use ZendY\Css;
  */
 class NestedTree extends Table implements TreeSetInterface {
     /**
-     * Kolumny zbioru
+     * Właściwości komponentu
      */
 
+    const PROPERTY_LEFTFIELD = 'leftField';
+    const PROPERTY_RIGHTFIELD = 'rightField';
+    const PROPERTY_DEPTHFIELD = 'depthField';
+    const PROPERTY_PARENTFIELD = 'parentField';
+
+    /**
+     * Kolumny zbioru
+     */
     const COL_LFT = 'lft';
     const COL_RGT = 'rgt';
     const COL_DEPTH = 'depth';
@@ -114,6 +122,23 @@ class NestedTree extends Table implements TreeSetInterface {
     protected $_pasteType;
 
     /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DEPTHFIELD,
+        self::PROPERTY_LEFTFIELD,
+        self::PROPERTY_MASTER,
+        self::PROPERTY_NAME,
+        self::PROPERTY_PARENTFIELD,
+        self::PROPERTY_PRIMARY,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_RIGHTFIELD,
+        self::PROPERTY_TABLENAME
+    );
+
+    /**
      * Ustawia parametry akcji
      * 
      * @return \ZendY\Db\DataSet\NestedTree
@@ -201,31 +226,32 @@ class NestedTree extends Table implements TreeSetInterface {
                 $this->_navigator[self::ACTION_ADD]
                 && $cur[$this->_leftField] > 1);
         $this->_navigator[self::ACTION_ADDBEFORE] = (
-                $this->_state == self::STATE_VIEW
+                $this->_state >= self::STATE_VIEW
                 && !$this->_readOnly
                 && $this->_recordCount > 0
                 && $cur[$this->_leftField] > 1);
         $this->_navigator[self::ACTION_ADDUNDER] = (
-                $this->_state == self::STATE_VIEW
+                $this->_state >= self::STATE_VIEW
                 && !$this->_readOnly
                 && $this->_recordCount > 0);
         $this->_navigator[self::ACTION_CUT] = (
-                $this->_state == self::STATE_VIEW
+                $this->_state >= self::STATE_VIEW
                 && !$this->_readOnly
                 && $cur[$this->_leftField] > 1);
         $this->_navigator[self::ACTION_PASTEBEFORE] = (
-                $this->_state == self::STATE_VIEW
+                $this->_state >= self::STATE_VIEW
                 && !$this->_readOnly
                 && $cur[$this->_leftField] > 1
                 && isset($this->_cutRecord)
                 );
         $this->_navigator[self::ACTION_PASTEAFTER] = $this->_navigator[self::ACTION_PASTEBEFORE];
         $this->_navigator[self::ACTION_PASTEUNDER] = (
-                $this->_state == self::STATE_VIEW
+                $this->_state >= self::STATE_VIEW
                 && !$this->_readOnly
                 && isset($this->_cutRecord)
                 );
-        $this->_navigator[self::ACTION_CALCULATEPARENT] = ($this->_state == self::STATE_VIEW
+        $this->_navigator[self::ACTION_CALCULATEPARENT] = (
+                $this->_state >= self::STATE_VIEW
                 && !$this->_readOnly
                 && $this->_recordCount > 0);
         return $this;
@@ -276,6 +302,17 @@ class NestedTree extends Table implements TreeSetInterface {
     }
 
     /**
+     * Ustawia pole przechowujące wartość "rodzic"
+     *
+     * @param string $parent
+     * @return \ZendY\Db\DataSet\NestedTree
+     */
+    public function setParentField($parent) {
+        $this->_parentField = (string) $parent;
+        return $this;
+    }
+
+    /**
      * Zwraca pole przechowujące wartość "z lewej"
      * 
      * @return string
@@ -312,7 +349,7 @@ class NestedTree extends Table implements TreeSetInterface {
     }
 
     /**
-     * Zwraca nazwę pola rodzica
+     * Zwraca nazwę pola "rodzica"
      * 
      * @return string
      */
@@ -346,22 +383,22 @@ class NestedTree extends Table implements TreeSetInterface {
         if ($getDepth) {
             //podzapytanie zliczające głębokość elementu drzewa
             $depthSubq = new \Zend_Db_Expr('(' . $this->_db->select()
-                                    ->from(array("d" => $this->_name), "count(*)-1")
+                                    ->from(array("d" => $this->_tableName), "count(*)-1")
                                     ->where("node.$this->_leftField BETWEEN d.$this->_leftField AND d.$this->_rightField") . ')');
 
             $columns[$this->_depthField] = $depthSubq;
         }
 
         $q = $this->_db->select()
-                ->from(array("node" => $this->_name), $columns);
+                ->from(array("node" => $this->_tableName), $columns);
 
         //drzewo od wskazanego miejsca (wybrana gałąź)
         if (isset($root)) {
             $left = new \Zend_Db_Expr('(' . $this->_db->select()
-                                    ->from($this->_name, $this->_leftField)
+                                    ->from($this->_tableName, $this->_leftField)
                                     ->where("$this->_primary = ?", $root) . ')');
             $right = new \Zend_Db_Expr('(' . $this->_db->select()
-                                    ->from($this->_name, $this->_rightField)
+                                    ->from($this->_tableName, $this->_rightField)
                                     ->where("$this->_primary = ?", $root) . ')');
             $q->where("node.$this->_leftField > $left AND node.$this->_leftField < $right");
         }
@@ -388,7 +425,7 @@ class NestedTree extends Table implements TreeSetInterface {
         $data = array();
         $select = $this->_getTreeSelect($root, $columns);
         try {
-            /* if ($this->getId() == 'role') {
+            /* if ($this->getName() == 'role') {
               //print_r($columns);
               exit($select);
               } */
@@ -408,9 +445,9 @@ class NestedTree extends Table implements TreeSetInterface {
      * @return int
      */
     protected function _count() {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         /* $select = $this->_db->select();
-          $select->from($this->_name, 'COUNT(*) AS num'); */
+          $select->from($this->_tableName, 'COUNT(*) AS num'); */
 
         $select = $this->_getTreeSelect();
 
@@ -421,13 +458,13 @@ class NestedTree extends Table implements TreeSetInterface {
         $select->reset(\ZendY\Db\Select::ORDER);
 
         try {
-            /* if ($this->getId() == 'diocese') {
+            /* if ($this->getName() == 'diocese') {
               exit($select);
               } */
 
             $q = $select->query();
-            Msg::add($this->getId() . '->' . __FUNCTION__ . ' after query');
-            /* if ($this->getId() == 'parish') {
+            Msg::add($this->getName() . '->' . __FUNCTION__ . ' after query');
+            /* if ($this->getName() == 'parish') {
               Msg::add('SQL: ' . $select);
               } */
         } catch (Exception $exc) {
@@ -458,14 +495,14 @@ class NestedTree extends Table implements TreeSetInterface {
      * @return array
      */
     public function getCurrent($filterBlobs = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         if ($this->_state && $this->_offset >= 0) {
             $select = $this->_getTreeSelect(null, null);
             $select->limit(1, $this->_offset);
-            /* if ($this->getId() == 'diocese')
+            /* if ($this->getName() == 'diocese')
               exit($select); */
             $q = $select->query();
-            Msg::add($this->getId() . '->' . __FUNCTION__ . ' after query');
+            Msg::add($this->getName() . '->' . __FUNCTION__ . ' after query');
             $row = $q->fetch(\PDO::FETCH_ASSOC);
             //$row = $this->_db->fetchRow($select);
             //return $this->getAdapter()->fetchRow($select);
@@ -721,7 +758,7 @@ class NestedTree extends Table implements TreeSetInterface {
      * @return array
      */
     public function describe() {
-        return $this->_db->describeTable($this->_name);
+        return $this->_db->describeTable($this->_tableName);
     }
 
     /**
@@ -778,7 +815,11 @@ class NestedTree extends Table implements TreeSetInterface {
                         $ret = $this->_insert($data, $this->_insertType);
                     $this->_recordCount = $this->_count();
                 }
-                $this->_state = self::STATE_VIEW;
+                if ($this->_editMode)
+                    $this->_state = self::STATE_EDIT;
+                else
+                    $this->_state = self::STATE_VIEW;
+
 
                 $primaryKey = $this->getPrimary();
                 foreach ($primaryKey as $key) {
@@ -832,7 +873,10 @@ class NestedTree extends Table implements TreeSetInterface {
         $this->_recordCount = $this->_count();
         if ($this->_offset >= $this->_recordCount && $this->_recordCount > 0)
             $this->_offset = $this->_recordCount - 1;
-        $this->_state = self::STATE_VIEW;
+        if ($this->_editMode)
+            $this->_state = self::STATE_EDIT;
+        else
+            $this->_state = self::STATE_VIEW;
         if (!$compositePart) {
             $this->_setActionState();
         }
@@ -1130,7 +1174,7 @@ class NestedTree extends Table implements TreeSetInterface {
      * @return array
      */
     public function searchAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
         if (isset($params['searchValues'])) {
             $select = $this->_getTreeSelect(null, null);
@@ -1184,21 +1228,21 @@ class NestedTree extends Table implements TreeSetInterface {
      * @return array
      */
     public function calculateParentAction($params = array(), $compositePart = false) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $result = array();
 
         $primary = $this->getPrimary();
 
         $this->_db->query(
-                "UPDATE `" . $this->_name . "` 
+                "UPDATE `" . $this->_tableName . "` 
 LEFT JOIN (
 SELECT " . $primary[0] . " as pid, 
-(SELECT `sp`.`" . $primary[0] . "` FROM `" . $this->_name . "` AS `sp` 
-        WHERE (sp." . $this->_leftField . " < p" . $this->_name . "." . $this->_leftField . " 
-            AND sp." . $this->_rightField . " > p" . $this->_name . "." . $this->_rightField . ") 
-            ORDER BY sp." . $this->_rightField . " - p" . $this->_name . "." . $this->_rightField . " LIMIT 1) as parent
-FROM `" . $this->_name . "` as `p" . $this->_name . "`
-) AS `p` ON (`" . $this->_name . "`.`" . $primary[0] . "` = `p`.`pid`)
+(SELECT `sp`.`" . $primary[0] . "` FROM `" . $this->_tableName . "` AS `sp` 
+        WHERE (sp." . $this->_leftField . " < p" . $this->_tableName . "." . $this->_leftField . " 
+            AND sp." . $this->_rightField . " > p" . $this->_tableName . "." . $this->_rightField . ") 
+            ORDER BY sp." . $this->_rightField . " - p" . $this->_tableName . "." . $this->_rightField . " LIMIT 1) as parent
+FROM `" . $this->_tableName . "` as `p" . $this->_tableName . "`
+) AS `p` ON (`" . $this->_tableName . "`.`" . $primary[0] . "` = `p`.`pid`)
 SET `parent_id` = `p`.`parent`"
         );
 

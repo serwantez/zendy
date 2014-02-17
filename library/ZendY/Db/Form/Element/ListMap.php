@@ -22,6 +22,46 @@ abstract class ListMap extends \ZendY\Form\Element\ListMap implements ColumnInte
     use ColumnTrait;
 
     /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_DATASOURCE = 'dataSource';
+    const PROPERTY_DATAFIELD = 'dataField';
+    const PROPERTY_LISTSOURCE = 'listSource';
+    const PROPERTY_LISTFIELD = 'listField';
+    const PROPERTY_KEYFIELD = 'keyField';
+    const PROPERTY_STATICRENDER = 'staticRender';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DATAFIELD,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_KEYFIELD,
+        self::PROPERTY_LISTFIELD,
+        self::PROPERTY_LISTSOURCE,
+        self::PROPERTY_STATICRENDER,
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CENTER,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MAPTYPE,
+        self::PROPERTY_NAME,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH,
+        self::PROPERTY_ZOOM
+    );
+
+    /**
      * Licznik instancji
      * 
      * @var int
@@ -43,13 +83,23 @@ abstract class ListMap extends \ZendY\Form\Element\ListMap implements ColumnInte
     protected $_conditionalRowFormat = array();
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->setFrontNaviParam('type', 'mp');
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final protected function setMultiOptions(array $options) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
     }
 
     /**
@@ -166,7 +216,8 @@ abstract class ListMap extends \ZendY\Form\Element\ListMap implements ColumnInte
             }
             $options[$keyValueString] = $option;
         }
-        $this->setMultiOptions($options);
+        $this->clearMultiOptions();
+        $this->addMultiOptions($options);
     }
 
     /**

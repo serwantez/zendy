@@ -10,6 +10,7 @@ namespace ZendY\Db\Form\Element;
 
 use ZendY\Db\Form\Element\CellInterface;
 use ZendY\Form\Element;
+use ZendY\Exception;
 
 /**
  * Obrazek, którego ścieżka przechowywana jest w zbiorze danych
@@ -19,7 +20,40 @@ use ZendY\Form\Element;
 class ImageView extends Element\Image implements CellInterface {
 
     use CellTrait;
+    
+    /**
+     * Właściwości komponentu
+     */
 
+    const PROPERTY_DATASOURCE = 'dataSource';
+    const PROPERTY_DATAFIELD = 'dataField';     
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DATAFIELD,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_ALT,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_FIT,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_NULLPATH,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_UPLOADDIRECTORY,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+    
     /**
      * Licznik instancji
      * 
@@ -28,14 +62,24 @@ class ImageView extends Element\Image implements CellInterface {
     static protected $count = 0;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'imageView';
     }
+    
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setFileName($value) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }     
 
     /**
      * Ustawia źródło grafiki
@@ -44,8 +88,8 @@ class ImageView extends Element\Image implements CellInterface {
      */
     protected function _setSource() {
         if (isset($this->_dataSource) && isset($this->_dataField)) {
-            $this->setSource($this->getView()->baseUrl() . '/' . \Blueimp\Upload\Handler::$uploadDir . 'noimage.png');
-            $this->options['datasource'] = $this->_dataSource->getId();
+            parent::setFileName($this->getView()->baseUrl() . '/' . \Blueimp\Upload\Handler::$uploadDir . 'noimage.png');
+            $this->options['datasource'] = $this->_dataSource->getName();
             $this->options['datafield'] = $this->_dataField;
             $this->setNullPath($this->getView()->baseUrl() . '/' . \Blueimp\Upload\Handler::$uploadDir . 'noimage.png');
         }
@@ -60,7 +104,7 @@ class ImageView extends Element\Image implements CellInterface {
      */
     public function getJQueryMethod($method) {
         $js = sprintf('dc["iv"]["%s"].%s();'
-                , $this->getId()
+                , $this->getName()
                 , $method
         );
         return $js;

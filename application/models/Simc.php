@@ -38,10 +38,10 @@ class Simc extends DataSet\EditableQuery {
      * @return void
      */
     public function init() {
-        $this->_name = self::TABLE_NAME;
         parent::init();
+        $this->setTableName(self::TABLE_NAME);
         $this->setPrimary(self::COL_SYM);
-        $this->from(array('s' => $this->_name), array(
+        $this->from(array('s' => $this->_tableName), array(
                     self::COL_WOJ,
                     self::COL_POW,
                     self::COL_GMI,

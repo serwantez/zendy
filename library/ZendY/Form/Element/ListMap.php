@@ -16,6 +16,35 @@ use ZendY\Css;
  * @author Piotr Zając
  */
 abstract class ListMap extends CustomMap {
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_MULTIOPTIONS = 'multiOptions';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CENTER,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MAPTYPE,
+        self::PROPERTY_MULTIOPTIONS,
+        self::PROPERTY_NAME,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH,
+        self::PROPERTY_ZOOM
+    );
 
     /**
      * Tablica pozycji listy

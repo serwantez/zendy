@@ -126,7 +126,9 @@ class IconMenu extends \Zend_View_Helper_Navigation_Menu {
         if (null !== $page->icon) {
             $icon = '<img src="' . $this->_iconPath . '/' . $page->icon . '" alt="" /> ';
         } elseif (null !== $page->class && $page->class <> '') {
-            $icon = '<' . $this->_iconTag . ' class="' . \ZendY\Css::ICON . ' ' . $page->class . '" />
+            $icon = '<' . $this->_iconTag . ' class="' 
+                    . \ZendY\Css::MENU_ICON_LEFT . ' '
+                    . \ZendY\Css::ICON . ' ' . $page->class . '" />
                 </' . $this->_iconTag . '> ';
         } else {
             $icon = '';

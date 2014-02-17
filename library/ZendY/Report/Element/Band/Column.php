@@ -30,17 +30,12 @@ class Column extends Component {
     /**
      * Konstruktor
      * 
-     * @param string|null $id
      * @param array|Zend_Config|null @options
      * @return void
      */
-    public function __construct($id = null, $options = null) {
-        $this->setName($id);
-        if (is_array($id)) {
-            $id = $id[0];
-        }
+    public function __construct($options = null) {
         $this->setSortable();
-        parent::__construct($id, $options);
+        parent::__construct($options);
     }
 
     /**
@@ -87,7 +82,7 @@ class Column extends Component {
     public function getLabel() {
         $label = $this->getAttrib('label');
         if (!isset($label))
-            $label = $this->getId();
+            $label = $this->getName();
 
         if (null !== ($translator = $this->getTranslator())) {
             return $translator->translate($label);
@@ -167,14 +162,14 @@ class Column extends Component {
      * @return string 
      */
     public function cellValue(array $row) {
-        $row[$this->getId()] = htmlspecialchars($row[$this->getId()]);
+        $row[$this->getName()] = htmlspecialchars($row[$this->getName()]);
         $decorators = $this->getDecorators();
         foreach ($decorators as $decorator) {
             if ($decorator instanceof Column\Decorator\Custom) {
-                $row[$this->getId()] = $decorator->cellValue($row);
+                $row[$this->getName()] = $decorator->cellValue($row);
             }
         }
-        return $row[$this->getId()];
+        return $row[$this->getName()];
     }
 
     /**

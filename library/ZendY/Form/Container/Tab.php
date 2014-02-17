@@ -25,6 +25,21 @@ class Tab extends Panel {
     static protected $count = 0;
 
     /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_SPACE,
+        self::PROPERTY_WIDGETCLASS,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
      * Odświeża dekoratory po zmianach wykonanych na formularzu 
      * po dołaczeniu go do innego kontenera
      * 
@@ -32,21 +47,24 @@ class Tab extends Panel {
      */
     public function refreshDecorators() {
         $attribs = \ZendY\View\Helper\Widget::prepareCSS($this->getAttribs());
-        $tabAttribs['id'] = $this->getId();
+        $tabAttribs['id'] = $this->getName();
         $tabAttribs['jQueryParams'] = $this->getJQueryParams();
+
+        $space = $this->_space['value'] . $this->_space['unit'];
+
         $this->setDecorators(array(
             array('FormElements'),
             array(array('Inner' => 'HtmlTag'), array(
                     'tag' => 'div',
-                    'id' => $this->getId()
+                    'id' => $this->getName()
             )),
             array('TabContainer', $tabAttribs),
             array(array('Space' => 'HtmlTag'), array(
                     'style' => sprintf('position: absolute; left: %s; top: %s; right: %s; bottom: %s;'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px'
-                            , $this->_space . 'px')
+                            , $space
+                            , $space
+                            , $space
+                            , $space)
             )),
             array(array('Outer' => 'HtmlTag'), $attribs)
         ));

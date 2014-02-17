@@ -92,10 +92,12 @@ treeview = function(id, options) {
         var node = this.widgetUl;
         var hasChildren;
         var icon;
+        var j = 0;
         //console.log('set data for control '+this.id);
         //console.log(data);
         if (data['rows']) {
             $.each(data['rows'], function(key, value) {
+                if (j==0) depth = value[params.depthField];
                 if ((value[params.rightField]-value[params.leftField])>1) 
                     hasChildren = true; 
                 else 
@@ -162,7 +164,8 @@ treeview = function(id, options) {
                 node.append(listItem);
                 if (node.parent().attr("aria-expanded") == "false") {
                     node.hide();
-                }                
+                } 
+                j++;
             }); 
         }
         this.refresh();

@@ -13,22 +13,34 @@ use Application\Form\UserRole;
 class ACLController extends Zend_Controller_Action {
 
     public function roleAction() {
-        $form = new Role();
+        $form = new Role(array(
+                    Role::PROPERTY_NAME => 'roleForm',
+                    Role::PROPERTY_AJAXVALIDATOR => false,
+                ));
         $this->view->form = $form;
     }
 
     public function ruleAction() {
-        $form = new Rule();
+        $form = new Rule(array(
+                    Rule::PROPERTY_NAME => 'ruleForm',
+                    Rule::PROPERTY_AJAXVALIDATOR => false,
+                ));
         $this->view->form = $form;
     }
 
     public function userAction() {
-        $form = new User();
+        $form = new User(array(
+                    User::PROPERTY_NAME => 'userForm',
+                    User::PROPERTY_AJAXVALIDATOR => false,
+                ));
         $this->view->form = $form;
     }
 
     public function userroleAction() {
-        $form = new UserRole();
+        $form = new UserRole(array(
+                    UserRole::PROPERTY_NAME => 'userRoleForm',
+                    UserRole::PROPERTY_AJAXVALIDATOR => false,
+                ));
         $this->view->form = $form;
     }
 

@@ -18,6 +18,39 @@ use ZendY\Db\Form\Element\CellInterface;
 class SpinEdit extends \ZendY\Form\Element\SpinEdit implements CellInterface {
 
     use CellTrait;
+    
+    /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_DATASOURCE = 'dataSource';
+    const PROPERTY_DATAFIELD = 'dataField';    
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DATAFIELD,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_MAX,
+        self::PROPERTY_MIN,
+        self::PROPERTY_NAME,
+        self::PROPERTY_NUMBERFORMAT,
+        self::PROPERTY_PAGE,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_STEP,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
 
     /**
      * Licznik instancji

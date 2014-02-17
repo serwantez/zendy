@@ -9,9 +9,6 @@ use ZendY\Form\Element;
 class Signup extends \ZendY\Form {
 
     public function init() {
-        $this->setAttrib('id', 'signupForm');
-        $this->setAction('');
-
         $login = new Element\RegisterLogin('username');
         $login
                 ->setLabel('User name', 180)
@@ -54,27 +51,28 @@ class Signup extends \ZendY\Form {
                 ->setCaption('Sign up')
         ;
 
-        $btnPanel = new Container\Panel('btnPanel');
-        $btnPanel
-                ->setHeight(35)
-                ->addElements(array($submit))
-                ->addClasses(array(
-                    Css::DIALOG_BUTTONPANE,
-                    Css::WIDGET_CONTENT,
-                    Css::HELPER_CLEARFIX
-                ))
-                ->setAlign(Css::ALIGN_BOTTOM);
-
-        $panel = new Container\Box('panel');
-        $panel->setWidth(450)
-                ->setHeight(230)
+        $btnPanel = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'btnPanel',
+                    Container\Panel::PROPERTY_ALIGN => Css::ALIGN_BOTTOM,
+                    Container\Panel::PROPERTY_SPACE => array('value' => 0.2, 'unit' => 'em'),
+                    Container\Panel::PROPERTY_HEIGHT => array('value' => 3.2, 'unit' => 'em'),
+                    Container\Panel::PROPERTY_CLASSES => array(
+                        Css::SCROLL_DISABLE
+                    )
+                ));
+        $btnPanel->addElements(array($submit));
+        $box = new Container\Box(array(
+                    'name' => 'box'
+                ));
+        $box->setWidth(450)
+                ->setHeight(270)
                 ->setTitle('Sign up')
                 ->addElements(array($login, $password, $repeatpassword, $email, $repeatemail))
                 ->addContainer($btnPanel)
                 ->setAlign(Css::ALIGN_CENTER)
         ;
 
-        $this->addContainer($panel);
+        $this->addContainer($box);
     }
 
 }

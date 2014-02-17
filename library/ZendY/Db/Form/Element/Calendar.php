@@ -18,6 +18,50 @@ class Calendar extends \ZendY\Form\Element\Calendar implements ColumnInterface, 
     use ColumnTrait;
 
     /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_DATAFIELD = 'dataField';
+    const PROPERTY_DATASOURCE = 'dataSource';
+    const PROPERTY_DATEFIELD = 'dateField';
+    const PROPERTY_HOLIDAYFIELD = 'holidayField';
+    const PROPERTY_KEYFIELD = 'keyField';
+    const PROPERTY_LISTFIELD = 'listField';
+    const PROPERTY_LISTSOURCE = 'listSource';
+    const PROPERTY_STATICRENDER = 'staticRender';
+
+    /**
+     * Tablica właściwości
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_CONDITIONALROWFORMATS,
+        self::PROPERTY_CURRENTDATE,
+        self::PROPERTY_DATAFIELD,
+        self::PROPERTY_DATASOURCE,
+        self::PROPERTY_DATEFIELD,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HOLIDAYFIELD,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_KEYFIELD,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_LISTFIELD,
+        self::PROPERTY_LISTSOURCE,
+        self::PROPERTY_NAME,
+        self::PROPERTY_RANGE,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_STATICRENDER,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
      * Licznik instancji
      * 
      * @var int
@@ -39,12 +83,12 @@ class Calendar extends \ZendY\Form\Element\Calendar implements ColumnInterface, 
     protected $_holidayField;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->setFrontNaviParam('type', 'ca');
         $this->setFrontEditParam('type', 'ca');
     }

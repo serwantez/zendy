@@ -19,6 +19,27 @@ class IconSubmit extends Submit {
 
     use \ZendY\ControlTrait;
 
+    const PROPERTY_ICON = 'icon';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CAPTION,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_ICON,
+        self::PROPERTY_NAME,
+        self::PROPERTY_SHORTKEY,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_WIDTH
+    );
+
     /**
      * Tablica ikony przycisku
      * primary - z lewej strony

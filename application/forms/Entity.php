@@ -18,20 +18,32 @@ use ZendY\Db\Form\Element as DbElement;
 class Entity extends Form {
 
     public function init() {
-        $this->setAttrib('id', 'entityForm');
-        $this->setAlign(Css::ALIGN_CLIENT);
         $this->setEnctype(\Zend_Form::ENCTYPE_MULTIPART);
-        $this->setAjaxValidator(false);
 
-        $dataSet = new DbEntity('entity');
-        $dataSources[0] = new DataSource('entitySource', $dataSet);
+        $dataSetE = new DbEntity(array(
+                    'name' => 'entity'
+                ));
+        $dataSources[0] = new DataSource(array(
+                    'name' => 'entitySource',
+                    'dataSet' => $dataSetE
+                ));
 
-        $dataSet = new Country('country');
-        $dataSources['country'] = new DataSource('countrySource', $dataSet);
+        $dataSet = new Country(array(
+                    'name' => 'country'
+                ));
+        $dataSources['country'] = new DataSource(array(
+                    'name' => 'countrySource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSet = new ListItem('type');
-        $dataSet->setList(13);
-        $dataSources['type'] = new DataSource('typeSource', $dataSet);
+        $dataSet = new ListItem(array(
+                    'name' => 'type',
+                    'list' => 13,
+                ));
+        $dataSources['type'] = new DataSource(array(
+                    'name' => 'typeSource',
+                    'dataSet' => $dataSet
+                ));
 
         $treeView = new DbElement\Treeview('entities');
         $treeView
@@ -195,7 +207,7 @@ class Entity extends Form {
         $nav
                 ->setActions($actions)
                 ->setDataSource($dataSources[0])
-                ->setSpace()
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'))
         ;
 
         $this->addContainer($nav);

@@ -37,7 +37,7 @@ class ReportBand extends Widget {
             }
             $alignHorizontal[$key] = $column->getAlign();
             $th[] = sprintf('<th id="%s">%s</th>'
-                    , $id . '_' . $column->getId()
+                    , $id . '_' . $column->getName()
                     , $column->getLabel());
         }
 

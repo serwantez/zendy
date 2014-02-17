@@ -9,9 +9,6 @@ use ZendY\Form\Element;
 class ChangePassword extends \ZendY\Form {
 
     public function init() {
-        $this->setAttrib('id', 'changePasswordForm');
-        $this->setAction('');
-
         $password = new Element\Password('password');
         $password
                 ->setLabel('New password', 180)
@@ -32,20 +29,24 @@ class ChangePassword extends \ZendY\Form {
                 ->setCaption('Change password')
         ;
 
-        $btnPanel = new Container\Panel('btnPanel');
+        $btnPanel = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'btnPanel',
+                    Container\Panel::PROPERTY_ALIGN => Css::ALIGN_BOTTOM,
+                    Container\Panel::PROPERTY_SPACE => array('value' => 0.2, 'unit' => 'em'),
+                    Container\Panel::PROPERTY_HEIGHT => array('value' => 3.2, 'unit' => 'em'),
+                    Container\Panel::PROPERTY_CLASSES => array(
+                        Css::SCROLL_DISABLE
+                    )
+                ));
         $btnPanel
-                ->setHeight(35)
                 ->addElements(array($submit))
-                ->addClasses(array(
-                    Css::DIALOG_BUTTONPANE,
-                    Css::WIDGET_CONTENT,
-                    Css::HELPER_CLEARFIX
-                ))
-                ->setAlign(Css::ALIGN_BOTTOM);
+        ;
 
-        $panel = new Container\Box('panel');
+        $panel = new Container\Box(array(
+                    'name' => 'panel'
+                ));
         $panel->setWidth(450)
-                ->setHeight(150)
+                ->setHeight(180)
                 ->setTitle('Changing password')
                 ->addElements(array($password, $repeatpassword))
                 ->addContainer($btnPanel)

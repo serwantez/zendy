@@ -16,6 +16,11 @@ use ZendY\Msg;
  * @author Piotr Zając
  */
 class ArraySet extends Base {
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_DATA = 'data';
 
     /**
      * Dane tablicowe w formacie macierzy MxN:
@@ -31,6 +36,18 @@ class ArraySet extends Base {
     protected $_data = array();
 
     /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_DATA,
+        self::PROPERTY_MASTER,
+        self::PROPERTY_NAME,
+        self::PROPERTY_PRIMARY
+    );
+
+    /**
      * Inicjalizuje obiekt
      *
      * @return void
@@ -38,6 +55,16 @@ class ArraySet extends Base {
     public function init() {
         parent::init();
         $this->_readOnly = true;
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param bool $readOnly
+     * @throws Exception
+     */
+    final public function setReadOnly($readOnly) {
+        throw new Exception("You mustn't use method setReadOnly");
     }
 
     /**
@@ -146,7 +173,7 @@ class ArraySet extends Base {
      * @return array
      */
     public function getCurrent() {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $data = $this->getData();
 
         if (count($this->_filter->getFilters())) {
@@ -173,7 +200,7 @@ class ArraySet extends Base {
      * @return array
      */
     public function getItems($offset = null, $itemCount = null, $columns = null, $conditionalFormats = null) {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $data = $this->getData();
 
         if (count($this->_filter->getFilters())) {
@@ -200,7 +227,7 @@ class ArraySet extends Base {
      * @return int
      */
     protected function _count() {
-        Msg::add($this->getId() . '->' . __FUNCTION__);
+        Msg::add($this->getName() . '->' . __FUNCTION__);
         $data = $this->getData();
 
         if (count($this->_filter->getFilters())) {

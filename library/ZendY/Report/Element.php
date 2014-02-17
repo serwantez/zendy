@@ -248,7 +248,7 @@ class Element {
      * @return string
      */
     public static function resolveElementId(BaseInterface $decorator) {
-        return $decorator->getElement()->getId() . '-element';
+        return $decorator->getElement()->getName() . '-element';
     }
 
     /**

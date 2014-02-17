@@ -2,14 +2,14 @@
 
 namespace Application\Form;
 
-use ZendY\Css;
-use ZendY\Db\DataSource;
-use ZendY\Db\DataSet;
-use ZendY\Form\Container;
-use ZendY\Db\Form\Container as DbContainer;
-use ZendY\Form\Element;
-use ZendY\Db\Form\Element as DbElement;
-use Application\Model;
+use ZendY\Css,
+    ZendY\Db\DataSource,
+    ZendY\Db\DataSet,
+    ZendY\Form\Container,
+    ZendY\Db\Form\Container as DbContainer,
+    ZendY\Form\Element,
+    ZendY\Db\Form\Element as DbElement,
+    Application\Model;
 
 /**
  * Formularz demonstracyjny z rejestrem portów lotniczych
@@ -19,207 +19,219 @@ use Application\Model;
 class Airport extends \ZendY\Db\Form {
 
     public function init() {
-        //ustawienia ogólne
-        $this->setAttrib('id', 'airportForm');
-        $this->setAjaxValidator(false);
-
         //zbiory i źródła danych
-        $dataSet = new Model\Airport('airport');
-        $dataSourceAirport = new DataSource('airportSource', $dataSet);
+        $dataSetAirport = new Model\Airport(array(
+                    Model\Airport::PROPERTY_NAME => 'airport'
+                ));
+        $dataSourceAirport = new DataSource(array(
+                    DataSource::PROPERTY_NAME => 'airportSource',
+                    DataSource::PROPERTY_DATASET => $dataSetAirport
+                ));
 
-        $dataSet = new DataSet\App\Country('country');
-        $dataSourceCountry = new DataSource('countrySource', $dataSet);
+        $dataSetCountry = new DataSet\App\Country(array(
+                    DataSet\App\Country::PROPERTY_NAME => 'country'
+                ));
+        $dataSourceCountry = new DataSource(array(
+                    DataSource::PROPERTY_NAME => 'countrySource',
+                    DataSource::PROPERTY_DATASET => $dataSetCountry
+                ));
 
         //własne przyciski akcji
-        $btnOpenFilter = new Element\IconButton('btnOpenFilter');
-        $btnOpenFilter
-                ->setLabel('Filter')
-                ->setShortKey('Ctrl+F')
-                ->setIcons(Css::ICON_SEARCH)
-        ;
+        $btnOpenFilter = new Element\IconButton(array(
+                    Element\IconButton::PROPERTY_NAME => 'btnOpenFilter',
+                    Element\IconButton::PROPERTY_LABEL => 'Filter',
+                    Element\IconButton::PROPERTY_SHORTKEY => 'Ctrl+F',
+                    Element\IconButton::PROPERTY_ICONS => Css::ICON_SEARCH
+                ));
 
         //lista lotnisk
-        $listElement[0] = new DbElement\Listbox();
-        $listElement[0]
-                ->setListSource($dataSourceAirport)
-                ->setKeyField(Model\Airport::COL_ID)
-                ->setListField(Model\Airport::COL_NAME)
+        $listAirports = new DbElement\Listbox(array(
+                    DbElement\Listbox::PROPERTY_NAME => 'listAirports',
+                    DbElement\Listbox::PROPERTY_LISTSOURCE => $dataSourceAirport,
+                    DbElement\Listbox::PROPERTY_KEYFIELD => Model\Airport::COL_ID,
+                    DbElement\Listbox::PROPERTY_LISTFIELD => Model\Airport::COL_NAME,
+                    DbElement\Listbox::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                ));
+        //ustawienie wybranych dekoratorów
+        $listAirports
                 ->setDecorators(array(
                     array('UiWidgetMultiElement'),
                     array('HtmlTag', array('class' => Css::ALIGN_CLIENT))
                 ))
-                ->setAlign(Css::ALIGN_CLIENT)
-
         ;
 
-        $panelLeft = new Container\Panel();
-        $panelLeft->addElements($listElement)
-                ->setAlign(Css::ALIGN_LEFT)
-                ->setWidth(300)
-                ->setSpace()
-        ;
+        $panelLeft = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'panelLeft',
+                    Container\Panel::PROPERTY_ALIGN => Css::ALIGN_LEFT,
+                    Container\Panel::PROPERTY_WIDTH => 300,
+                    Container\Panel::PROPERTY_SPACE => 2
+                ));
+        $panelLeft->setElements(array($listAirports));
 
-        $i = 0;
-        $elements[$i] = new DbElement\Edit('code');
-        $elements[$i]
-                ->setLabel('IATA code')
-                ->setDataSource($dataSourceAirport)
-                ->setDataField(Model\Airport::COL_CODE)
-                ->setWidth(50)
-        ;
+        $editCode = new DbElement\Edit(array(
+                    DbElement\Edit::PROPERTY_NAME => 'code',
+                    DbElement\Edit::PROPERTY_LABEL => 'IATA code',
+                    DbElement\Edit::PROPERTY_WIDTH => 50,
+                    DbElement\Edit::PROPERTY_DATASOURCE => $dataSourceAirport,
+                    DbElement\Edit::PROPERTY_DATAFIELD => Model\Airport::COL_CODE
+                ));
 
-        $i++;
-        $elements[$i] = new DbElement\Edit('name');
-        $elements[$i]
-                ->setLabel('Name')
-                ->setDataSource($dataSourceAirport)
-                ->setDataField(Model\Airport::COL_NAME)
-                ->setWidth(250)
-        ;
+        $editName = new DbElement\Edit(array(
+                    DbElement\Edit::PROPERTY_NAME => 'name',
+                    DbElement\Edit::PROPERTY_LABEL => 'Name',
+                    DbElement\Edit::PROPERTY_WIDTH => 250,
+                    DbElement\Edit::PROPERTY_DATASOURCE => $dataSourceAirport,
+                    DbElement\Edit::PROPERTY_DATAFIELD => Model\Airport::COL_NAME
+                ));
 
-        $i++;
-        $elements[$i] = new DbElement\Combobox('country_id');
-        $elements[$i]
-                ->setLabel('Country')
-                ->setListSource($dataSourceCountry)
-                ->setKeyField(DataSet\App\Country::COL_ID)
-                ->setListField(DataSet\App\Country::COL_NAME)
-                ->setDataSource($dataSourceAirport)
-                ->setDataField(Model\Airport::COL_COUNTRY_ID)
-                ->setWidth(200)
-                ->setStaticRender()
-        ;
+        $comboboxCountry = new DbElement\Combobox(array(
+                    DbElement\Combobox::PROPERTY_NAME => 'country_id',
+                    DbElement\Combobox::PROPERTY_LABEL => 'Country',
+                    DbElement\Combobox::PROPERTY_WIDTH => 250,
+                    DbElement\Combobox::PROPERTY_DATASOURCE => $dataSourceAirport,
+                    DbElement\Combobox::PROPERTY_DATAFIELD => Model\Airport::COL_COUNTRY_ID,
+                    DbElement\Combobox::PROPERTY_LISTSOURCE => $dataSourceCountry,
+                    DbElement\Combobox::PROPERTY_LISTFIELD => DataSet\App\Country::COL_NAME,
+                    DbElement\Combobox::PROPERTY_KEYFIELD => DataSet\App\Country::COL_ID,
+                    DbElement\Combobox::PROPERTY_STATICRENDER => true
+                ));
 
+        $panelTop = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'panelTop',
+                    Container\Panel::PROPERTY_ALIGN => Css::ALIGN_TOP,
+                    Container\Panel::PROPERTY_CLASSES => array(Css::WIDGET_CONTENT),
+                    Container\Panel::PROPERTY_HEIGHT => 100
+                ));
+        $panelTop->setElements(array($editCode, $editName, $comboboxCountry));
 
-        $panelMain = new Container\Panel();
-        $panelMain
-                ->setAlign(Css::ALIGN_CLIENT)
-                ->setSpace()
-        ;
+        $map = new DbElement\PointMap(array(
+                    DbElement\PointMap::PROPERTY_NAME => 'coordinates',
+                    DbElement\PointMap::PROPERTY_DATASOURCE => $dataSourceAirport,
+                    DbElement\PointMap::PROPERTY_DATAFIELD => Model\Airport::COL_COORDINATES,
+                    DbElement\PointMap::PROPERTY_ZOOM => 14,
+                    DbElement\PointMap::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                    DbElement\PointMap::PROPERTY_LABEL => 'Coordinates',
+                ));
 
-        $panelTop = new Container\Panel();
-        $panelTop->addElements($elements)
-                ->setAlign(Css::ALIGN_TOP)
-                ->addClass(Css::WIDGET_CONTENT)
-                ->setHeight(100)
-        ;
-        $panelMain->addContainer($panelTop);
+        $panelMap = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'panelMap',
+                    Container\Panel::PROPERTY_ALIGN => Css::ALIGN_CLIENT
+                ));
+        $panelMap->setElements(array($map));
 
-        $map = new DbElement\PointMap('coordinates');
-        $map
-                ->setDataSource($dataSourceAirport)
-                ->setDataField(Model\Airport::COL_COORDINATES)
-                ->setZoom(14)
-                ->setAlign(Css::ALIGN_CLIENT)
-        ;
+        $panelMain = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'panelMain',
+                    Container\Panel::PROPERTY_ALIGN => Css::ALIGN_CLIENT,
+                    Container\Panel::PROPERTY_SPACE => 2
+                ));
+        $panelMain->setContainers(array($panelTop, $panelMap));
 
-        $panelMap = new Container\Panel();
-        $panelMap->addElement($map)
-                ->setAlign(Css::ALIGN_CLIENT)
-        ;
-        $panelMain->addContainer($panelMap);
-
-        $actions = array(
-            DataSet\Base::ACTION_FIRST,
-            DataSet\Base::ACTION_PREVIOUS,
-            DataSet\Base::ACTION_NEXT,
-            DataSet\Base::ACTION_LAST,
-            DataSet\Base::ACTION_REFRESH,
-            DataSet\Base::ACTION_EXPORTEXCEL,
-            DataSet\Editable::ACTION_ADD,
-            DataSet\Editable::ACTION_EDIT,
-            DataSet\Editable::ACTION_SAVE,
-            DataSet\Editable::ACTION_DELETE
-        );
-        $nav = new DbContainer\Navigator();
-        $nav
-                ->setDataSource($dataSourceAirport)
-                ->setActions($actions)
-                ->addElement($btnOpenFilter)
-                ->setSpace();
+        $nav = new DbContainer\Navigator(array(
+                    DbContainer\Navigator::PROPERTY_NAME => 'nav',
+                    DbContainer\Navigator::PROPERTY_DATASOURCE => $dataSourceAirport,
+                    DbContainer\Navigator::PROPERTY_ACTIONS => array(
+                        DataSet\Base::ACTION_FIRST,
+                        DataSet\Base::ACTION_PREVIOUS,
+                        DataSet\Base::ACTION_NEXT,
+                        DataSet\Base::ACTION_LAST,
+                        DataSet\Base::ACTION_REFRESH,
+                        DataSet\Base::ACTION_EXPORTEXCEL,
+                        DataSet\Editable::ACTION_ADD,
+                        DataSet\Editable::ACTION_EDIT,
+                        DataSet\Editable::ACTION_SAVE
+                    ),
+                    DbContainer\Navigator::PROPERTY_SPACE => array('value' => 0.2, 'unit' => 'em')
+                ));
+        $nav->setElements(array($btnOpenFilter));
 
         //okno filtrowania
-        $dialogAirportFilter = new DbContainer\FilterDialog('dialogAirportFilter');
-        $panelAirportFilter = new Container\Panel('panelAirportFilter');
+        $filterName = new DbElement\Filter\IconEdit(array(
+                    DbElement\Filter\IconEdit::PROPERTY_NAME => 'filterName',
+                    DbElement\Filter\IconEdit::PROPERTY_DATASOURCE => $dataSourceAirport,
+                    DbElement\Filter\IconEdit::PROPERTY_DATAFIELD => Model\Airport::COL_NAME,
+                    DbElement\Filter\IconEdit::PROPERTY_LABEL => 'Name'
+                ));
 
-        $filterElements[0] = new DbElement\Filter\IconEdit('filterName');
-        $filterElements[0]
-                ->setDataSource($dataSourceAirport)
-                ->setDataField(Model\Airport::COL_NAME)
-                ->setLabel('Name')
-        ;
+        $filterCode = new DbElement\Filter\IconEdit(array(
+                    DbElement\Filter\IconEdit::PROPERTY_NAME => 'filterCode',
+                    DbElement\Filter\IconEdit::PROPERTY_DATASOURCE => $dataSourceAirport,
+                    DbElement\Filter\IconEdit::PROPERTY_DATAFIELD => Model\Airport::COL_CODE,
+                    DbElement\Filter\IconEdit::PROPERTY_LABEL => 'IATA code'
+                ));
 
-        $filterElements[1] = new DbElement\Filter\IconEdit('filterCode');
-        $filterElements[1]
-                ->setDataSource($dataSourceAirport)
-                ->setDataField(Model\Airport::COL_CODE)
-                ->setLabel('IATA code')
-        ;
+        $filterCountry = new DbElement\Filter\IconEdit(array(
+                    DbElement\Filter\IconEdit::PROPERTY_NAME => 'filterCountry',
+                    DbElement\Filter\IconEdit::PROPERTY_DATASOURCE => $dataSourceAirport,
+                    DbElement\Filter\IconEdit::PROPERTY_DATAFIELD => Model\Airport::COL_COUNTRY_NAME,
+                    DbElement\Filter\IconEdit::PROPERTY_LABEL => 'Country'
+                ));
 
-        $filterElements[2] = new DbElement\Filter\IconEdit('filterCountry');
-        $filterElements[2]
-                ->setDataSource($dataSourceAirport)
-                ->setDataField(Model\Airport::COL_COUNTRY_NAME)
-                ->setLabel('Country')
-        ;
+        $panelAirportFilter = new Container\Panel(array(
+                    Container\Panel::PROPERTY_NAME => 'panelAirportFilter',
+                    Container\Panel::PROPERTY_ALIGN => Css::ALIGN_CLIENT
+                ));
+        $panelAirportFilter->setElements(array($filterName, $filterCode, $filterCountry));
 
-        $panelAirportFilter
-                ->addElements($filterElements)
-                ->setAlign(Css::ALIGN_CLIENT)
-        ;
-        $dialogAirportFilter
-                ->setDataSource($dataSourceAirport)
-                ->setTitle('Airport filter')
-                ->setWidth(350)
-                ->setHeight(200)
-                ->addContainer($panelAirportFilter)
-                ->addOpener($btnOpenFilter)
-        ;
+        $dialogAirportFilter = new DbContainer\FilterDialog(array(
+                    DbContainer\FilterDialog::PROPERTY_NAME => 'dialogAirportFilter',
+                    DbContainer\FilterDialog::PROPERTY_DATASOURCE => $dataSourceAirport,
+                    DbContainer\FilterDialog::PROPERTY_TITLE => 'Airport filter',
+                    DbContainer\FilterDialog::PROPERTY_WIDTH => 350,
+                    DbContainer\FilterDialog::PROPERTY_HEIGHT => 200,
+                    DbContainer\FilterDialog::PROPERTY_OPENERS => array($btnOpenFilter)
+                ));
+        $dialogAirportFilter->setContainers(array($panelAirportFilter));
 
-        $code = new Element\TextFileView('airportFormCode');
-        $code
-                ->setFileName('../application/forms/Airport.php')
-                ->setAlign(Css::ALIGN_CLIENT)
-        ;
+        $code = new Element\TextFileView(array(
+                    Element\TextFileView::PROPERTY_NAME => 'airportFormCode',
+                    Element\TextFileView::PROPERTY_FILENAME => '../application/forms/Airport.php',
+                    Element\TextFileView::PROPERTY_ALIGN => Css::ALIGN_CLIENT
+                ));
 
-        $description = new Element\DocFileView('demoDescription');
-        $description
-                ->setFileName('../application/views/scripts/demo/airport_description.phtml')
-                ->setAlign(Css::ALIGN_CLIENT)
-        ;
+        $description = new Element\DocFileView(array(
+                    Element\DocFileView::PROPERTY_NAME => 'demoDescription',
+                    Element\DocFileView::PROPERTY_FILENAME => '../application/views/scripts/demo/airport_description.phtml',
+                    Element\DocFileView::PROPERTY_ALIGN => Css::ALIGN_CLIENT
+                ));
 
         //zakładka opisu
-        $tabpanel[0] = new Container\TabPane();
-        $tabpanel[0]
-                ->setTitle('Description')
-                ->addElement($description)
-        ;
+        $tabPanel0 = new Container\TabPane(array(
+                    Container\TabPane::PROPERTY_NAME => 'tabPanel0',
+                    Container\TabPane::PROPERTY_TITLE => 'Description'
+                ));
+        $tabPanel0->setElements(array($description));
 
         //zakładka demo
-        $tabpanel[1] = new Container\TabPane();
-        $tabpanel[1]
-                ->setTitle('Demo')
-                ->addContainer($panelLeft)
-                ->addContainer($panelMain)
-                ->addContainer($nav)
-                ->addContainer($dialogAirportFilter)
-        ;
+        $tabPanel1 = new Container\TabPane(array(
+                    Container\TabPane::PROPERTY_NAME => 'tabPanel1',
+                    Container\TabPane::PROPERTY_TITLE => 'Demo'
+                ));
+        $tabPanel1->setContainers(array(
+            $panelLeft,
+            $panelMain,
+            $nav,
+            $dialogAirportFilter
+        ));
 
         //zakładka kodu
-        $tabpanel[2] = new Container\TabPane();
-        $tabpanel[2]
-                ->setTitle('Code')
-                ->addElement($code)
-        ;
+        $tabPanel2 = new Container\TabPane(array(
+                    Container\TabPane::PROPERTY_NAME => 'tabPanel2',
+                    Container\TabPane::PROPERTY_TITLE => 'Code'
+                ));
+        $tabPanel2->setElements(array($code));
 
         //główny kontener zakładek
-        $tab = new Container\Tab('tab1');
-        $tab
-                ->setAlign(Css::ALIGN_CLIENT)
-                ->addContainers($tabpanel)
-        ;
+        $tab = new Container\Tab(array(
+                    Container\Tab::PROPERTY_NAME => 'tab',
+                    Container\Tab::PROPERTY_ALIGN => Css::ALIGN_CLIENT
+                ));
+        $tab->setContainers(array(
+            $tabPanel0,
+            $tabPanel1,
+            $tabPanel2
+        ));
 
-        $this->addContainer($tab);
+        $this->setContainers(array($tab));
     }
 
 }

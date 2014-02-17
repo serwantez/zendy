@@ -18,17 +18,69 @@ use ZendY\Css;
 class Link extends Widget {
 
     use \ZendY\ControlTrait;
+    
+    /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_HREF = 'href';
+    
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_HREF,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_WIDTH
+    );    
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'link';
         $this->addClasses(array(Css::LINK));
     }
+    
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setDisabled($disabled) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    } 
+    
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setReadOnly($readOnly) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }    
 
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setRequired($flag = true) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }    
     /**
      * Ustawia adres linku
      * 

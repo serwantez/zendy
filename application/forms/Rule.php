@@ -21,65 +21,81 @@ use ZendY\Db\Form\Element as DbElement;
 class Rule extends Form {
 
     public function init() {
-        $this->setAttrib('id', 'ruleForm');
-        $this->setAlign(Css::ALIGN_CLIENT);
-        $this->setAjaxValidator(false);
+        $dataSet = new DbRule(array(
+                    'name' => 'rule'
+                ));
+        $dataSourceDbRule = new DataSource(array(
+                    'name' => 'ruleSource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSourceDbRule = new DataSource('ruleSource',
-                        new DbRule('rule'));
+        $dataSet = new Role(array(
+                    'name' => 'role'
+                ));
+        $dataSourceRole = new DataSource(array(
+                    'name' => 'roleSource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSourceRole = new DataSource('roleSource',
-                        new Role('role'));
+        $dataSet = new Page(array(
+                    'name' => 'page'
+                ));
+        $dataSourcePage = new DataSource(array(
+                    'name' => 'pageSource',
+                    'dataSet' => $dataSet
+                ));
 
-        $dataSourcePage = new DataSource('pageSource',
-                        new Page('page'));
-
-        $dataSet = new ArraySet('rule_type');
+        $dataSet = new ArraySet(array(
+                    'name' => 'rule_type'
+                ));
         $dataSet->setData(array(
                     array('id' => 0, 'type' => 'deny'),
                     array('id' => 1, 'type' => 'allow')
                 ))
                 ->setPrimary('id');
-        $dataSourceDbRuleType = new DataSource('rule_typeSource', $dataSet);
+        $dataSourceDbRuleType = new DataSource(array(
+                    'name' => 'ruleTypeSource',
+                    'dataSet' => $dataSet
+                ));
 
         $grid = new DbElement\Grid('rulesGrid');
         $grid
                 ->setListSource($dataSourceDbRule)
                 ->setKeyField(DbRule::COL_ID)
                 ->addColumn(new Column(
-                                DbRule::COL_ID,
                                 array(
+                                    'name' => DbRule::COL_ID,
                                     'label' => 'ID',
                                     'width' => 40,
                                     'align' => Css::TEXT_ALIGN_HORIZONTAL_RIGHT
                         )))
                 ->addColumn(new Column(
-                                DbRule::COL_ROLE_NAME,
                                 array(
+                                    'name' => DbRule::COL_ROLE_NAME,
                                     'label' => 'Role name',
                                     'width' => 150
                         )))
                 ->addColumn(new Column(
-                                DbRule::COL_RESOURCE,
                                 array(
+                                    'name' => DbRule::COL_RESOURCE,
                                     'label' => 'Resource name',
                                     'width' => 150
                         )))
                 ->addColumn(new Column(
-                                DbRule::COL_PRIVILEGE,
                                 array(
+                                    'name' => DbRule::COL_PRIVILEGE,
                                     'label' => 'Privilege',
                                     'width' => 150
                         )))
                 ->addColumn(new Column(
-                                DbRule::COL_ASSERT,
                                 array(
+                                    'name' => DbRule::COL_ASSERT,
                                     'label' => 'Assertion class',
                                     'width' => 150
                         )))
                 ->addColumn(new Column(
-                                DbRule::COL_RULE_TYPE,
                                 array(
+                                    'name' => DbRule::COL_RULE_TYPE,
                                     'label' => 'Rule type',
                                     'width' => 50,
                                     'align' => Css::TEXT_ALIGN_HORIZONTAL_CENTER,
@@ -178,7 +194,7 @@ class Rule extends Form {
         $nav->setActions($actions)
                 ->addElement($btnOpenFilter)
                 ->setDataSource($dataSourceDbRule)
-                ->setSpace();
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'));
         $this->addContainer($nav);
 
         // okno filtrowania

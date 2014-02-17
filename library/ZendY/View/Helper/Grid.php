@@ -89,7 +89,7 @@ class Grid extends Widget {
             $th[] = sprintf('<th id="%s" class="%s" style="width: %s;"><div class="%s">
                 <span class="%s">%s</span>
                 </div></th>'
-                    , $id . '_' . $column->getId()
+                    , $id . '_' . $column->getName()
                     , Css::STATE_DEFAULT
                     , $widthWithUnit
                     , Css::GRID_HEADER_CONTAINER

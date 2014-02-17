@@ -14,15 +14,32 @@ use ZendY\Db\Form\Element as DbElement;
 class Role extends Form {
 
     public function init() {
-        //ustawienie identyfikatora formularza
-        $this->setAttrib('id', 'roleForm');
-        //ustawienie akcji formularza na stronę bieżącą        
-        $this->setAjaxValidator(false);
-
         //zbiór danych przechowujący role użytkowników
-        $roleSet = new DataSet\App\Role('role');
+        $roleSet = new DataSet\App\Role(array(
+                    'name' => 'role'
+                ));
         //źródło danych do połączenia zbioru ról z kontrolkami
-        $roleSource = new DataSource('roleSource', $roleSet);
+        $roleSource = new DataSource(array(
+                    'name' => 'roleSource',
+                    'dataSet' => $roleSet
+                ));
+
+        //zbiór ikon, jako zbiór stałych klasy ZendY\Css
+        $iconSet = new DataSet\ClassConst(array(
+                    'name' => 'iconSet',
+                    'class' => '\ZendY\Css'
+                ));
+        $iconSet->sortAction(array('field' => DataSet\ClassConst::COL_VALUE));
+        //filtr danych wybiera tylko te stałe, które posiadają prefix 'ICON_'
+        $iconFilter = new Filter();
+        $iconFilter->addFilter(DataSet\ClassConst::COL_NAME, 'ICON_', DataSet\Base::OPERATOR_BEGIN);
+        $iconSet->filterAction(array('filter' => $iconFilter));
+        //źródło danych do połączenia zbioru ikon z kontrolką listy rozwijalnej
+        $iconSource = new DataSource(array(
+                    'name' => 'iconSource',
+                    'dataSet' => $iconSet
+                ));
+
 
         //kontrolka drzewa ról
         $roleList = new DbElement\Treeview('roleList');
@@ -66,17 +83,6 @@ class Role extends Form {
                 ->setDataSource($roleSource)
                 ->setDataField(DataSet\App\Role::COL_NAME)
                 ->setLabel('Name');
-
-        //zbiór ikon, jako zbiór stałych klasy ZendY\Css
-        $iconSet = new DataSet\ClassConst('iconSet', '\ZendY\Css');
-        $iconSet->setPrimary(DataSet\ClassConst::COL_VALUE)
-                ->sortAction(array('field' => DataSet\ClassConst::COL_VALUE));
-        //filtr danych wybiera tylko te stałe, które posiadają prefix 'ICON_'
-        $iconFilter = new Filter();
-        $iconFilter->addFilter(DataSet\ClassConst::COL_NAME, 'ICON_', DataSet\Base::OPERATOR_BEGIN);
-        $iconSet->filterAction(array('filter' => $iconFilter));
-        //źródło danych do połączenia zbioru ikon z kontrolką listy rozwijalnej
-        $iconSource = new DataSource('iconSource', $iconSet);
 
         //kontrolka listy rozwijalnej do wyboru ikony dla roli użytkownika
         $elements[1] = new DbElement\IconCombobox('icon');
@@ -123,7 +129,7 @@ class Role extends Form {
         $nav
                 ->setActions($actions)
                 ->setDataSource($roleSource)
-                ->setSpace()
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'))
         ;
 
         //dodanie nawigatora do formularza

@@ -14,6 +14,43 @@ namespace ZendY\Form\Element;
  * @author Piotr Zając
  */
 class RepeatEmail extends Email {
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_CONTROL = 'control';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_NAME,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_CONTROL,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_ICON,
+        self::PROPERTY_ICON_POSITION,
+        self::PROPERTY_MAXLENGTH,
+        self::PROPERTY_PLACEHOLDER,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Kontrolka adresu mailowego, z którą ma być porównywana wartość
+     * 
+     * @var ZendY\Form\Element\Email
+     */
+    protected $_control;
 
     /**
      * Licznik instancji
@@ -23,12 +60,12 @@ class RepeatEmail extends Email {
     static protected $count = 0;
 
     /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->setRequired(true);
     }
 
@@ -39,8 +76,18 @@ class RepeatEmail extends Email {
      * @return \ZendY\Form\Element\RepeatEmail
      */
     public function setControl(Email $control) {
+        $this->_control = $control;
         $this->addValidator(new \Zend_Validate_Identical(array('token' => $control->getName())));
         return $this;
+    }
+
+    /**
+     * Zwraca kontrolkę adresu mailowego, z którą ma być porównywana wartość
+     * 
+     * @return ZendY\Form\Element\Email
+     */
+    public function getControl() {
+        return $this->_control;
     }
 
 }

@@ -29,11 +29,46 @@ abstract class CustomImage extends Widget {
     const PARAM_METHOD_LOAD = 'load';
 
     /**
-     * Inicjalizacja obiektu
+     * Właściwości komponentu
+     */
+    const PROPERTY_ALT = 'alt';
+    const PROPERTY_FILENAME = 'fileName';
+    const PROPERTY_FIT = 'fit';
+    const PROPERTY_NULLPATH = 'nullPath';
+    const PROPERTY_UPLOADDIRECTORY = 'uploadDirectory';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_ALT,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_FILENAME,
+        self::PROPERTY_FIT,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_NULLPATH,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_REQUIRED,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_UPLOADDIRECTORY,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
+
+    /**
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
+    protected function _setDefaults() {
+        parent::_setDefaults();
         $this->helper = 'image';
         $this->addClasses(array(
             Css::IMAGE,
@@ -50,7 +85,7 @@ abstract class CustomImage extends Widget {
      * @param string $value
      * @return \ZendY\Form\Element\CustomImage
      */
-    public function setSource($value) {
+    public function setFileName($value) {
         $this->setAttrib('src', $value);
         return $this;
     }
@@ -60,7 +95,7 @@ abstract class CustomImage extends Widget {
      * 
      * @return string
      */
-    public function getSource() {
+    public function getFileName() {
         return $this->getAttrib('src');
     }
 
@@ -99,6 +134,15 @@ abstract class CustomImage extends Widget {
     }
 
     /**
+     * Informuje czy obraz ma być dostosowany do kontenera
+     * 
+     * @return bool
+     */
+    public function getFit() {
+        return $this->hasClass(Css::IMAGE_FIT);
+    }
+
+    /**
      * Ustawia katalog pobierania obrazu
      * 
      * @param string $directory
@@ -117,7 +161,7 @@ abstract class CustomImage extends Widget {
     public function getUploadDirectory() {
         return $this->getJQueryParam(self::PARAM_UPLOAD_DIRECTORY);
     }
-    
+
     /**
      * Ustawia ścieżkę pustej grafiki
      * 
@@ -136,6 +180,6 @@ abstract class CustomImage extends Widget {
      */
     public function getNullPath() {
         return $this->getJQueryParam(self::PARAM_NULL_PATH);
-    }    
+    }
 
 }

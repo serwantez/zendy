@@ -20,10 +20,15 @@ class EditableQuery extends Query implements TableInterface {
     use EditableTrait,
         TableTrait;
 
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_TABLENAME = 'tableName';
+
     /*
      * Akcje na zbiorze
      */
-
     const ACTION_ADD = 'addAction';
     const ACTION_EDIT = 'editAction';
     const ACTION_CANCEL = 'cancelAction';
@@ -32,24 +37,28 @@ class EditableQuery extends Query implements TableInterface {
     const ACTION_DELETE = 'deleteAction';
     const ACTION_TRUNCATE = 'truncateAction';
 
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_MASTER,
+        self::PROPERTY_NAME,
+        self::PROPERTY_PRIMARY,
+        self::PROPERTY_READONLY,
+        self::PROPERTY_SELECT,
+        self::PROPERTY_TABLENAME,
+    );
 
     /**
-     * Stan dodawania rekordu
-     */
-    const STATE_INSERT = 2;
-    /**
-     * Stan edycji rekordu
-     */
-    const STATE_EDIT = 3;
-
-    /**
-     * Inicjalizacja obiektu
+     * Ustawia wartości domyślne
      * 
      * @return void
      */
-    public function init() {
-        parent::init();
-        $this->_table = new \Zend_Db_Table(array('name' => $this->_name));
+    protected function _setDefaults() {
+        parent::_setDefaults();
+        $this->_table = new \Zend_Db_Table(array('name' => $this->_tableName));
         $this->_readOnly = false;
     }
 
@@ -68,7 +77,7 @@ class EditableQuery extends Query implements TableInterface {
                 , 'Add'
                 , NULL
                 , false
-                , Base::ACTION_PRIVILEGE_EDIT                
+                , Base::ACTION_PRIVILEGE_EDIT
         );
         $this->_registerAction(
                 self::ACTION_EDIT
@@ -127,39 +136,6 @@ class EditableQuery extends Query implements TableInterface {
 
         return $this;
     }
-
-    /**
-     * Ustawia stan przycisków nawigacyjnych
-     * 
-     * @param array|null $params
-     * @return \ZendY\Db\DataSet\EditableQuery
-     */
-    protected function _setActionState($params = array()) {
-        parent::_setActionState($params);
-
-        $this->_navigator[self::ACTION_ADD] = ($this->_state == self::STATE_VIEW
-                && !$this->_readOnly);
-        $this->_navigator[self::ACTION_EDIT] = ($this->_state == self::STATE_VIEW
-                && !$this->_readOnly
-                && $this->_recordCount > 0);
-        $this->_navigator[self::ACTION_CANCEL] = ($this->_state == self::STATE_EDIT
-                || $this->_state == self::STATE_INSERT);
-        $this->_navigator[self::ACTION_ADDCOPY] = $this->_navigator[self::ACTION_EDIT];
-        $this->_navigator[self::ACTION_SAVE] = (($this->_state == self::STATE_INSERT
-                || $this->_state == self::STATE_EDIT)
-                && !$this->_readOnly);
-        $this->_navigator[self::ACTION_DELETE] = (($this->_state == self::STATE_VIEW
-                || $this->_state == self::STATE_EDIT)
-                && $this->_recordCount > 0
-                && !$this->_readOnly);
-        $this->_navigator[self::ACTION_TRUNCATE] = (($this->_state == self::STATE_VIEW
-                || $this->_state == self::STATE_EDIT)
-                && !$this->_readOnly);
-
-        return $this;
-    }
-
-    /** AKCJE */
 
     /**
      * Zwraca nazwę kolumny tabeli źródłowej na podstawie jej aliasu

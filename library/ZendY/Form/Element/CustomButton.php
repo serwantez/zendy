@@ -14,11 +14,35 @@ namespace ZendY\Form\Element;
  * @author Piotr Zając
  */
 abstract class CustomButton extends Widget {
-
     /**
      * Parametry
      */
+
     const PARAM_SHORTKEY = 'shortkey';
+
+    /**
+     * Właściwości komponentu
+     */
+    const PROPERTY_SHORTKEY = 'shortKey';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_ALIGN,
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_DISABLED,
+        self::PROPERTY_HEIGHT,
+        self::PROPERTY_LABEL,
+        self::PROPERTY_NAME,
+        self::PROPERTY_SHORTKEY,
+        self::PROPERTY_TITLE,
+        self::PROPERTY_TOOLTIP,
+        self::PROPERTY_VALUE,
+        self::PROPERTY_WIDTH
+    );
 
     /**
      * Konstruktor
@@ -37,6 +61,26 @@ abstract class CustomButton extends Widget {
         }
 
         parent::__construct($spec, $options);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setReadOnly($readOnly) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setRequired($flag = true) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
     }
 
     /**

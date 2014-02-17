@@ -9,7 +9,7 @@ use ZendY\Db\Form\Container\EditDialog;
 use ZendY\Css;
 use ZendY\Db\DataSource;
 use ZendY\Db\DataSet\Base as DataSet;
-use ZendY\Db\DataSet\Editable;
+use ZendY\Form\Element;
 use ZendY\Db\DataSet\App\Doc;
 use ZendY\Db\DataSet\NestedTree;
 use ZendY\Db\Form\Element as DbElement;
@@ -23,16 +23,28 @@ use ZendY\Db\Form\Element as DbElement;
  */
 class Manual extends Form {
 
+    private $_dataset;
+
+    public function __construct($options = null) {
+        $this->_dataset = new Doc(array(
+                    'name' => 'doc'
+                ));
+
+        if (isset($options['search'])) {
+            $this->_dataset->openAction();
+            $this->_dataset->searchAction(array('searchValues' => array(
+                    Doc::COL_ID => $options['search']
+                    )));
+            unset($options['search']);
+        }
+        parent::__construct($options);
+    }
+
     public function init() {
-        //ustawienia ogólne
-        $this->setAttrib('id', 'docForm');
-        $this->setAlign(Css::ALIGN_CLIENT);
-        $this->setAjaxValidator(false);
-
-
-        //zbiory danych
-        $dataSet = new Doc('doc');
-        $dataSources['doc'] = new DataSource('docSource', $dataSet);
+        $dataSources['doc'] = new DataSource(array(
+                    'name' => 'docSource',
+                    'dataSet' => $this->_dataset
+                ));
 
         //kontrolki
         $tree = new DbElement\Treeview('docs');
@@ -46,7 +58,7 @@ class Manual extends Form {
         $panelMenu = new Panel();
         $panelMenu->addElement($tree)
                 ->setAlign(Css::ALIGN_LEFT)
-                ->setWidth(350)
+                ->setWidth(300)
                 ->setSpace()
         ;
         $contextMenu = new DbElement\ContextMenu('docsmenu');
@@ -98,10 +110,9 @@ class Manual extends Form {
             DataSet::ACTION_REFRESH,
         );
 
-        $btnEdit = new DbElement\Button('editButton');
+        $btnEdit = new Element\Button('editButton');
         $btnEdit
-                ->setDataSource($dataSources['doc'])
-                ->setDataAction(Editable::ACTION_EDIT)
+                ->setLabel('Details')
                 ->setShortKey('F3')
         ;
 
@@ -111,6 +122,7 @@ class Manual extends Form {
                 ->addElement($btnEdit)
                 ->setDataSource($dataSources['doc'])
                 ->setAlign(Css::ALIGN_BOTTOM)
+                ->setSpace(array('value' => 0.2, 'unit' => 'em'))
         ;
 
         $panelMain = new Panel();
@@ -118,12 +130,14 @@ class Manual extends Form {
                 ->setAlign(Css::ALIGN_CLIENT)
                 ->addContainer($panelTitle)
                 ->addContainer($panelContent)
-                ->addContainer($nav)
                 ->setSpace()
         ;
 
-        $this->addContainer($panelMenu);
-        $this->addContainer($panelMain);
+        $this->setContainers(array(
+            $panelMenu,
+            $panelMain,
+            $nav
+        ));
 
 
         //edytor
@@ -162,15 +176,6 @@ class Manual extends Form {
                 ->setDataField(Doc::COL_CREATION_DATE)
                 ->setWidth(200)
         ;
-
-        /* $i++;
-          $elements[$i] = new DbElement\Text('creation_user');
-          $elements[$i]
-          ->setLabel('Creator')
-          ->setDataSource($dataSources['doc'])
-          ->setDataField(Doc::COL_CREATION_USERNAME)
-          ->setWidth(200)
-          ; */
 
         $detailsPanel = new Panel();
         $detailsPanel->addElements($elements)

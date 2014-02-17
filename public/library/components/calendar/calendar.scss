@@ -10,7 +10,7 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 24px;
+        height: 32px;
         vertical-align: middle;
         .ui-calendar-range {
             vertical-align: middle;
@@ -36,7 +36,7 @@
     }    
     .ui-calendar-daynames {
         position: absolute;
-        top: 38px;
+        top: 42px;
         left: 0;
         height: 24px;
         table-layout: fixed;
@@ -54,7 +54,7 @@
     .ui-calendar-body {
         position: absolute;
         left: 0;
-        top: 62px;
+        top: 66px;
         bottom: 0px;
         width: 100%;        
         overflow: hidden;

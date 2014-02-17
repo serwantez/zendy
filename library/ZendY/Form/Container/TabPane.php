@@ -8,12 +8,19 @@
 
 namespace ZendY\Form\Container;
 
+use ZendY\Exception;
+
 /**
  * Klasa panelu zakładki
  *
  * @author Piotr Zając
  */
 class TabPane extends Panel {
+    /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_TITLE = 'title';
 
     /**
      * Licznik instancji
@@ -35,6 +42,67 @@ class TabPane extends Panel {
      * @var string
      */
     protected $_title = '';
+
+    /**
+     * Tablica właściwości komponentu
+     * 
+     * @var array
+     */
+    protected $_properties = array(
+        self::PROPERTY_CLASSES,
+        self::PROPERTY_NAME,
+        self::PROPERTY_TITLE,
+    );
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setHeight($value, $unit = 'px') {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setWidth($value, $unit = 'px') {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setAlign($align) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setWidgetClass($widgetClass) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
+
+    /**
+     * Zakaz używania metody
+     * 
+     * @param string $action
+     * @throws Exception
+     */
+    final public function setSpace($space = 2) {
+        throw new Exception("You mustn't use method " . __FUNCTION__);
+    }
 
     /**
      * Ustawia identyfikator kontenera zakładki
@@ -87,7 +155,7 @@ class TabPane extends Panel {
             'FormElements',
             array('HtmlTag', array('tag' => 'div')),
             array('TabPane', array('jQueryParams' => array(
-                        'id' => $this->getId(),
+                        'id' => $this->getName(),
                         'containerId' => $this->_containerId,
                         'title' => $this->_title
                 )))

@@ -39,9 +39,9 @@ class Sorter extends Plugin {
             }
         }
         $js = sprintf('dc["gr"]["%s"].setSorting(%s, "%s", "%s")'
-                , $this->getGrid()->getId()
+                , $this->getGrid()->getName()
                 , \ZendX_JQuery::encodeJson($sortCols)
-                , $this->getGrid()->getListSource()->getId()
+                , $this->getGrid()->getListSource()->getName()
                 , $this->getGrid()->getListSource()->getFormId());
         $this->addOnLoad($js);
     }
