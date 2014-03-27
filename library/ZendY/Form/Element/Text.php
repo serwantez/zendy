@@ -29,6 +29,7 @@ class Text extends Widget {
         self::PROPERTY_ALIGN,
         self::PROPERTY_CLASSES,
         self::PROPERTY_HEIGHT,
+        self::PROPERTY_INLINE,
         self::PROPERTY_LABEL,
         self::PROPERTY_NAME,
         self::PROPERTY_TITLE,

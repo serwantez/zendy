@@ -141,9 +141,10 @@ class ContextMenu extends \ZendY\Form\Element\ContextMenu {
     /**
      * Renderuje kod js odpowiedzialny za dostarczanie danych do kontrolki
      * 
+     * @param string $list
      * @return string
      */
-    public function renderDbNavi() {
+    public function renderDbNavi($list = 'standard') {
         $js = array();
         foreach ($this->multiOptions as $key => $option) {
             $js[] = sprintf('ds.addAction("%s",%s);'

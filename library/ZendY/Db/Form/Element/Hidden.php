@@ -20,6 +20,13 @@ class Hidden extends \ZendY\Form\Element\Hidden implements CellInterface {
     use CellTrait;
 
     /**
+     * Właściwości komponentu
+     */
+
+    const PROPERTY_DATASOURCE = 'dataSource';
+    const PROPERTY_DATAFIELD = 'dataField';
+
+    /**
      * Licznik instancji
      * 
      * @var int
@@ -44,8 +51,9 @@ class Hidden extends \ZendY\Form\Element\Hidden implements CellInterface {
      * @return string
      */
     public function render(\Zend_View_Interface $view = null) {
-        if ($this->hasDataSource())
+        if ($this->hasDataSource()) {
             $this->getDataSource()->addEditControl($this);
+        }
         return parent::render($view);
     }
 

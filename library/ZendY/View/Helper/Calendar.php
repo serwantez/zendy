@@ -32,9 +32,10 @@ class Calendar extends Widget {
         $attribs = $this->_prepareAttributes($id, $value, $attribs);
         $params = $this->_prepareParams($id, $params);
 
-        if (isset($attribs['listSource'])) {
-            $listSource = $attribs['listSource'];
-            unset($attribs['listSource']);
+        if (isset($attribs['lists'])) {
+            if (count($attribs['lists']) > 0)
+                $lists = $attribs['lists'];
+            unset($attribs['lists']);
         }
 
         $attribs = $this->_extractAttributes($id, $attribs);
@@ -64,11 +65,15 @@ class Calendar extends Widget {
                 , $id
                 , $id
                 , $params);
-        if (isset($listSource)) {
-            $js[] = sprintf('dc["ca"]["%s"].setNavigating("%s", "%s")'
+        if (isset($lists)) {
+            $listNames = array();
+            foreach ($lists as $list) {
+                $listNames[] = $list['listSource']->getName();
+            }
+            $js[] = sprintf('dc["ca"]["%s"].setNavigating(%s, "%s")'
                     , $id
-                    , $listSource->getName()
-                    , $listSource->getFormId());
+                    , \ZendY\JQuery::encodeJson($listNames)
+                    , $lists['standard']['listSource']->getFormId());
         }
 
         $this->view->headLink()->appendStylesheet($this->view->host . '/library/components/calendar/calendar.css');

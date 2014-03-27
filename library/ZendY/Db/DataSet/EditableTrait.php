@@ -61,7 +61,8 @@ trait EditableTrait {
         if (!isset($describe)) {
             $describe = $this->describe();
         }
-        if (array_key_exists($field, $describe)) {
+
+        if (!is_object($field) && array_key_exists($field, $describe)) {
             $result = $describe[$field];
         } else
             $result = false;
@@ -134,5 +135,5 @@ trait EditableTrait {
         }
         return $result;
     }
-
+    
 }

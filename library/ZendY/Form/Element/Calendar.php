@@ -35,6 +35,7 @@ class Calendar extends CustomList {
      * Właściwości komponentu
      */
     const PROPERTY_CURRENTDATE = 'currentDate';
+    const PROPERTY_DIALOG = 'dialog';
     const PROPERTY_RANGE = 'range';
 
     /**
@@ -47,7 +48,8 @@ class Calendar extends CustomList {
         self::PROPERTY_CLASSES,
         self::PROPERTY_CONDITIONALROWFORMATS,
         self::PROPERTY_CURRENTDATE,
-        self::PROPERTY_DISABLED,        
+        self::PROPERTY_DIALOG,
+        self::PROPERTY_DISABLED,
         self::PROPERTY_HEIGHT,
         self::PROPERTY_LABEL,
         self::PROPERTY_MULTIOPTIONS,
@@ -60,6 +62,13 @@ class Calendar extends CustomList {
         self::PROPERTY_VALUE,
         self::PROPERTY_WIDTH
     );
+
+    /**
+     * Identyfikator okna dialogowego
+     * 
+     * @var string
+     */
+    protected $_dialog = null;
 
     /**
      * Ustawia wartości domyślne
@@ -198,6 +207,26 @@ class Calendar extends CustomList {
                 break;
         }
         return new \ZendY\Date\Period($date[0], $date[1]);
+    }
+
+    /**
+     * Ustawia okno dialogowe
+     * 
+     * @param string $dialog
+     * @return \ZendY\Form\Element\Calendar
+     */
+    public function setDialog($dialog) {
+        $this->_dialog = $dialog;
+        return $this;
+    }
+
+    /**
+     * Zwraca okno dialogowe
+     * 
+     * @return string
+     */
+    public function getDialog() {
+        return $this->_dialog;
     }
 
 }

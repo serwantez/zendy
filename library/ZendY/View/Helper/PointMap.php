@@ -45,7 +45,10 @@ class PointMap extends Map {
                 , $jh
                 , $id . '-map'
                 , $params);
-        $label = $this->view->translate($attribs['label']);
+        if (isset($attribs['label']))
+            $label = $this->view->translate($attribs['label']);
+        else
+            $label = '';
 
         unset($attribs['id']);
         unset($attribs['name']);

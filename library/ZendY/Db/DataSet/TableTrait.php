@@ -199,7 +199,9 @@ trait TableTrait {
     public function deleteAction($params = array(), $compositePart = false) {
         $result = array();
 
+        $this->beforeDeleteEvent($params);
         $result = $this->_delete();
+        $this->afterDeleteEvent($params);
         $this->_recordCount = $this->_count();
         if ($this->_offset >= $this->_recordCount && $this->_recordCount > 0)
             $this->_offset--;
@@ -256,7 +258,7 @@ trait TableTrait {
      * @param array $data
      * @return array
      */
-    protected function _saveOnFilter(array $data) {
+    protected function _saveOnFilter(array $data, $describe = null) {
         $filters = $this->getFilters();
         foreach ($filters as $filterName => $filter) {
             foreach ($filter as $field => $filterData) {
@@ -268,7 +270,9 @@ trait TableTrait {
                 }
                 if (!array_key_exists($field, $data)
                         && $filterData['operator'] == Base::OPERATOR_EQUAL
-                        && $filterData['connector'] == Base::CONNECTOR_AND) {
+                        && $filterData['connector'] == Base::CONNECTOR_AND
+                        && isset($describe[$field]['TABLE_NAME'])
+                        && $describe[$field]['TABLE_NAME'] == $this->getTableName()) {
                     $data[$field] = $filterData['value'];
                 }
             }
@@ -284,6 +288,7 @@ trait TableTrait {
      * @return array
      */
     public function saveAction($params = array(), $compositePart = false) {
+        $this->beforeSaveEvent($params);
         $result = array();
         $ret = null;
         //walidacja formularza
@@ -297,36 +302,43 @@ trait TableTrait {
         if (count($messages) == 0) {
             if (isset($params['fieldsValues'])) {
                 $ret = null;
-                //dane tabeli
+                //dane kolumn zbioru
                 $describe = $this->describe();
 
-                $data = $this->_saveOnFilter($params['fieldsValues']);
+                $params['fieldsValues'] = $this->_saveOnFilter($params['fieldsValues'], $describe);
 
-                foreach ($data as $key => $value) {
+                foreach ($params['fieldsValues'] as $key => $value) {
                     //zabezpieczenie przed próbą błędnego zapisania tablicy do pola
                     if (is_array($value)) {
-                        $data[$key] = $value[0];
+                        $params['fieldsValues'][$key] = $value[0];
                     }
                     //pola blob (grafika)
                     $col = $describe[$key];
                     if (in_array($col['DATA_TYPE'], array('blob', 'tinyblob', 'mediumblob', 'longblob'))) {
-                        $path = pathinfo($data[$key]);
+                        $path = pathinfo($params['fieldsValues'][$key]);
                         $url = dirname($_SERVER['SCRIPT_FILENAME']) . '/' . \Blueimp\Upload\Handler::$uploadDir . $path['basename'];
                         if ($path['basename'] == 'empty') {
-                            $data[$key] = '';
+                            $params['fieldsValues'][$key] = '';
                         } elseif (file_exists($url)) {
-                            $data[$key] = file_get_contents($url);
+                            $params['fieldsValues'][$key] = file_get_contents($url);
                             unlink($url);
                         } else
-                            unset($data[$key]);
+                            unset($params['fieldsValues'][$key]);
                     }
                 }
 
                 if ($this->_state == self::STATE_EDIT) {
-                    $this->_update($data);
-                    $ret = $this->getPrimaryValue();
+                    $this->beforeUpdateEvent($params);
+                    $this->_update($params['fieldsValues']);
+                    $this->afterUpdateEvent($params);
+                    if ($this->hasFilter()) {
+                        $this->_recordCount = $this->_count();
+                    }
+                    $params['key'] = $this->getPrimaryValue();
                 } elseif ($this->_state == self::STATE_INSERT) {
-                    $ret = $this->_table->createRow()->setFromArray($data)->save();
+                    $this->beforeInsertEvent($params);
+                    $params['key'] = $this->_table->createRow()->setFromArray($params['fieldsValues'])->save();
+                    $this->afterInsertEvent($params);
                     $this->_recordCount = $this->_count();
                 }
                 if ($this->_editMode)
@@ -337,7 +349,7 @@ trait TableTrait {
 
                 $primaryKey = $this->getPrimary();
                 foreach ($primaryKey as $key) {
-                    $searchValues[$key] = is_array($ret) && array_key_exists($key, $ret) ? $ret[$key] : $ret;
+                    $searchValues[$key] = is_array($params['key']) && array_key_exists($key, $params['key']) ? $params['key'][$key] : $params['key'];
                 }
                 $result = array_merge($result, $this->searchAction(array('searchValues' => $searchValues), true));
                 if (!$compositePart) {
@@ -347,7 +359,88 @@ trait TableTrait {
         } else {
             $result['errors'] = $messages;
         }
+        $this->afterSaveEvent($params);
         return $result;
+    }
+
+    /**
+     * Zdarzenie wykonywane po zapisaniu rekordu
+     * 
+     * @param array $params
+     * @return ZendY\Db\DataSet\TableTrait
+     */
+    public function afterSaveEvent(&$params) {
+        return $this;
+    }
+
+    /**
+     * Zdarzenie wykonywane przed zapisaniem rekordu
+     * 
+     * @param array $params
+     * @return ZendY\Db\DataSet\TableTrait
+     */
+    public function beforeSaveEvent(&$params) {
+        return $this;
+    }
+
+    /**
+     * Zdarzenie wykonywane po aktualizacji rekordu
+     * 
+     * @param array $params
+     * @return ZendY\Db\DataSet\TableTrait
+     */
+    public function afterUpdateEvent(&$params) {
+        return $this;
+    }
+
+    /**
+     * Zdarzenie wykonywane przed aktualizacją rekordu
+     * 
+     * @param array $params
+     * @return ZendY\Db\DataSet\TableTrait
+     */
+    public function beforeUpdateEvent(&$params) {
+        return $this;
+    }
+
+    /**
+     * Zdarzenie wykonywane po dodaniu rekordu
+     * 
+     * @param array $params
+     * @return ZendY\Db\DataSet\TableTrait
+     */
+    public function afterInsertEvent(&$params) {
+        return $this;
+    }
+
+    /**
+     * Zdarzenie wykonywane przed dodaniem rekordu
+     * 
+     * @param array $params
+     * @return ZendY\Db\DataSet\TableTrait
+     */
+    public function beforeInsertEvent(&$params) {
+        return $this;
+    }
+
+    /**
+     * Zdarzenie wykonywane po usunięciu rekordu
+     * 
+     * @param array $params
+     * @return ZendY\Db\DataSet\TableTrait
+     */
+    public function afterDeleteEvent(&$params) {
+        return $this;
+    }
+
+    /**
+     * Zdarzenie wykonywane przed usunięciem rekordu
+     * 
+     * @param array $params
+     * @return ZendY\Db\DataSet\TableTrait
+     */
+    public function beforeDeleteEvent(&$params) {
+        return $this;
     }
 
 }

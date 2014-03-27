@@ -73,6 +73,7 @@ class FilterDialog extends Dialog implements DataInterface {
      */
     protected function _setDefaults() {
         parent::_setDefaults();
+        $this->setTitle('Filter');
         $this->_navigator = new Navigator();
         $actions = array(
             array('action' => DataSet::ACTION_FILTER, 'text' => true)

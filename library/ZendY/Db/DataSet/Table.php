@@ -19,11 +19,12 @@ use ZendY\Exception;
 class Table extends Editable implements TableInterface {
 
     use TableTrait;
-    
+
     /**
      * Właściwości komponentu
      */
-    const PROPERTY_TABLENAME = 'tableName';   
+
+    const PROPERTY_TABLENAME = 'tableName';
 
     /**
      * Obiekt adaptera bazodanowego
@@ -31,7 +32,7 @@ class Table extends Editable implements TableInterface {
      * @var \Zend_Db_Adapter_Abstract
      */
     protected $_db;
-    
+
     /**
      * Tablica właściwości komponentu
      * 
@@ -43,7 +44,7 @@ class Table extends Editable implements TableInterface {
         self::PROPERTY_PRIMARY,
         self::PROPERTY_READONLY,
         self::PROPERTY_TABLENAME
-    );    
+    );
 
     /**
      * Ustawia wartości domyślne
@@ -289,6 +290,9 @@ class Table extends Editable implements TableInterface {
 
             $select->limit(1, $this->_offset);
             $row = $this->_table->fetchRow($select);
+            if (!isset($row)) {
+                $row = $this->_table->createRow();
+            }
         } else {
             $row = $this->_table->createRow();
         }

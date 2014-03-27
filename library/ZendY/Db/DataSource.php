@@ -280,6 +280,7 @@ class DataSource extends Component {
             if (($dataSet instanceof TableInterface) &&
                     !($control instanceof Element\Filter\FilterInterface) &&
                     !($control instanceof Element\PresentationInterface)) {
+
                 if ($col = $dataSet->describeField($dataSet->getTableField($dataField))) {
                     //jeśli przypisane pole w tabeli nie może mieć wartości null, dodaje do kontrolki "wymagalność"
                     if (!$col['NULLABLE']) {
@@ -316,9 +317,10 @@ class DataSource extends Component {
      * @param \ZendY\Form\Element\Widget $control
      * @return \ZendY\Db\DataSource
      */
-    public function addNaviControl(\ZendY\Form\Element\Widget &$control) {
+    public function addNaviControl(\ZendY\Form\Element\Widget &$control, $list = 'standard') {
         $this->refreshNaviControl($control);
-        $this->_naviControls[$control->getName()] = $control;
+        $this->_naviControls[$control->getName()]['control'] = $control;
+        $this->_naviControls[$control->getName()]['list'] = $list;
         return $this;
     }
 
@@ -488,9 +490,9 @@ class DataSource extends Component {
         }
 
         foreach ($this->_naviControls as $key => $control) {
-            if (is_object($control)) {
-                if ($control instanceof Element\ColumnInterface) {
-                    $this->_naviControls[$key] = array('id' => $key);
+            if (is_object($control['control'])) {
+                if ($control['control'] instanceof Element\ListInterface) {
+                    $this->_naviControls[$key]['control'] = array('id' => $key);
                 } else {
                     unset($this->_naviControls[$key]);
                 }
@@ -660,7 +662,7 @@ class DataSource extends Component {
             }
 
             foreach ($this->_naviControls as $control) {
-                $js[] = $control->renderDbNavi();
+                $js[] = $control['control']->renderDbNavi($control['list']);
             }
 
             foreach ($this->_filterControls as $control) {

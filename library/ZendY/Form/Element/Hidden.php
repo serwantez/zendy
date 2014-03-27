@@ -24,7 +24,7 @@ class Hidden extends Widget {
      */
     protected function _setDefaults() {
         parent::_setDefaults();
-        $this->helper = 'formHidden';
+        $this->helper = 'hidden';
     }
 
 }

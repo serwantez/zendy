@@ -114,7 +114,7 @@ class Link extends Widget {
 
         return $this->_value;
     }
-
+    
     /**
      * Ładuje domyślne dekoratory
      * 

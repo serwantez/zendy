@@ -75,7 +75,7 @@ class Role extends NestedTree {
                 'name' => self::COL_PARENT,
                 'type' => Mysql::FIELD_TYPE_INT,
                 'length' => 11,
-                'null' => null
+                'null' => true,
             )
         ),
         'primaryKey' => array(self::COL_ID),

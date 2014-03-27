@@ -13,9 +13,9 @@ namespace ZendY\Db\Form\Element;
  *
  * @author Piotr Zając
  */
-class Calendar extends \ZendY\Form\Element\Calendar implements ColumnInterface, CalendarInterface {
+class Calendar extends \ZendY\Form\Element\Calendar implements ListInterface, CalendarInterface {
 
-    use ColumnTrait;
+    use ListTrait;
 
     /**
      * Właściwości komponentu
@@ -43,6 +43,7 @@ class Calendar extends \ZendY\Form\Element\Calendar implements ColumnInterface, 
         self::PROPERTY_DATAFIELD,
         self::PROPERTY_DATASOURCE,
         self::PROPERTY_DATEFIELD,
+        self::PROPERTY_DIALOG,
         self::PROPERTY_DISABLED,
         self::PROPERTY_HOLIDAYFIELD,
         self::PROPERTY_HEIGHT,
@@ -96,15 +97,19 @@ class Calendar extends \ZendY\Form\Element\Calendar implements ColumnInterface, 
     /**
      * Zwraca tablicę parametrów nawigacyjnych przekazywanych do przeglądarki
      * 
+     * @param string $list
      * @return array
      */
-    public function getFrontNaviParams() {
-        $this->setFrontNaviParam('dateField', $this->getDateField());
-        $this->setFrontNaviParam('holidayField', $this->getHolidayField());
-        $this->setFrontNaviParam('keyField', $this->getKeyField());
-        $this->setFrontNaviParam('listField', $this->getListField());
+    public function getFrontNaviParams($list = 'standard') {
+        if ($list == 'standard') {
+            $this->setFrontNaviParam('dateField', $this->getDateField());
+            $this->setFrontNaviParam('holidayField', $this->getHolidayField());
+            $this->setFrontNaviParam('keyField', $this->getKeyField());
+            $this->setFrontNaviParam('listField', $this->getListField());
+        }
+        $this->setFrontNaviParam('dialog', $this->getDialog());
         $this->setFrontNaviParam('staticRender', $this->getStaticRender());
-        return parent::getFrontNaviParams();
+        return parent::getFrontNaviParams($list);
     }
 
     /**
@@ -118,18 +123,22 @@ class Calendar extends \ZendY\Form\Element\Calendar implements ColumnInterface, 
     }
 
     /**
-     * Zwraca pola ze zbioru danych potrzebne do wyrenderowania kontrolki
+     * Zwraca pola ze zbioru danych listy potrzebne do wyrenderowania kontrolki
      *  
+     * @param string $source
      * @return array
      */
-    public function getFields() {
-        return array_unique(array_merge(
-                                $this->getKeyField()
-                                , array(
-                            $this->getDateField(),
-                            $this->getHolidayField()
-                                ), $this->getListField()
-                        ));
+    public function getFields($list = 'standard') {
+        if ($list == 'standard') {
+            return array_unique(array_merge(
+                                    $this->getKeyField()
+                                    , array(
+                                $this->getDateField(),
+                                $this->getHolidayField()
+                                    ), $this->getListField()
+                            ));
+        } else
+            return array();
     }
 
     /**
@@ -182,9 +191,9 @@ class Calendar extends \ZendY\Form\Element\Calendar implements ColumnInterface, 
         if ($this->hasDataSource())
             $this->getDataSource()->addEditControl($this);
         if ($this->hasListSource()) {
-            $this->setAttrib('listSource', $this->_listSource);
-            $this->_listSource->getDataSet()->setPeriod($this->getPeriod());
+            $this->getListSource()->getDataSet()->setPeriod($this->getPeriod());
         }
+        $this->setAttrib('lists', $this->getLists());
         return parent::render($view);
     }
 

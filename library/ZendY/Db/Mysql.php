@@ -48,11 +48,14 @@ class Mysql extends \ZendY\Object {
     /**
      * Typy pól tabeli
      */
+    const FIELD_TYPE_BIGINT = 'bigint';
     const FIELD_TYPE_DATE = 'date';
     const FIELD_TYPE_DECIMAL = 'decimal';
+    const FIELD_TYPE_FLOAT = 'float';
     const FIELD_TYPE_INT = 'int';
     const FIELD_TYPE_LONGTEXT = 'longtext';
     const FIELD_TYPE_MEDIUMBLOB = 'mediumblob';
+    const FIELD_TYPE_MEDIUMINT = 'mediumint';
     const FIELD_TYPE_MEDIUMTEXT = 'mediumtext';
     const FIELD_TYPE_SMALLINT = 'smallint';
     const FIELD_TYPE_TINYINT = 'tinyint';
@@ -134,6 +137,24 @@ class Mysql extends \ZendY\Object {
             return self::VERIFY_NO_DATABASE;
         }
         return self::VERIFY_OK;
+    }
+
+    /**
+     * Czy podany typ kolumny jest numeryczny
+     * 
+     * @param string $fieldType
+     * @return bool
+     */
+    static public function isNumeric($fieldType) {
+        return in_array($fieldType, array(
+                    self::FIELD_TYPE_BIGINT,
+                    self::FIELD_TYPE_FLOAT,
+                    self::FIELD_TYPE_INT,
+                    self::FIELD_TYPE_MEDIUMINT,
+                    self::FIELD_TYPE_SMALLINT,
+                    self::FIELD_TYPE_TINYINT,
+                    self::FIELD_TYPE_DECIMAL
+                ));
     }
 
 }

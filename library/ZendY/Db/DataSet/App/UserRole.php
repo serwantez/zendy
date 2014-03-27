@@ -118,7 +118,8 @@ class UserRole extends EditableQuery {
                 self::COL_ID => 1,
                 self::COL_USER_ID => 1,
                 self::COL_ROLE_ID => 4,
-                self::COL_ACTIVE => 1
+                self::COL_ACTIVE => 1,
+                self::COL_ADDITION_TIME => null
             )
         );
     }

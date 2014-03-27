@@ -33,6 +33,7 @@ abstract class CustomEdit extends Widget {
         self::PROPERTY_CLASSES,
         self::PROPERTY_DISABLED,
         self::PROPERTY_HEIGHT,
+        self::PROPERTY_INLINE,
         self::PROPERTY_LABEL,
         self::PROPERTY_MAXLENGTH,
         self::PROPERTY_NAME,

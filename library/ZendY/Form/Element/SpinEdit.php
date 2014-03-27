@@ -36,6 +36,7 @@ class SpinEdit extends CustomEdit {
      * Formaty liczb
      */
     const FORMAT_NUMBER = 'n';
+    const FORMAT_NUMBER2 = 'n2';
     const FORMAT_DECIMALDIGITS = 'd';
     const FORMAT_PERCENTAGE = 'p';
     const FORMAT_CURRENCY = 'c';
@@ -44,6 +45,7 @@ class SpinEdit extends CustomEdit {
      * Właściwości komponentu
      */
 
+    const PROPERTY_LOCALE = 'locale';
     const PROPERTY_MIN = 'min';
     const PROPERTY_MAX = 'max';
     const PROPERTY_STEP = 'step';
@@ -61,6 +63,7 @@ class SpinEdit extends CustomEdit {
         self::PROPERTY_DISABLED,
         self::PROPERTY_HEIGHT,
         self::PROPERTY_LABEL,
+        self::PROPERTY_LOCALE,
         self::PROPERTY_MAX,
         self::PROPERTY_MIN,
         self::PROPERTY_NAME,
@@ -235,7 +238,7 @@ class SpinEdit extends CustomEdit {
      * @param string $format
      * @return \ZendY\Form\Element\SpinEdit
      */
-    public function setFormat($format) {
+    public function setNumberFormat($format) {
         $this->setJQueryParam(self::PARAM_NUMBERFORMAT, $format);
         return $this;
     }
@@ -245,7 +248,7 @@ class SpinEdit extends CustomEdit {
      * 
      * @return string
      */
-    public function getFormat() {
+    public function getNumberFormat() {
         return $this->getJQueryParam(self::PARAM_NUMBERFORMAT);
     }
 

@@ -998,8 +998,9 @@ abstract class Base extends Component {
                     $master['detailField'] = $master['detailField'];
                 }
 
-                //zbiór nadrzędny master jest otwarty
-                if ($masterSet->getState() <> self::STATE_OFF) {
+                //zbiór nadrzędny master jest otwarty i ma rekordy
+                if ($masterSet->getState() <> self::STATE_OFF
+                        && $masterSet->getRecordCount() > 0) {
                     if ($this->getState() <> self::STATE_OFF)
                         $result = $this->closeAction(null, true);
                     $cur = $masterSet->getCurrent();
@@ -1019,10 +1020,10 @@ abstract class Base extends Component {
                         ));
                     }
                 }
-                //zbiór master jest zamknięty
+                //zbiór master jest zamknięty lub nie ma rekordów
                 else {
                     $result = $this->closeAction(null, true);
-                    $this->_filter->setFilter('master', array($master['detailField'] => ''));
+                    $this->_filter->setFilter('master' . $key, array($master['detailField'] => null));
                 }
             }
         }
@@ -1311,6 +1312,15 @@ abstract class Base extends Component {
     }
 
     /**
+     * Zwraca informację o ustawieniu filtra
+     * 
+     * @return bool
+     */
+    public function hasFilter() {
+        return (count($this->_filter->getFilters()) > 0);
+    }
+
+    /**
      * Sortuje zbiór po podanej kolumnie i w podanym kierunku
      * 
      * @param array $params
@@ -1328,8 +1338,8 @@ abstract class Base extends Component {
                 foreach ($params['field'] as $field) {
                     $direction = 'asc';
                     if (is_array($field)) {
-                        $field = $field[0];
                         $direction = $field[1];
+                        $field = $field[0];
                     }
                     $this->_order->setSort(array('field' => $field, 'direction' => $direction));
                 }

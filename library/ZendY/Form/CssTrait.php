@@ -111,7 +111,11 @@ trait CssTrait {
      * @param mixed $value
      * @return \ZendY\Form\CssTrait
      */
-    public function setStyle($property, $value) {
+    public function setStyle($property, $value = null) {
+        if (is_array($property)) {
+            $value = $property['value'];
+            $property = $property['property'];
+        }
         $style = $this->getAttrib('style');
         $style[$property] = $value;
         $this->setAttrib('style', $style);

@@ -36,7 +36,7 @@ dbFilter = function(id, params) {
     this.setEvents = function(actionFunction) {
         //filtry listy
         if (this.type == 'ls') {
-            /*$('#'+this.id).change({
+        /*$('#'+this.id).change({
                 dataAction: 'filterSeekAction',
                 actionType: 'filter',
                 offset: 0
@@ -46,8 +46,8 @@ dbFilter = function(id, params) {
         }
 
         else {
-            //filtry tekstowe
-            /*$('#'+this.id).keypress({
+        //filtry tekstowe
+        /*$('#'+this.id).keypress({
                 dataAction: 'filterSeekAction',
                 actionType: 'filter',
                 offset: 0
@@ -64,11 +64,11 @@ dbFilter = function(id, params) {
             }, function(event) {
                 action(event);
             });
-            */
+             */
         }
         
-        //dodatkowo dla przycisków - ikon
-        /*if ($('#'+this.id+'-button')) {
+    //dodatkowo dla przycisków - ikon
+    /*if ($('#'+this.id+'-button')) {
             $('#'+this.id+'-button').click({
                 dataAction: 'filterSeekAction',
                 actionType: 'filter',
@@ -80,12 +80,14 @@ dbFilter = function(id, params) {
     }
     
     this.getFilter = function() {
-        var f = {
+        var f = {};
+        f[this.dataField] = {
             value: this.getValue(), 
             operator: this.operator
+            
         }
         if (this.type == 'ls' && f.value == '') {
-            f.operator = 'begin';
+            f[this.dataField].operator = 'begin';
         }
         return f;
     }

@@ -204,18 +204,26 @@ class Form extends \ZendY\Form {
      * @return \ZendY\Db\Form
      */
     public function addElement($element, $name = null, $options = null) {
-//jeśli element jest dowolną kontrolką bazodanową
+        //jeśli element jest dowolną kontrolką bazodanową
         if ($element instanceof Element\CellInterface) {
             $dataSource = $element->getDataSource();
-//jeśli kontrolka ma ustawione źródło danych i źródła tego nie ma jeszcze w spisie (w tablicy źródeł danych)
+            //jeśli kontrolka ma ustawione źródło danych i źródła tego nie ma jeszcze w spisie (w tablicy źródeł danych)
             if (isset($dataSource) && !array_key_exists($dataSource->getName(), $this->_dataSources))
                 $this->_addDataSource($dataSource);
-//jeśli element jest listą bazodanową
-            if ($element instanceof Element\ColumnInterface && !$element->getStaticRender()) {
-                $listSource = $element->getListSource();
-//jeśli źródła listy nie ma jeszcze w spisie (w tablicy źródeł listy)
-                if (isset($listSource) && !array_key_exists($listSource->getName(), $this->_listSources))
-                    $this->_addListSource($listSource);
+            //jeśli element jest listą bazodanową
+            if ($element instanceof Element\ListInterface && !$element->getStaticRender()) {
+                $lists = $element->getLists();
+                foreach ($lists as $list) {
+                    //jeśli źródła listy nie ma jeszcze w spisie (w tablicy źródeł listy)
+                    if (isset($list['listSource']) && !array_key_exists($list['listSource']->getName(), $this->_listSources)) {
+                        $this->_addListSource($list['listSource']);
+                    }
+                    /* if ($element instanceof Element\CalendarInterface) {
+                      if ($element->hasEventSource() && !array_key_exists($element->getEventSource()->getName(), $this->_listSources)) {
+                      $this->_addListSource($element->getEventSource());
+                      }
+                      } */
+                }
             }
         }
         parent::addElement($element, $name, $options);

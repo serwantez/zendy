@@ -67,7 +67,7 @@ dataSource = function(id, url, formClass, formId, dialog, confirmText) {
     this.getFilters = function() {
         var ret = {};
         for(var f in this.df) {
-            ret[this.df[f].dataField] = this.df[f].getFilter();
+            ret[f] = this.df[f].getFilter();
         }
         return ret;
     }
@@ -145,7 +145,7 @@ dataSource = function(id, url, formClass, formId, dialog, confirmText) {
     /**
      * wykonanie akcji na zbiorze danych i pobranie bieżącego rekordu (strony rekordów)
      */
-    this.executeAction = function(event) {  
+    this.executeAction = function(event) {
         var params = event.data;
         var action = params.dataAction;
         var actionType = params.actionType;
@@ -160,9 +160,7 @@ dataSource = function(id, url, formClass, formId, dialog, confirmText) {
         }
         
         if (actionType == 'filter') {
-            params.filter = {
-                user: self.getFilters()
-            };
+            params.filter = self.getFilters();
         }
 
         if (actionType == 'generateFile' || actionType == 'generateWebpage') {
@@ -193,8 +191,12 @@ dataSource = function(id, url, formClass, formId, dialog, confirmText) {
             });*/
             $.post(self.url, params, function(data) {
                 //parsowanie odpowiedzi
-                data = $.parseJSON(data);
-                df[self.formId].refreshControls(data, action);
+                try{
+                    data = $.parseJSON(data);
+                    df[self.formId].refreshControls(data, action);
+                }catch(e){
+                    alert(data);
+                }
                 afterAction();
             });
         }

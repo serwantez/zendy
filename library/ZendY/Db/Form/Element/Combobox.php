@@ -8,7 +8,6 @@
 
 namespace ZendY\Db\Form\Element;
 
-use ZendY\Db\Form\Element\ColumnInterface;
 use ZendY\Exception;
 
 /**
@@ -16,9 +15,9 @@ use ZendY\Exception;
  *
  * @author Piotr Zając
  */
-class Combobox extends \ZendY\Form\Element\Combobox implements ColumnInterface {
+class Combobox extends \ZendY\Form\Element\Combobox implements ListInterface {
 
-    use ColumnTrait;
+    use ListTrait;
 
     /**
      * Właściwości komponentu
@@ -66,15 +65,18 @@ class Combobox extends \ZendY\Form\Element\Combobox implements ColumnInterface {
         self::PROPERTY_VALUE,
         self::PROPERTY_WIDTH
     );
-    
+
     /**
      * Zwraca tablicę parametrów nawigacyjnych przekazywanych do przeglądarki
      * 
+     * @param string $list 
      * @return array
      */
-    public function getFrontNaviParams() {
-        $this->setFrontNaviParam('keyField', $this->getKeyField());
-        $this->setFrontNaviParam('listField', $this->getListField());
+    public function getFrontNaviParams($list = 'standard') {
+        if ($list == 'standard') {
+            $this->setFrontNaviParam('keyField', $this->getKeyField());
+            $this->setFrontNaviParam('listField', $this->getListField());
+        }
         $this->setFrontNaviParam('columnSpace', $this->getColumnSpace());
         $this->setFrontNaviParam('emptyValue', $this->getEmptyValue());
         $this->setFrontNaviParam('staticRender', $this->getStaticRender());
@@ -92,15 +94,6 @@ class Combobox extends \ZendY\Form\Element\Combobox implements ColumnInterface {
     }
 
     /**
-     * Zwraca pola ze zbioru danych potrzebne do wyrenderowania kontrolki
-     *  
-     * @return array
-     */
-    public function getFields() {
-        return array_unique(array_merge($this->getKeyField(), $this->getListField()));
-    }
-
-    /**
      * Tworzy tablicę wartości dla statycznego renderowania listy
      * 
      * @return void
@@ -108,7 +101,7 @@ class Combobox extends \ZendY\Form\Element\Combobox implements ColumnInterface {
      */
     protected function _performList() {
         if ($this->hasListSource()) {
-            $results = $this->_listSource->getDataSet()->getItems();
+            $results = $this->getListSource()->getDataSet()->getItems();
         } else {
             $results = array();
         }
@@ -123,7 +116,7 @@ class Combobox extends \ZendY\Form\Element\Combobox implements ColumnInterface {
             if (is_object($r))
                 $r = $r->toArray();
 
-            foreach ($this->_keyField as $keyField) {
+            foreach ($this->getKeyField() as $keyField) {
                 if (!array_key_exists($keyField, $r)) {
                     throw new Exception(
                             'Kolumna klucza ' . $keyField . ' nie jest obecna w wyniku zapytania');
@@ -135,7 +128,7 @@ class Combobox extends \ZendY\Form\Element\Combobox implements ColumnInterface {
 
             $option = '';
             $c = 0;
-            foreach ($this->_listField as $field) {
+            foreach ($this->getListField() as $field) {
                 if (!array_key_exists($field, $r)) {
                     throw new Exception(
                             'Kolumna wyświetlana ' . $field . ' nie jest obecna w wyniku zapytania');

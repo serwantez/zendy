@@ -52,7 +52,7 @@ class Box extends Base {
      */
     protected function _setDefault() {
         parent::_setDefault();
-        $this->setTitle($this->getId());
+        $this->setTitle($this->getName());
     }
 
     /**

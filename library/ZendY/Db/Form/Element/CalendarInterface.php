@@ -28,4 +28,11 @@ interface CalendarInterface {
      * @return string 
      */
     public function getDateField();
+
+    /**
+     * Odświeża zakres kalendarza
+     * 
+     * @param array $params
+     */
+    public function refreshPeriod($params);
 }

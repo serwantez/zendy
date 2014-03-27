@@ -16,31 +16,88 @@ calendar = function(id, options) {
     this.curDay = options.currentDate;
     
     this.setData = function(data, params) {
+        //console.log(data);
         var day;
         var holiday;
         //this.widget.empty();
-        $.each(data['rows'], function(key, value) {
-            //console.log(value[params.dateField]);
-            day = $('#'+value[params.dateField]);
-            holiday = value[params.holidayField];
-            if (holiday == 1) {
-                day.addClass('ui-calendar-holiday');
-            }
-            if (day) {
-                var feast = $('<div></div>')
-                .addClass('ui-calendar-feast')
-                .html(value[params.listField[0]]);
-
-                //formatowanie warunkowe
-                if (value['_format']) {
-                    feast.addClass(value['_format']);
+        if (data['list']=='standard') {
+            $('.ui-calendar-feasts').empty();
+            $.each(data['rows'], function(key, value) {
+                day = $('#'+value[params.dateField]);
+                holiday = value[params.holidayField];
+                if (holiday == 1) {
+                    day.addClass('ui-calendar-holiday');
                 }
+                if (day) {
+                    var feast = $('<div></div>')
+                    .addClass('ui-calendar-feast')
+                    .html(value[params.listField[0]]);
+
+                    //formatowanie warunkowe
+                    if (value['_format']) {
+                        feast.addClass(value['_format']);
+                    }
                 
-                day
-                .find('.ui-calendar-feasts')
-                .append(feast);
-            }
-        });
+                    day
+                    .find('.ui-calendar-feasts')
+                    .append(feast);
+                }
+            });
+        } else if (data['list']=='event') {
+            $('.ui-calendar-events').empty();
+            $.each(data['rows'], function(key, value) {
+                day = $('#'+value[params.eventField['date']]);
+                if (day) {
+                    var eventTime = $('<span></span>')
+                    .addClass('ui-calendar-event-time')
+                    .html(value[params.eventField['time']]);
+                    
+                    var eventType = $('<span></span>')
+                    .addClass('ui-calendar-event-type')
+                    .html(value[params.eventField['type']]);
+                    
+                    var eventDescription = $('<span></span>')
+                    .addClass('ui-calendar-event-description')
+                    .html(value[params.eventField['description']]);
+                    
+                    var event = $('<div></div>')
+                    .addClass('ui-calendar-event')
+                    .append(eventTime)
+                    .append(eventType)
+                    .append('<br />')
+                    .append(eventDescription);
+                    
+                    day
+                    .find('.ui-calendar-events')
+                    .append($('<a></a>')
+                        .attr('key', value[params.eventKeyField[0]])
+                        .append(event))
+                ;
+                }
+            });
+        }
+        this.refresh(params);
+    }
+    
+    this.refresh = function(params) {
+        var ce = $(".ui-calendar-event");
+        if (ce) {
+            $(".ui-calendar-event").bind("click", {
+                dataAction: 'searchAction',
+                actionType: 'standard'
+            }, function(e, ui){
+                if (params.eventDialog) {
+                    $("#"+params.eventDialog).dialog("open");
+                }
+                var value = $(this).parent().attr("key");
+                value = value.split(';');
+                e.data.searchValues = {};
+                for(var k in params.eventKeyField) {
+                    e.data.searchValues[params.eventKeyField[k]] = value[k];
+                }
+                params.actionFunction(e);
+            });
+        }
     }
 
     this.showValue = function(value) {
@@ -73,7 +130,7 @@ calendar = function(id, options) {
         }, function(e, ui){
             e.data.currentDate = self.curDay.yyyymmdd();
             e.data.range = options.range;
-            df[form].getDataSource(ds).executeAction(e);
+            df[form].multiaction(ds, e);
         });
         
         $("#"+self.id+"-button-next")
@@ -83,7 +140,7 @@ calendar = function(id, options) {
         }, function(e, ui){
             e.data.currentDate = self.curDay.yyyymmdd();
             e.data.range = options.range;
-            df[form].getDataSource(ds).executeAction(e);
+            df[form].multiaction(ds, e);
         });
         
         $("input[name="+self.id+"-button-range]")
@@ -93,7 +150,7 @@ calendar = function(id, options) {
         }, function(e, ui){
             e.data.currentDate = self.curDay.yyyymmdd();
             e.data.range = $(this).val();
-            df[form].getDataSource(ds).executeAction(e);
+            df[form].multiaction(ds, e);
         });
         
     }
@@ -140,6 +197,7 @@ calendar = function(id, options) {
         var dayNumber;
         var monthName;
         var feasts;
+        var events;
         var iDay = new Date(self.curDay);
         var weekday;
         _calendarBody.empty();
@@ -163,6 +221,7 @@ calendar = function(id, options) {
                     .addClass("ui-calendar-month")
                     .html(options.monthNames[iDay.getMonth()+1]);
                     feasts = $('<span></span>').addClass("ui-calendar-feasts");
+                    events = $('<span></span>').addClass("ui-calendar-events");
                     td = $('<td></td>')
                     .attr('id', iDay.yyyymmdd())
                     .addClass("ui-widget-content")
@@ -171,6 +230,7 @@ calendar = function(id, options) {
                         .append(dayNumber)
                         .append(monthName))                    
                     .append(feasts)
+                    .append(events)
                     ;
                     //dzień dzisiejszy
                     if (iDay.getDate() == today.getDate() && iDay.getMonth() == today.getMonth() && iDay.getFullYear() == today.getFullYear()) {
@@ -202,6 +262,7 @@ calendar = function(id, options) {
                 .addClass("ui-calendar-month")
                 .html(options.monthNames[iDay.getMonth()+1]);
                 feasts = $('<span></span>').addClass("ui-calendar-feasts");
+                events = $('<span></span>').addClass("ui-calendar-events");
                 td = $('<td></td>')
                 .attr('id', iDay.yyyymmdd())
                 .addClass("ui-widget-content")
@@ -209,7 +270,8 @@ calendar = function(id, options) {
                     .addClass("ui-widget-content ui-calendar-day-header")
                     .append(dayNumber)
                     .append(monthName))                    
-                .append(feasts);
+                .append(feasts)
+                .append(events);
                 //dzień dzisiejszy
                 if (iDay.getDate() == today.getDate() && iDay.getMonth() == today.getMonth() && iDay.getFullYear() == today.getFullYear()) {
                     td.addClass("ui-calendar-today");

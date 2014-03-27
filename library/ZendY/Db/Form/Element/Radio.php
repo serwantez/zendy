@@ -8,7 +8,6 @@
 
 namespace ZendY\Db\Form\Element;
 
-use ZendY\Db\Form\Element\ColumnInterface;
 use ZendY\Exception;
 
 /**
@@ -16,10 +15,10 @@ use ZendY\Exception;
  *
  * @author Piotr Zając
  */
-class Radio extends \ZendY\Form\Element\Radio implements ColumnInterface {
+class Radio extends \ZendY\Form\Element\Radio implements ListInterface {
 
-    use ColumnTrait;
-    
+    use ListTrait;
+
     /**
      * Właściwości komponentu
      */
@@ -29,8 +28,8 @@ class Radio extends \ZendY\Form\Element\Radio implements ColumnInterface {
     const PROPERTY_LISTSOURCE = 'listSource';
     const PROPERTY_LISTFIELD = 'listField';
     const PROPERTY_KEYFIELD = 'keyField';
-    const PROPERTY_STATICRENDER = 'staticRender';    
-    
+    const PROPERTY_STATICRENDER = 'staticRender';
+
     /**
      * Tablica właściwości
      * 
@@ -43,7 +42,6 @@ class Radio extends \ZendY\Form\Element\Radio implements ColumnInterface {
         self::PROPERTY_LISTFIELD,
         self::PROPERTY_LISTSOURCE,
         self::PROPERTY_STATICRENDER,
-        
         self::PROPERTY_ALIGN,
         self::PROPERTY_CLASSES,
         self::PROPERTY_COLUMNSPACE,
@@ -58,7 +56,7 @@ class Radio extends \ZendY\Form\Element\Radio implements ColumnInterface {
         self::PROPERTY_TOOLTIP,
         self::PROPERTY_VALUE,
         self::PROPERTY_WIDTH
-    );    
+    );
 
     /**
      * Licznik instancji
@@ -70,16 +68,19 @@ class Radio extends \ZendY\Form\Element\Radio implements ColumnInterface {
     /**
      * Zwraca tablicę parametrów nawigacyjnych przekazywanych do przeglądarki
      * 
+     * @param string $list
      * @return array
      */
-    public function getFrontNaviParams() {
-        $this->setFrontNaviParam('keyField', $this->getKeyField());
-        $this->setFrontNaviParam('listField', $this->getListField());
+    public function getFrontNaviParams($list = 'standard') {
+        if ($list == 'standard') {
+            $this->setFrontNaviParam('keyField', $this->getKeyField());
+            $this->setFrontNaviParam('listField', $this->getListField());
+        }
         $this->setFrontNaviParam('columnSpace', $this->getColumnSpace());
         $this->setFrontNaviParam('emptyValue', $this->getEmptyValue());
         $this->setFrontNaviParam('staticRender', $this->getStaticRender());
         $this->setFrontNaviParam('type', 'ra');
-        return parent::getFrontNaviParams();
+        return parent::getFrontNaviParams($list);
     }
 
     /**
@@ -94,23 +95,14 @@ class Radio extends \ZendY\Form\Element\Radio implements ColumnInterface {
     }
 
     /**
-     * Zwraca pola ze zbioru danych potrzebne do wyrenderowania kontrolki
-     *  
-     * @return array
-     */
-    public function getFields() {
-        return array_merge($this->getKeyField(), $this->getListField());
-    }
-
-    /**
      * Tworzy tablicę wartości dla statycznego renderowania listy
      * 
      * @return void
      * @throws Exception
      */
     protected function _performList() {
-        if (isset($this->_listSource))
-            $results = $this->_listSource->getDataSet()->getItems();
+        if ($this->hasListSource())
+            $results = $this->getListSource()->getDataSet()->getItems();
         else {
             $results = array();
         }
@@ -126,7 +118,7 @@ class Radio extends \ZendY\Form\Element\Radio implements ColumnInterface {
             if (is_object($r))
                 $r = $r->toArray();
 
-            foreach ($this->_keyField as $keyField) {
+            foreach ($this->getKeyField() as $keyField) {
                 if (!array_key_exists($keyField, $r)) {
                     throw new Exception(
                             'Kolumna klucza ' . $keyField . ' nie jest obecna w wyniku zapytania');
@@ -138,7 +130,7 @@ class Radio extends \ZendY\Form\Element\Radio implements ColumnInterface {
 
             $option = '';
             $c = 0;
-            foreach ($this->_listField as $field) {
+            foreach ($this->getListField() as $field) {
                 if (!array_key_exists($field, $r)) {
                     throw new Exception(
                             'Kolumna wyświetlana ' . $field . ' nie jest obecna w wyniku zapytania');

@@ -394,6 +394,10 @@ abstract class CustomList extends Widget {
         if ($this->loadDefaultDecoratorsIsDisabled()) {
             return;
         }
+        $sectionOptions = array('tag' => 'div', 'class' => 'field-container');
+        if ($this->getInline()) {
+            $sectionOptions['style'] = 'display: inline-block';
+        }
 
         $decorators = $this->getDecorators();
         if (empty($decorators)) {
@@ -404,7 +408,7 @@ abstract class CustomList extends Widget {
                         'class' => Css::WIDGET . ' ' . Css::STATE_ERROR . ' ' . Css::CORNER_ALL . ' ' . Css::INVISIBLE
                 )),
                 array('Description', array('tag' => 'span', 'class' => 'field-description')),
-                array(array('Section' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field-container'))
+                array(array('Section' => 'HtmlTag'), $sectionOptions)
             ))
             ;
         }
@@ -416,6 +420,10 @@ abstract class CustomList extends Widget {
      * @return void
      */
     public function loadDecorators() {
+        $sectionOptions = array('tag' => 'div', 'class' => 'field-container');
+        if ($this->getInline()) {
+            $sectionOptions['style'] = 'display: inline-block';
+        }
         $this->_labelOptions['id'] = $this->getName();
         $this->setDecorators(array(
             array('UiWidgetMultiElement'),
@@ -425,7 +433,7 @@ abstract class CustomList extends Widget {
             )),
             array('Description', array('escape' => false, 'tag' => 'span', 'class' => 'field-description')),
             array('Label', $this->_labelOptions),
-            array(array('Section' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field-container'))
+            array(array('Section' => 'HtmlTag'), $sectionOptions)
         ));
     }
 
@@ -444,9 +452,11 @@ abstract class CustomList extends Widget {
     /**
      * Zwraca tablicę parametrów przekazywanych do przeglądarki
      * 
+     * @param string $list
      * @return array
      */
-    public function getFrontNaviParams() {
+    public function getFrontNaviParams($list = 'standard') {
+        $this->setFrontNaviParam('list', $list);
         return $this->_frontNaviParams;
     }
 
@@ -455,12 +465,13 @@ abstract class CustomList extends Widget {
      * 
      * @param Filter|array $condition
      * @param string $rowFormat
+     * @param string $list
      * @return \ZendY\Form\Element\CustomList
      */
-    public function addConditionalRowFormat($condition, $rowFormat) {
+    public function addConditionalRowFormat($condition, $rowFormat, $list = 'standard') {
         if (is_array($condition))
             $condition = new Filter($condition);
-        $this->_conditionalRowFormat[] = array($condition, $rowFormat);
+        $this->_conditionalRowFormat[$list][] = array($condition, $rowFormat);
         return $this;
     }
 
@@ -468,20 +479,26 @@ abstract class CustomList extends Widget {
      * Ustawia wszystkie warunki formatujące wiersze
      * 
      * @param array $rowFormats
+     * @param string $list
      * @return \ZendY\Form\Element\CustomList
      */
-    public function setConditionalRowFormats(array $rowFormats) {
-        $this->_conditionalRowFormat = $rowFormats;
+    public function setConditionalRowFormats(array $rowFormats, $list = 'standard') {
+        $this->_conditionalRowFormat[$list] = $rowFormats;
         return $this;
     }
 
     /**
      * Zwraca warunki formatujące wiersze
      * 
+     * @param string $list
      * @return array
      */
-    public function getConditionalRowFormats() {
-        return $this->_conditionalRowFormat;
+    public function getConditionalRowFormats($list = 'standard') {
+        if (isset($this->_conditionalRowFormat[$list])) {
+            return $this->_conditionalRowFormat[$list];
+        } else {
+            return array();
+        }
     }
 
     /**

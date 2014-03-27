@@ -41,9 +41,9 @@ final class ActionManager {
     protected $_dataAction;
 
     /**
-     * Źródło danych, na którym będzie wykonywana akcja
+     * Źródła danych, na których będzie wykonywana akcja
      * 
-     * @var string 
+     * @var array 
      */
     protected $_dataSourceId;
 
@@ -101,6 +101,9 @@ final class ActionManager {
             }
             if ($this->_request->getParam('id')) {
                 $this->_dataSourceId = $this->_request->getParam('id');
+                if (!is_array($this->_dataSourceId)) {
+                    $this->_dataSourceId = array($this->_dataSourceId);
+                }
             }
             Msg::add('Liczba źródeł ' . count($dbs->datasource));
             foreach ($dbs->datasource as $key => $dataSource) {
@@ -210,7 +213,9 @@ final class ActionManager {
         $result = array();
         if (!isset($masterSource)) {
             if (isset($this->_dataSourceId)) {
-                $masterSource = $this->_dataSources[$this->_dataSourceId];
+                foreach ($this->_dataSourceId as $dataSourceId) {
+                    $masterSource[] = $this->_dataSources[$dataSourceId];
+                }
             } else {
                 if (isset($formId)) {
                     foreach ($this->_dataSources as $dataSource) {
@@ -225,16 +230,22 @@ final class ActionManager {
                 return $result;
             }
         }
-        //filtrowanie po źródłach przypisanych do podanego formularza
-        if (isset($formId)) {
-            if ($masterSource->getFormId() == $formId)
-                $result[$masterSource->getName()] = $masterSource;
-        } else {
-            $result[$masterSource->getName()] = $masterSource;
+        if (!is_array($masterSource)) {
+            $masterSource = array($masterSource);
         }
-        $detailSources = $this->_getDetailSources($masterSource);
-        foreach ($detailSources as $dataSource) {
-            $result = array_merge($result, $this->getMasterDetailSources($dataSource, $formId));
+
+        foreach ($masterSource as $source) {
+            //filtrowanie po źródłach przypisanych do podanego formularza
+            if (isset($formId)) {
+                if ($source->getFormId() == $formId)
+                    $result[$source->getName()] = $source;
+            } else {
+                $result[$source->getName()] = $source;
+            }
+            $detailSources = $this->_getDetailSources($source);
+            foreach ($detailSources as $dataSource) {
+                $result = array_merge($result, $this->getMasterDetailSources($dataSource, $formId));
+            }
         }
         return $result;
     }
@@ -249,16 +260,24 @@ final class ActionManager {
         Msg::add($masterSource->getName() . '->' . __FUNCTION__);
         if (!isset($masterSource)) {
             if (isset($this->_dataSourceId))
-                $masterSource = $this->_dataSources[$this->_dataSourceId];
+                foreach ($this->_dataSourceId as $dataSourceId) {
+                    $masterSource[] = $this->_dataSources[$dataSourceId];
+                }
             else
                 return FALSE;
         }
-        $detailSources = $this->_getDetailSources($masterSource);
-        if (count($detailSources)) {
-            foreach ($detailSources as $detailSource) {
-                $detailSource->getDataSet()->closeAction(array(), true);
-                $detailSource->getDataSet()->openAction(array('first' => true), false);
-                $this->_refilterDetail($detailSource);
+        if (!is_array($masterSource)) {
+            $masterSource = array($masterSource);
+        }
+
+        foreach ($masterSource as $source) {
+            $detailSources = $this->_getDetailSources($source);
+            if (count($detailSources)) {
+                foreach ($detailSources as $detailSource) {
+                    $detailSource->getDataSet()->closeAction(array(), true);
+                    $detailSource->getDataSet()->openAction(array('first' => true), false);
+                    $this->_refilterDetail($detailSource);
+                }
             }
         }
         return TRUE;
@@ -295,42 +314,47 @@ final class ActionManager {
     public function action() {
         Msg::add('ACTION MANAGER -> ' . __FUNCTION__);
         $result = array();
-        //jeśli akcja dotyczy konkretnego zbioru
-        if (isset($this->_dataSourceId) && isset($this->_dataSources[$this->_dataSourceId])) {
-            $dataSet = $this->_dataSources[$this->_dataSourceId]->getDataSet();
-            if (isset($dataSet)) {
-                $dataAction = $this->_dataAction;
-                $resource = $dataSet->getName();
-                $privilege = $dataSet->getActionPrivilege($this->_dataAction);
-                if (self::allowed($resource, $privilege)) {
-                    if ($dataSet->isRegisteredAction($dataAction)) {
-                        //przekazanie obiektu formularza do akcji "zapisz" w celu szybszej walidacji
-                        if ($dataAction == DataSet\Editable::ACTION_SAVE) {
-                            $this->_request->setParam('form', $this->getForm());
+        //jeśli akcja dotyczy konkretnego zbioru lub zbiorów
+        if (isset($this->_dataSourceId)) {
+            foreach ($this->_dataSourceId as $dataSourceId) {
+                if (isset($this->_dataSources[$dataSourceId])) {
+                    $dataSet = $this->_dataSources[$dataSourceId]->getDataSet();
+                    if (isset($dataSet)) {
+                        $dataAction = $this->_dataAction;
+                        $resource = $dataSet->getName();
+                        $privilege = $dataSet->getActionPrivilege($this->_dataAction);
+                        if (self::allowed($resource, $privilege)) {
+                            if ($dataSet->isRegisteredAction($dataAction)) {
+                                //przekazanie obiektu formularza do akcji "zapisz" w celu szybszej walidacji
+                                if ($dataAction == DataSet\Editable::ACTION_SAVE) {
+                                    $this->_request->setParam('form', $this->getForm());
+                                }
+                                $result = $dataSet->$dataAction($this->_request->getParams());
+                                if (array_key_exists('messages', $result)) {
+                                    $this->_resultData[$dataSourceId]['messages'] = $result['messages'];
+                                    unset($result['messages']);
+                                }
+                                if (array_key_exists('errors', $result)) {
+                                    $this->_resultData[$dataSourceId]['errors'] = $result['errors'];
+                                    unset($result['errors']);
+                                }
+                                $this->_refilterDetail($this->_dataSources[$dataSourceId]);
+                            } else {
+                                $this->_resultData[$dataSourceId]['errors'][] = sprintf(Msg::MSG_ACTION_NO_ACTION, $dataAction);
+                            }
+                        } else {
+                            $this->_resultData[$dataSourceId]['errors'][] = sprintf(Msg::MSG_ACTION_NO_PERMISSION, $dataAction);
                         }
-                        $result = $dataSet->$dataAction($this->_request->getParams());
-                        if (array_key_exists('messages', $result)) {
-                            $this->_resultData[$this->_dataSourceId]['messages'] = $result['messages'];
-                            unset($result['messages']);
-                        }
-                        if (array_key_exists('errors', $result)) {
-                            $this->_resultData[$this->_dataSourceId]['errors'] = $result['errors'];
-                            unset($result['errors']);
-                        }
-                        $this->_refilterDetail($this->_dataSources[$this->_dataSourceId]);
-                    } else {
-                        $this->_resultData[$this->_dataSourceId]['errors'][] = sprintf(Msg::MSG_ACTION_NO_ACTION, $dataAction);
                     }
-                } else {
-                    $this->_resultData[$this->_dataSourceId]['errors'][] = sprintf(Msg::MSG_ACTION_NO_PERMISSION, $dataAction);
                 }
             }
         } elseif ($this->_dataAction == 'init') {
             //otwiera wszystkie źródła z danego formularza
             foreach ($this->_dataSources as $dataSource) {
                 $dataSet = $dataSource->getDataSet();
-                if (isset($dataSet) && $dataSource->getFormId() == $this->_request->getParam('formId'))
+                if (isset($dataSet) && $dataSource->getFormId() == $this->_request->getParam('formId')) {
                     $result = array_merge($result, $dataSet->openAction($this->_request->getParams()));
+                }
             }
         }
         return $result;
@@ -383,23 +407,33 @@ final class ActionManager {
             $recordPerPage = $dataSet->getRecordPerPage();
             $offset = ($dataSet->getPage() - 1) * $dataSet->getRecordPerPage();
         }
+        $params = $this->_request->getParams();
         foreach ($naviControls as $name => $options) {
             $control = $this->getForm()->getNestedElement($name);
-            if (isset($control) && $control instanceof DbElement\ColumnInterface) {
+            if (isset($control) && $control instanceof DbElement\ListInterface) {
                 if ($control instanceof DbElement\CalendarInterface) {
-                    $control->refreshPeriod($this->_request->getParams());
-                    $this->_dataSources[$dataSourceId]
-                            ->getDataSet()
-                            ->setPeriod($control->getPeriod());
+                    $control->refreshPeriod($params);
+                    if ($options['list'] == 'event') {
+                        //print($this->_dataSources[$dataSourceId]->getDataSet()->getPeriod()->getBegin() . ' ');
+                        //print($control->getPeriod()->getEnd() . ' ');
+                        //exit;
+                    }
+                    if (isset($params[\ZendY\Form\Element\Calendar::PARAM_RANGE])) {
+                        $this->_dataSources[$dataSourceId]
+                                ->getDataSet()
+                                ->setPeriod($control->getPeriod());
+                    }
                 }
-                $controlsData[$name] = $control->formatData(
+
+                $controlsData[$name]['list'] = $options['list'];
+                $controlsData[$name]['data'] = $control->formatData(
                         $this->_dataSources[$dataSourceId]
                                 ->getDataSet()
                                 ->getItems(
                                         $offset
                                         , $recordPerPage
-                                        , $control->getFields()
-                                        , $control->getConditionalRowFormats()
+                                        , $control->getFields($options['list'])
+                                        , $control->getConditionalRowFormats($options['list'])
                                 ));
             }
         }
@@ -425,15 +459,16 @@ final class ActionManager {
             if (isset($dataSet)) {
                 $id = $dataSource->getName();
                 $this->_resultData[$id]['data'] = array();
+
                 if (in_array($dataSet->getState(), array(DataSet\Base::STATE_VIEW, DataSet\Editable::STATE_EDIT))
                         || ($this->_dataAction == DataSet\Editable::ACTION_ADDCOPY)) {
                     //dane list są odswieżane tylko przy niektórych akcjach
                     if (!isset($this->_dataSourceId)
                             || (isset($this->_dataSourceId)
-                            && ($this->_dataSourceId == $id)
+                            && (in_array($id, $this->_dataSourceId))
                             && $dataSet->isRefreshAction($this->_dataAction))
                             || (isset($this->_dataSourceId)
-                            && ($this->_dataSourceId <> $id))) {
+                            && (!in_array($id, $this->_dataSourceId)))) {
                         $this->_resultData[$id]['multi'] = $this->_getNaviControlsData($id);
                     }
                     if ($dataSet->getRecordCount()) {
@@ -441,11 +476,13 @@ final class ActionManager {
                         $this->_resultData[$id]['data'] = $this->_getEditControlsData($id, $current);
                     }
                 }
-                $this->_resultData[$id]['expr'][DataSet\Base::EXPR_OFFSET] = $dataSet->getOffset();
-                $this->_resultData[$id]['expr'][DataSet\Base::EXPR_COUNT] = $dataSet->getRecordCount();
-                $this->_resultData[$id]['expr'][DataSet\Base::EXPR_STATE] = $dataSet->getState();
-                $this->_resultData[$id]['expr'][DataSet\Base::EXPR_PAGE] = $dataSet->getPage();
-                $this->_resultData[$id]['expr'][DataSet\Base::EXPR_PAGECOUNT] = $dataSet->getPageCount();
+                $this->_resultData[$id]['expr'] = array(
+                    DataSet\Base::EXPR_OFFSET => $dataSet->getOffset(),
+                    DataSet\Base::EXPR_COUNT => $dataSet->getRecordCount(),
+                    DataSet\Base::EXPR_STATE => $dataSet->getState(),
+                    DataSet\Base::EXPR_PAGE => $dataSet->getPage(),
+                    DataSet\Base::EXPR_PAGECOUNT => $dataSet->getPageCount()
+                );
 
                 $this->_resultData[$id]['filter'] = $dataSet->getFilters();
                 $this->_resultData[$id]['sort'] = $dataSet->getSorts();

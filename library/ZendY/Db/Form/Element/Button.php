@@ -27,7 +27,7 @@ class Button extends IconButton implements ActionInterface {
 
     const PROPERTY_DATASOURCE = 'dataSource';
     const PROPERTY_DATAACTION = 'dataAction';
-    
+
     /**
      * Tablica właściwości komponentu
      * 
@@ -48,7 +48,7 @@ class Button extends IconButton implements ActionInterface {
         self::PROPERTY_TOOLTIP,
         self::PROPERTY_VISIBLETEXT,
         self::PROPERTY_WIDTH
-    );    
+    );
 
     /**
      * Licznik instancji
@@ -161,14 +161,22 @@ class Button extends IconButton implements ActionInterface {
      * @return null|string
      */
     public function render(\Zend_View_Interface $view = null) {
-        if ($this->hasDataSource())
-            $this->getDataSource()->addNaviControl($this);
-        $resource = $this->getDataSource()->getDataSet()->getName();
-        $privilege = $this->getDataSource()->getDataSet()->getActionPrivilege($this->_dataAction);
         $result = parent::render($view);
-        //nie wyświetli przycisku, gdy użytkownik nie ma uprawnienia do jego akcji
-        if (!ActionManager::allowed($resource, $privilege)) {
-            $result = null;
+        if ($this->hasDataSource()) {
+            $this->getDataSource()->addNaviControl($this);
+            $resource = $this->getDataSource()->getDataSet()->getName();
+            $privilege = $this->getDataSource()->getDataSet()->getActionPrivilege($this->_dataAction);
+
+            //nie wyświetli przycisku, gdy użytkownik nie ma uprawnienia do jego akcji
+            //lub gdy jest akcja nie może zostać wykonana
+            if (!ActionManager::allowed($resource, $privilege) ||
+                    ($this->getDataSource()->getDataSet()->getEditMode())
+                    && in_array($this->getDataAction(), array(
+                        \ZendY\Db\DataSet\Editable::ACTION_EDIT,
+                            //\ZendY\Db\DataSet\Editable::ACTION_CANCEL
+                    ))) {
+                $result = null;
+            }
         }
         return $result;
     }
@@ -176,9 +184,10 @@ class Button extends IconButton implements ActionInterface {
     /**
      * Renderuje kod js odpowiedzialny za dostarczanie danych do kontrolki
      * 
+     * @param string $list
      * @return string
      */
-    public function renderDbNavi() {
+    public function renderDbNavi($list = 'standard') {
         $js = sprintf(
                 'ds.addAction("%s",%s);'
                 , $this->getName()

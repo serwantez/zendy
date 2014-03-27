@@ -73,6 +73,7 @@ class EditDialog extends Dialog implements DataInterface {
      */
     protected function _setDefaults() {
         parent::_setDefaults();
+        $this->setTitle('Edit');
         $this->_navigator = new Navigator();
         $actions = array(
             array('action' => Editable::ACTION_ADD, 'text' => true),
@@ -85,7 +86,7 @@ class EditDialog extends Dialog implements DataInterface {
 
         $this->setModal(true)
                 ->setJQueryParam(self::PARAM_RESIZABLE, false)
-                ->setJQueryParam(self::PARAM_CLOSEONESCAPE, false)
+                ->setJQueryParam(self::PARAM_CLOSEONESCAPE, true)
         ;
     }
 

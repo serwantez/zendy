@@ -71,21 +71,24 @@ class Treeview extends \ZendY\Form\Element\Treeview implements TreeInterface {
     /**
      * Zwraca tablicę parametrów nawigacyjnych przekazywanych do przeglądarki
      * 
+     * @param string $list
      * @return array
      */
-    public function getFrontNaviParams() {
+    public function getFrontNaviParams($list = 'standard') {
+        if ($list == 'standard') {
+            $this->setFrontNaviParam('keyField', $this->getKeyField());
+            $this->setFrontNaviParam('listField', $this->getListField());
+            $this->setFrontNaviParam('leftField', $this->getLeftField());
+            $this->setFrontNaviParam('rightField', $this->getRightField());
+            $this->setFrontNaviParam('iconField', $this->getIconField());
+            $this->setFrontNaviParam('depthField', $this->getDepthField());
+        }
         $this->setFrontNaviParam('type', 'tv');
-        $this->setFrontNaviParam('keyField', $this->getKeyField());
-        $this->setFrontNaviParam('listField', $this->getListField());
         $this->setFrontNaviParam('staticRender', $this->getStaticRender());
         $this->setFrontNaviParam('columnSpace', $this->getColumnSpace());
         $this->setFrontNaviParam('emptyValue', $this->getEmptyValue());
-        $this->setFrontNaviParam('leftField', $this->getLeftField());
-        $this->setFrontNaviParam('rightField', $this->getRightField());
-        $this->setFrontNaviParam('iconField', $this->getIconField());
-        $this->setFrontNaviParam('depthField', $this->getDepthField());
         $this->setFrontNaviParam('icons', $this->getIcons());
-        return parent::getFrontNaviParams();
+        return parent::getFrontNaviParams($list);
     }
 
     /**
@@ -102,18 +105,22 @@ class Treeview extends \ZendY\Form\Element\Treeview implements TreeInterface {
     /**
      * Zwraca pola ze zbioru danych potrzebne do wyrenderowania kontrolki
      * 
+     * @param string $source
      * @return array
      */
-    public function getFields() {
-        $fields = array_merge($this->getKeyField(), $this->getListField()
-                , array(
-            $this->getLeftField(),
-            $this->getRightField(),
-            $this->getDepthField()
-                ));
-        if ($this->getIconField())
-            $fields[] = $this->getIconField();
-        return $fields;
+    public function getFields($list = 'standard') {
+        if ($list == 'standard') {
+            $fields = array_merge($this->getKeyField(), $this->getListField()
+                    , array(
+                $this->getLeftField(),
+                $this->getRightField(),
+                $this->getDepthField()
+                    ));
+            if ($this->getIconField())
+                $fields[] = $this->getIconField();
+            return $fields;
+        } else
+            return array();
     }
 
     /**
@@ -124,8 +131,8 @@ class Treeview extends \ZendY\Form\Element\Treeview implements TreeInterface {
      * @throws ZendY_Exception
      */
     protected function _performList() {
-        if (isset($this->_listSource))
-            $results = $this->_listSource->getItems();
+        if ($this->hasListSource())
+            $results = $this->getListSource()->getItems();
         else {
             $results = array();
         }
@@ -134,6 +141,10 @@ class Treeview extends \ZendY\Form\Element\Treeview implements TreeInterface {
         if ($this->_emptyValue) {
             $options[''] = '';
         }
+
+        /**
+         * @todo static tree rendering
+         */
         $this->clearMultiOptions();
         $this->addMultiOptions($options);
     }

@@ -46,6 +46,7 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
     const PROPERTY_CLASSES = 'classes';
     const PROPERTY_DISABLED = 'disabled';
     const PROPERTY_HEIGHT = 'height';
+    const PROPERTY_INLINE = 'inline';
     const PROPERTY_LABEL = 'label';
     const PROPERTY_NAME = 'name';
     const PROPERTY_READONLY = 'readOnly';
@@ -82,6 +83,13 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
      * @var array
      */
     protected $_frontEditParams = array();
+
+    /**
+     * Czy kontrolka ma się wyświetlać w jednej linii z innymi kontrolkami?
+     * 
+     * @var bool
+     */
+    protected $_inline = false;
 
     /**
      * Tablica właściwości komponentu
@@ -394,6 +402,10 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
 
         $decorators = $this->getDecorators();
         if (empty($decorators)) {
+            $sectionOptions = array('tag' => 'div', 'class' => 'field-container');
+            if ($this->getInline()) {
+                $sectionOptions['style'] = 'display: inline-block';
+            }
             $this->setDecorators(array(
                 array('UiWidgetElement'),
                 array('Errors', array(
@@ -401,7 +413,7 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
                         'class' => Css::STATE_ERROR . ' ' . Css::CORNER_ALL . ' ' . Css::INVISIBLE
                 )),
                 array('Description', array('tag' => 'span', 'class' => 'field-description')),
-                array(array('Section' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field-container'))
+                array(array('Section' => 'HtmlTag'), $sectionOptions)
             ));
         }
         return $this;
@@ -413,6 +425,10 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
      * @return \ZendY\Form\Element\Widget
      */
     public function loadDecorators() {
+        $sectionOptions = array('tag' => 'div', 'class' => 'field-container');
+        if ($this->getInline()) {
+            $sectionOptions['style'] = 'display: inline-block';
+        }
         $this->setDecorators(array(
             array('UiWidgetElement'),
             array('Errors', array(
@@ -421,7 +437,7 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
             )),
             array('Description', array('tag' => 'span', 'class' => 'field-description')),
             array('Label', $this->_labelOptions),
-            array(array('Section' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field-container'))
+            array(array('Section' => 'HtmlTag'), $sectionOptions)
         ));
         return $this;
     }
@@ -542,6 +558,26 @@ abstract class Widget extends \ZendX_JQuery_Form_Element_UiWidget {
             return TRUE;
         else
             return FALSE;
+    }
+
+    /**
+     * Ustawia wyświetlanie kontrolki w jednej linii z innymi kontrolkami
+     * 
+     * @param bool $inline
+     * @return \ZendY\Form\Element\Widget
+     */
+    public function setInline($inline = true) {
+        $this->_inline = $inline;
+        return $this;
+    }
+
+    /**
+     * Zwraca informację o wyświetlaniu kontrolki w jednej linii z innymi kontrolkami
+     * 
+     * @return bool
+     */
+    public function getInline() {
+        return $this->_inline;
     }
 
     /**

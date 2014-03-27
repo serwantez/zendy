@@ -43,6 +43,13 @@ class ListItem extends Sortable {
     const TABLE_NAME = 'list_item';
 
     /**
+     * Numer id słownika
+     * 
+     * @var int
+     */
+    protected $_listId;
+
+    /**
      * Inicjalizacja obiektu
      * 
      * @return void
@@ -63,10 +70,20 @@ class ListItem extends Sortable {
      * @return \ZendY\Db\DataSet\App\Lists
      */
     public function setList($id) {
+        $this->_listId = $id;
         $filter = new Filter();
         $filter->addFilter(self::COL_LIST_ID, $id);
         $this->filterAction(array('filter' => $filter));
         return $this;
+    }
+
+    /**
+     * Zwraca numer id słownika
+     * 
+     * @return int
+     */
+    public function getList() {
+        return $this->_listId;
     }
 
 }

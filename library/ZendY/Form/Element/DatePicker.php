@@ -58,6 +58,7 @@ class DatePicker extends IconEdit {
         self::PROPERTY_LABEL,
         self::PROPERTY_ICON,
         self::PROPERTY_ICON_POSITION,
+        self::PROPERTY_INLINE,
         self::PROPERTY_LOCALE,
         self::PROPERTY_MAXDATE,
         self::PROPERTY_MAXLENGTH,

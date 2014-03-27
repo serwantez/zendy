@@ -421,9 +421,13 @@ class NestedTree extends Table implements TreeSetInterface {
      * @param array|null $columns
      * @return array
      */
-    protected function _getTree($root = null, $columns = array()) {
+    protected function _getTree($offset = null, $itemCount = null, $root = null, $columns = array()) {
         $data = array();
         $select = $this->_getTreeSelect($root, $columns);
+
+        if (isset($offset) && isset($itemCount))
+            $select->limit($itemCount, $offset);
+
         try {
             /* if ($this->getName() == 'role') {
               //print_r($columns);
@@ -485,7 +489,7 @@ class NestedTree extends Table implements TreeSetInterface {
      * @return array 
      */
     public function getItems($offset = null, $itemCount = null, $columns = null, $conditionalFormats = null) {
-        $data = $this->_getTree(null, $columns);
+        $data = $this->_getTree($offset, $itemCount, null, $columns);
         return $data;
     }
 
@@ -604,7 +608,7 @@ class NestedTree extends Table implements TreeSetInterface {
      * @return array 
      */
     public function toMultiDimensionalArray($root = null) {
-        $data = $this->_getTree($root);
+        $data = $this->_getTree(null, null, $root);
         return $this->_createMultiDimensionalArray($data);
     }
 
@@ -1163,7 +1167,11 @@ class NestedTree extends Table implements TreeSetInterface {
      * @return string
      */
     protected function _getOffsetWhere($record) {
-        return "node." . $this->_leftField . " <= '" . $record[$this->_leftField] . "'";
+        if (array_key_exists($this->_leftField, $record))
+            $val = $record[$this->_leftField];
+        else
+            $val = 0;
+        return "node." . $this->_leftField . " <= '" . $val . "'";
     }
 
     /**
@@ -1203,8 +1211,12 @@ class NestedTree extends Table implements TreeSetInterface {
                 $array = $array->toArray();
             }
             $select2->reset(\ZendY\Db\Select::COLUMNS);
-            $select2->columns("count(*)-1")
-                    ->where($this->_getOffsetWhere($array[0]));
+            $select2->columns("count(*)-1");
+            if (array_key_exists(0, $array))
+                $record = $array[0];
+            else
+                $record = array();
+            $select2->where($this->_getOffsetWhere($record));
             try {
                 $q = $select2->query();
                 $key = $q->fetchColumn();

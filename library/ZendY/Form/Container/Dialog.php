@@ -343,8 +343,17 @@ class Dialog extends Base {
      * @return \ZendY\Form\Container\Dialog
      */
     public function addOpener($element, $event = \ZendY\JQuery::EVENT_CLICK) {
-        if ($element instanceof Element\Widget)
+        if ($element instanceof Element\Widget) {
             $element->setOnEvent($event, $this->getJQueryMethod(self::PARAM_METHOD_OPEN));
+        } else {
+            $js = sprintf('%s("%s").on("%s",%s);'
+                    , \ZendX_JQuery_View_Helper_JQuery::getJQueryHandler()
+                    , $element
+                    , $event
+                    , \ZendY\JQuery::createJQueryEventObject($this->getJQueryMethod(self::PARAM_METHOD_OPEN))
+            );
+            $this->getView()->jQuery()->addOnLoad($js);
+        }
         return $this;
     }
 

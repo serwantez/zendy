@@ -17,8 +17,7 @@ dbNavi = function(id, params) {
             if (dc[params.type][this.id]) {
                 dc[params.type][this.id].showValue(value);
             }
-        }
-    
+        }    
     }
     
     this.getValue = function() {
@@ -68,6 +67,7 @@ dbNavi = function(id, params) {
     }
     
     this.setEvents = function(actionFunction) {
+        params.actionFunction = actionFunction;
         //if(this.changeclick!=false)
         $('#'+this.id).bind("change", {
             dataAction: 'searchAction',
@@ -80,7 +80,6 @@ dbNavi = function(id, params) {
                 for(var k in params.keyField) {
                     event.data.searchValues[params.keyField[k]] = value[k];
                 }                
-                
                 actionFunction(event);
             }
         });

@@ -77,10 +77,11 @@
                         }
                         .ui-calendar-day {
                             padding: 2px;
-                            font-size: 14px;
+                            font-size: 1.2em;
                         }
                         .ui-calendar-feasts {
                             .ui-calendar-feast {
+                                font-size: 0.8em;
                                 white-space: normal;
                                 margin-bottom: 3px;
                             }
@@ -96,6 +97,25 @@
                     }
                 }
             }
+        }
+        .ui-calendar-event {
+            padding: 0.2em;
+            background-color: #eee;
+            margin: 0.1em 0;
+            cursor: pointer;
+        }
+        .ui-calendar-event-time {
+            font-size: 1em;
+            font-weight: bold;
+        }
+        .ui-calendar-event-type {
+            font-size: 1em;
+            padding-left: 0.5em;
+            white-space: normal;
+        }
+        .ui-calendar-event-description {
+            font-size: 0.8em;
+            white-space: normal;
         }
     }
 }

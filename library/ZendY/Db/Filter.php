@@ -187,87 +187,89 @@ class Filter extends Object {
         }
         foreach ($this->_filters as $filter) {
             foreach ($filter as $field => $data) {
-                $searched = $data['value'];
-                $operator = $data['operator'];
-                $connector = $data['connector'];
+                if ($data['value'] !== '') {
+                    $searched = $data['value'];
+                    $operator = $data['operator'];
+                    $connector = $data['connector'];
 
-                if ($operator == DataSet::OPERATOR_BEGIN
-                        || $operator == DataSet::OPERATOR_NOT_BEGIN
-                        || $operator == DataSet::OPERATOR_CONTAIN
-                        || $operator == DataSet::OPERATOR_NOT_CONTAIN) {
-                    $searched .= '%';
-                }
-
-                if ($operator == DataSet::OPERATOR_END
-                        || $operator == DataSet::OPERATOR_NOT_END
-                        || $operator == DataSet::OPERATOR_CONTAIN
-                        || $operator == DataSet::OPERATOR_NOT_CONTAIN) {
-                    $searched = '%' . $searched;
-                }
-
-                if ($cond && !($searched instanceof \Zend_Db_Expr)) {
-                    $searched = $db->quote($searched);
-                }
-
-                if (is_array($searched)) {
-                    $searched = implode(',', $searched);
-                }
-
-                //wyłuskanie domeny
-                $dot = strpos($field, '.');
-                if ($dot !== false) {
-                    $domain = '`' . substr($field, 0, $dot) . '`.';
-                    $field = substr($field, $dot + 1);
-                    $uniqueField = $domain . '`' . $field . '`';
-                } else {
-                    $uniqueField = '`' . $field . '`';
-                }
-
-                //sprawdzenie czy kolumna jest aliasem lub występuje z domeną
-                foreach ($columns as $columnData) {
-                    if ($columnData[2] == $field
-                            || ($field == $columnData[1] && is_null($columnData[2]))) {
-                        if ($columnData[1] instanceof \Zend_Db_Expr) {
-                            $uniqueField = $columnData[1];
-                        } else {
-                            $uniqueField = '`' . $columnData[0] . '`.`' . $columnData[1] . '`';
-                        }
-                        break;
+                    if ($operator == DataSet::OPERATOR_BEGIN
+                            || $operator == DataSet::OPERATOR_NOT_BEGIN
+                            || $operator == DataSet::OPERATOR_CONTAIN
+                            || $operator == DataSet::OPERATOR_NOT_CONTAIN) {
+                        $searched .= '%';
                     }
-                }
 
-                if ($operator == DataSet::OPERATOR_EQUAL)
-                    $res .= " " . $connector . " " . $uniqueField . " = " . $searched;
-                elseif ($operator == DataSet::OPERATOR_NOT_EQUAL)
-                    $res .= " " . $connector . " " . $uniqueField . " <> " . $searched;
-                elseif ($operator == DataSet::OPERATOR_GREATER)
-                    $res .= " " . $connector . " " . $uniqueField . " > " . $searched;
-                elseif ($operator == DataSet::OPERATOR_GREATER_EQUAL)
-                    $res .= " " . $connector . " " . $uniqueField . " >= " . $searched;
-                elseif ($operator == DataSet::OPERATOR_LESS)
-                    $res .= " " . $connector . " " . $uniqueField . " < " . $searched;
-                elseif ($operator == DataSet::OPERATOR_LESS_EQUAL)
-                    $res .= " " . $connector . " " . $uniqueField . " <= " . $searched;
-                elseif ($operator == DataSet::OPERATOR_BEGIN)
-                    $res .= " " . $connector . " " . $uniqueField . " like " . $searched;
-                elseif ($operator == DataSet::OPERATOR_NOT_BEGIN)
-                    $res .= " " . $connector . " " . $uniqueField . " not like " . $searched;
-                elseif ($operator == DataSet::OPERATOR_END)
-                    $res .= " " . $connector . " " . $uniqueField . " like " . $searched;
-                elseif ($operator == DataSet::OPERATOR_NOT_END)
-                    $res .= " " . $connector . " " . $uniqueField . " not like " . $searched;
-                elseif ($operator == DataSet::OPERATOR_CONTAIN)
-                    $res .= " " . $connector . " " . $uniqueField . " like " . $searched;
-                elseif ($operator == DataSet::OPERATOR_NOT_CONTAIN)
-                    $res .= " " . $connector . " " . $uniqueField . " not like " . $searched;
-                elseif ($operator == DataSet::OPERATOR_IN)
-                    $res .= " " . $connector . " " . $uniqueField . " in (" . $searched . ")";
-                elseif ($operator == DataSet::OPERATOR_NOT_IN)
-                    $res .= " " . $connector . " " . $uniqueField . " not in (" . $searched . ")";
-                elseif ($operator == DataSet::OPERATOR_IS_NULL)
-                    $res .= " " . $connector . " " . $uniqueField . " is null";
-                elseif ($operator == DataSet::OPERATOR_IS_NOT_NULL)
-                    $res .= " " . $connector . " " . $uniqueField . " is not null";
+                    if ($operator == DataSet::OPERATOR_END
+                            || $operator == DataSet::OPERATOR_NOT_END
+                            || $operator == DataSet::OPERATOR_CONTAIN
+                            || $operator == DataSet::OPERATOR_NOT_CONTAIN) {
+                        $searched = '%' . $searched;
+                    }
+
+                    if ($cond && !($searched instanceof \Zend_Db_Expr)) {
+                        $searched = $db->quote($searched);
+                    }
+
+                    if (is_array($searched)) {
+                        $searched = implode(',', $searched);
+                    }
+
+                    //wyłuskanie domeny
+                    $dot = strpos($field, '.');
+                    if ($dot !== false) {
+                        $domain = '`' . substr($field, 0, $dot) . '`.';
+                        $field = substr($field, $dot + 1);
+                        $uniqueField = $domain . '`' . $field . '`';
+                    } else {
+                        $uniqueField = '`' . $field . '`';
+                    }
+
+                    //sprawdzenie czy kolumna jest aliasem lub występuje z domeną
+                    foreach ($columns as $columnData) {
+                        if ($columnData[2] == $field
+                                || ($field == $columnData[1] && is_null($columnData[2]))) {
+                            if ($columnData[1] instanceof \Zend_Db_Expr) {
+                                $uniqueField = $columnData[1];
+                            } else {
+                                $uniqueField = '`' . $columnData[0] . '`.`' . $columnData[1] . '`';
+                            }
+                            break;
+                        }
+                    }
+
+                    if ($operator == DataSet::OPERATOR_EQUAL)
+                        $res .= " " . $connector . " " . $uniqueField . " = " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_NOT_EQUAL)
+                        $res .= " " . $connector . " " . $uniqueField . " <> " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_GREATER)
+                        $res .= " " . $connector . " " . $uniqueField . " > " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_GREATER_EQUAL)
+                        $res .= " " . $connector . " " . $uniqueField . " >= " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_LESS)
+                        $res .= " " . $connector . " " . $uniqueField . " < " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_LESS_EQUAL)
+                        $res .= " " . $connector . " " . $uniqueField . " <= " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_BEGIN)
+                        $res .= " " . $connector . " " . $uniqueField . " like " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_NOT_BEGIN)
+                        $res .= " " . $connector . " " . $uniqueField . " not like " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_END)
+                        $res .= " " . $connector . " " . $uniqueField . " like " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_NOT_END)
+                        $res .= " " . $connector . " " . $uniqueField . " not like " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_CONTAIN)
+                        $res .= " " . $connector . " " . $uniqueField . " like " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_NOT_CONTAIN)
+                        $res .= " " . $connector . " " . $uniqueField . " not like " . $searched;
+                    elseif ($operator == DataSet::OPERATOR_IN)
+                        $res .= " " . $connector . " " . $uniqueField . " in (" . $searched . ")";
+                    elseif ($operator == DataSet::OPERATOR_NOT_IN)
+                        $res .= " " . $connector . " " . $uniqueField . " not in (" . $searched . ")";
+                    elseif ($operator == DataSet::OPERATOR_IS_NULL)
+                        $res .= " " . $connector . " " . $uniqueField . " is null";
+                    elseif ($operator == DataSet::OPERATOR_IS_NOT_NULL)
+                        $res .= " " . $connector . " " . $uniqueField . " is not null";
+                }
             }
         }
 

@@ -7,7 +7,7 @@
 }
 .ui-text span {
   padding: 0px;
-  white-space: nowrap;
+  vertical-align: middle;
 }
 
 .ui-longtext {

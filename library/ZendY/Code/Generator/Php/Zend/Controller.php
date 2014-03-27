@@ -38,13 +38,6 @@ class Controller extends Generator\FileGenerator {
     private $_viewsPath = '../application/views/scripts/';
 
     /**
-     * Ścieżka dostępu dla klas formularzy
-     * 
-     * @var string 
-     */
-    private $_formsPath = '../application/forms/';
-
-    /**
      * Nazwa kontrolera
      * 
      * @var string
@@ -68,22 +61,20 @@ class Controller extends Generator\FileGenerator {
         parent::__construct($options);
         $this->_setName($name);
 
-        $dir = $this->_viewsPath . $this->getName();
-        //utworzenie katalogu dla widoków akcji
-        if (!is_dir($dir)) {
-            try {
-                mkdir($dir);
-            } catch (Exception $exc) {
-                throw $exc;
-            }
-        }
         if (file_exists($this->getFilename())) {
             $file = Generator\FileGenerator::fromReflectedFileName(
                             '../application/controllers/' . $this->getFullName() . '.php', true
             );
             $this->setClasses($file->getClasses());
-            $this->setNamespace($file->getNamespace());
-            $this->setUses($file->getUses());
+            $namespace = $file->getNamespace();
+            if (isset($namespace))
+                $this->setNamespace($namespace);
+            $uses = $file->getUses();
+            if (isset($uses))
+                $this->setUses($uses);
+            $docBlock = $file->getDocBlock();
+            if (isset($docBlock))
+                $this->setDocBlock($docBlock);
         } else {
             $bootstrap = \Zend_Controller_Front::getInstance()->getParam('bootstrap');
             $options = $bootstrap->getOptions();
@@ -147,60 +138,22 @@ class Controller extends Generator\FileGenerator {
      * @param string $body
      * @return \ZendY\Code\Generator\Php\Zend\Controller
      */
-    protected function _createView($actionName, $body = null) {
+    public function createView($actionName, $body = null) {
+        $dir = $this->_viewsPath . $this->getName();
+        //utworzenie katalogu dla widoków akcji
+        if (!is_dir($dir)) {
+            try {
+                mkdir($dir);
+            } catch (Exception $exc) {
+                throw $exc;
+            }
+        }
         $fileName = $this->_viewsPath . $this->getName() . '/' . $actionName . '.phtml';
         if (!file_exists($fileName)) {
             $cg = new Generator\FileGenerator();
             $cg->setFilename($fileName);
             if (isset($body))
                 $cg->setBody($body);
-            $cg->write();
-        }
-        return $this;
-    }
-
-    /**
-     * Tworzy plik klasy formularza
-     * 
-     * @param string $formName
-     * @param string $body
-     * @return \ZendY\Code\Generator\Php\Zend\Controller
-     */
-    protected function _createForm($formName, $body = null) {
-        $formName = ucfirst($formName);
-        $fileName = $this->_formsPath . $formName . '.php';
-        if (!file_exists($fileName)) {
-            $cg = new Generator\FileGenerator();
-            $cg->setFilename($fileName);
-            $cg->setNamespace('Application\Form');
-            $cg->setUses(array(
-                array('ZendY\Css'),
-                array('ZendY\Db\DataSource'),
-                array('ZendY\Db\Form')
-            ));
-            //kod poza klasą
-            if (isset($body))
-                $cg->setBody($body);
-            //stworzenie klasy formularza
-            $formClass = new Generator\ClassGenerator();
-            $docblock = new Generator\DocBlockGenerator(
-                            $formName,
-                            'Formularz ' . $formName,
-                            array(
-                                array(
-                                    'name' => 'author',
-                                    'description' => $this->_author,
-                                ),
-                            )
-            );
-            $formClass->setName($formName)
-                    ->setExtendedClass('Form')
-                    ->setDocblock($docblock);
-            //metoda inicjalizująca
-            $init = new Generator\MethodGenerator();
-            $init->setName('init');
-            $formClass->addMethodFromGenerator($init);
-            $cg->setClass($formClass);
             $cg->write();
         }
         return $this;
@@ -217,7 +170,7 @@ class Controller extends Generator\FileGenerator {
      * @param string $viewBody
      * @return \Zend2\Code\Generator\MethodGenerator
      */
-    protected function _createAction($name, $parameters = array(), $view = false, $actionBody = null, $docblock = null, $viewBody = null) {
+    protected function _createAction($name, $parameters = array(), $actionBody = null, $docblock = null) {
         $method = new Generator\MethodGenerator();
         foreach ($parameters as $key => $param) {
             $parameters[$key] = new Generator\ParameterGenerator($param);
@@ -226,16 +179,9 @@ class Controller extends Generator\FileGenerator {
                 ->setParameters($parameters);
         if (isset($actionBody)) {
             $method->setBody($actionBody);
-            if (isset($viewBody)) {
-                $this->setUse(sprintf('Application\Form\%s', ucfirst($name)));
-                $this->_createForm($name);
-            }
         }
         if (isset($docblock)) {
             $method->setDocblock($docblock);
-        }
-        if ($view) {
-            $this->_createView($name, $viewBody);
         }
         return $method;
     }
@@ -279,15 +225,27 @@ class Controller extends Generator\FileGenerator {
      * @param string $viewBody
      * @return \ZendY\Code\Generator\Php\Zend\Controller
      */
-    public function addAction($name, $parameters = array(), $view = false, $actionBody = null, $docblock = null, $viewBody = null) {
+    public function addAction($name, $parameters = array(), $actionBody = null, $docblock = null) {
         $name = lcfirst($name);
         $class = $this->getClass($this->getFullName());
         if ($class->hasMethod($name . self::PARAM_ACTION) == false) {
             $class->addMethodFromGenerator(
-                    $this->_createAction($name, $parameters, $view, $actionBody, $docblock, $viewBody)
+                    $this->_createAction($name, $parameters, $actionBody, $docblock)
             );
         }
         return $this;
+    }
+
+    public function addForm($action, $formName) {
+        $actionBody = sprintf('$form = new Form\\%s(array(' . "\n" .
+                '\'name\'=>\'%s\'' . "\n" .
+                '));' . "\n" .
+                '$this->view->form = $form;'
+                , ucfirst($formName)
+                , $formName . 'Form');
+        $viewBody = 'echo $this->form->render();';
+        //$this->addAction($action, array(), TRUE, $actionBody, null, $viewBody, $formName);
+        //@todo
     }
 
     /**

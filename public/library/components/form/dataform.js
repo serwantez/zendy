@@ -147,7 +147,8 @@ dataForm = function(id, className, url, message) {
                 var cdata = new Array();
                 for(var n in ds[d].dn) {
                     if (data[d]['multi']) {
-                        cdata['rows'] = data[d]['multi'][n];
+                        cdata['list'] = data[d]['multi'][n]['list'];
+                        cdata['rows'] = data[d]['multi'][n]['data'];
                         cdata['sort'] = data[d]['sort'];
                         ds[d].dn[n].refresh(cdata);
                     }
@@ -210,8 +211,8 @@ dataForm = function(id, className, url, message) {
                 
                 //filtry
                 for(var f in ds[d].df) {
-                    if (data[d]['filter']['user'] && data[d]['filter']['user'][ds[d].df[f].dataField]){
-                        ds[d].df[f].setData(data[d]['filter']['user'][ds[d].df[f].dataField]['value']);
+                    if (data[d]['filter'][ds[d].df[f].id]) {
+                        ds[d].df[f].setData(data[d]['filter'][ds[d].df[f].id][ds[d].df[f].dataField]['value']);
                     } else ds[d].df[f].clear();
                     if(data[d].expr['state']>0) {
                         ds[d].df[f].enable();
@@ -244,6 +245,26 @@ dataForm = function(id, className, url, message) {
                 //parsowanie odpowiedzi
                 data = $.parseJSON(data);
                 self.refreshControls(data, params.dataAction);
+                closeDialog();
+            });
+        }        
+    }
+    
+    this.multiaction = function(sources, event) {
+        if (Object.keys(ds).length > 0) {
+            var params = event.data;
+            params.id = sources;
+            params.formId = this.id;
+            params.form = this.className;
+            openDialog();
+            $.post(self.url, params, function(data) {
+                try {
+                    //parsowanie odpowiedzi
+                    data = $.parseJSON(data);
+                    self.refreshControls(data, params.dataAction);
+                } catch(e) {
+                    alert(data);
+                }
                 closeDialog();
             });
         }        

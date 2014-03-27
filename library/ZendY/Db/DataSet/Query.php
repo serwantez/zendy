@@ -18,10 +18,10 @@ use ZendY\Db\Select;
  * @author Piotr Zając
  */
 class Query extends Base {
-    
     /**
      * Właściwości komponentu
      */
+
     const PROPERTY_SELECT = 'select';
 
     /**
@@ -37,7 +37,7 @@ class Query extends Base {
      * @var \Zend_Db_Adapter_Abstract
      */
     protected $_db;
-    
+
     /**
      * Tablica właściwości komponentu
      * 
@@ -48,7 +48,7 @@ class Query extends Base {
         self::PROPERTY_NAME,
         self::PROPERTY_PRIMARY,
         self::PROPERTY_SELECT,
-    );       
+    );
 
     /**
      * Ustawia wartości domyślne
@@ -117,7 +117,6 @@ class Query extends Base {
             ;
             try {
                 $this->_db->query("set @row:=-1");
-                //exit($select3);
                 if (count($this->_select->getBind()) > 0) {
                     $select3->bind($this->_select->getBind());
                 }
@@ -236,13 +235,13 @@ class Query extends Base {
                         . "'";
             }
             $formatColumn .= " else '' end) as `_format`";
+
             try {
                 $select->columns(new \Zend_Db_Expr($formatColumn));
             } catch (Exception $exc) {
                 exit($formatColumn);
             }
         }
-
         try {
             $q = $select->query();
         } catch (Exception $exc) {
@@ -371,7 +370,7 @@ class Query extends Base {
     }
 
     /**
-     * Zwraca opis kolumn tablic zapytania w postaci tablicy asocjacyjnej, 
+     * Zwraca opis kolumn zapytania w postaci tablicy asocjacyjnej, 
      * gdzie kluczami są nazwy kolumn lub ich aliasy
      * 
      * @return array
@@ -379,28 +378,51 @@ class Query extends Base {
     public function describe() {
         $res = array();
         $froms = $this->_select->getPart(\Zend_Db_Select::FROM);
-        $aliasFields = $this->getAliasFields();
+        $queryCols = $this->_select->getPart(\Zend_Db_Select::COLUMNS);
+        //$aliasFields = $this->getAliasFields();
         foreach ($froms as $alias => $from) {
             /**
              * @todo obsługa podzapytań
              */
             if (!is_object($from['tableName'])) {
+                //wyłuskanie wyświetlanych kolumn z bieżącej tabeli
+                $fromCols = array_filter($queryCols, function($row) use ($alias) {
+                            return ($row[0] == $alias);
+                        });
+                //wszystkie kolumny bieżącej tabeli
                 $cols = $this->_db->describeTable($from['tableName']);
+
+
+                //wyłuskanie wyświetlanych kolumn z bieżącej tabeli
+                array_filter($fromCols, function($row) use ($cols, &$res) {
+                            foreach ($cols as $key => $col) {
+                                if ($row[1] == $key || is_object($row[1])) {
+                                    //obsługa aliasów kolumn
+                                    if (isset($row[2])) {
+                                        $res[$row[2]] = $col;
+                                    } else {
+                                        $res[$key] = $col;
+                                    }
+                                    return true;
+                                }
+                            }
+                            return false;
+                        });
                 //obsługa aliasów kolumn
-                if (is_array($aliasFields)) {
-                    foreach ($aliasFields as $fieldData) {
-                        //sprawdzenie czy dana kolumna ma ustawiony alias w zapytaniu
-                        if (isset($fieldData[0])
-                                && $fieldData[0] == $alias
-                                && !is_object($fieldData[1])
-                                && array_key_exists($fieldData[1], $cols)) {
-                            //zamiana klucza
-                            $cols[$fieldData[2]] = $cols[$fieldData[1]];
-                            unset($cols[$fieldData[1]]);
-                        }
-                    }
-                }
-                $res = array_merge($res, $cols);
+                /* if (is_array($aliasFields)) {
+                  foreach ($aliasFields as $fieldData) {
+                  //sprawdzenie czy dana kolumna ma ustawiony alias w zapytaniu
+                  if (isset($fieldData[0])
+                  && $fieldData[0] == $alias
+                  && !is_object($fieldData[1])
+                  && array_key_exists($fieldData[1], $cols)) {
+                  //zamiana klucza
+                  $cols[$fieldData[2]] = $cols[$fieldData[1]];
+                  unset($cols[$fieldData[1]]);
+                  }
+                  }
+                  }
+                  $res = array_merge($res, $cols); */
             }
         }
         return $res;
@@ -491,7 +513,7 @@ class Query extends Base {
     public function getSQL() {
         return $this->_select->__toString();
     }
-    
+
     /**
      * Ustawia obiekt zapytania sql
      * 
@@ -502,7 +524,7 @@ class Query extends Base {
         $this->_select = $select;
         return $this;
     }
-    
+
     /**
      * Zwraca obiekt zapytania sql
      * 

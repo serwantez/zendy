@@ -88,7 +88,7 @@ dbEdit = function(id, params) {
     }
 
     this.enable = function() {
-        //console.log(params.type+' '+this.id);
+        //console.log('enable '+params.type+' '+this.id);
         if (params.type !== 'tx' && dc[params.type][this.id]) {
             dc[params.type][this.id].enable();
         }

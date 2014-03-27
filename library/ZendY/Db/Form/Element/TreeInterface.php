@@ -13,7 +13,7 @@ namespace ZendY\Db\Form\Element;
  * 
  * @author Piotr Zając
  */
-interface TreeInterface extends ColumnInterface {
+interface TreeInterface extends ListInterface {
 
     /**
      * Zwraca nazwę pola przechowującego wartość "z lewej"

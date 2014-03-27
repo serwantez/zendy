@@ -11,7 +11,7 @@ comboBox = function(id, options) {
     this.setData = function(data, params) {
         this.widget.empty();
         if (params.emptyValue) {
-            this.widget.append($("<option></option>"));
+            this.widget.append($("<option></option>").attr("value",""));
         }            
         $.each(data['rows'], function(key, value) {  
                 

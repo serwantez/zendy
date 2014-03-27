@@ -38,12 +38,14 @@ class Sorter extends Plugin {
                 $sortCols[] = $col->getName();
             }
         }
-        $js = sprintf('dc["gr"]["%s"].setSorting(%s, "%s", "%s")'
-                , $this->getGrid()->getName()
-                , \ZendX_JQuery::encodeJson($sortCols)
-                , $this->getGrid()->getListSource()->getName()
-                , $this->getGrid()->getListSource()->getFormId());
-        $this->addOnLoad($js);
+        if ($this->getGrid()->hasListSource()) {
+            $js = sprintf('dc["gr"]["%s"].setSorting(%s, "%s", "%s")'
+                    , $this->getGrid()->getName()
+                    , \ZendX_JQuery::encodeJson($sortCols)
+                    , $this->getGrid()->getListSource()->getName()
+                    , $this->getGrid()->getListSource()->getFormId());
+            $this->addOnLoad($js);
+        }
     }
 
     /**

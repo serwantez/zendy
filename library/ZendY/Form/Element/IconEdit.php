@@ -52,6 +52,7 @@ class IconEdit extends CustomEdit {
         self::PROPERTY_LABEL,
         self::PROPERTY_ICON,
         self::PROPERTY_ICON_POSITION,
+        self::PROPERTY_INLINE,
         self::PROPERTY_MAXLENGTH,
         self::PROPERTY_PLACEHOLDER,
         self::PROPERTY_READONLY,
@@ -60,7 +61,7 @@ class IconEdit extends CustomEdit {
         self::PROPERTY_TOOLTIP,
         self::PROPERTY_VALUE,
         self::PROPERTY_WIDTH
-    ); 
+    );
 
     /**
      * Ustawia wartości domyślne

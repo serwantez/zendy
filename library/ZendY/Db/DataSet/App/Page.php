@@ -23,6 +23,8 @@ class Page extends NestedTree {
      */
 
     const ACTION_CREATEPAGE = 'createPageAction';
+    const ACTION_CREATEDATASET = 'createDataSetAction';
+    const ACTION_CREATEDATAFORM = 'createDataFormAction';
 
     /**
      * Domyślne kolumny zbioru
@@ -155,7 +157,24 @@ class Page extends NestedTree {
                 , false
                 , self::ACTION_PRIVILEGE_EDIT
         );
-
+        $this->_registerAction(
+                self::ACTION_CREATEDATASET
+                , self::ACTIONTYPE_STANDARD
+                , array('primary' => Css::ICON_DOCUMENTB)
+                , 'Create data set'
+                , null
+                , false
+                , self::ACTION_PRIVILEGE_EDIT
+        );
+        $this->_registerAction(
+                self::ACTION_CREATEDATAFORM
+                , self::ACTIONTYPE_STANDARD
+                , array('primary' => Css::ICON_CONTACT)
+                , 'Create data form'
+                , null
+                , false
+                , self::ACTION_PRIVILEGE_EDIT
+        );
         return $this;
     }
 
@@ -202,11 +221,79 @@ class Page extends NestedTree {
                 $cg = new \ZendY\Code\Generator\Php\Zend\Controller($controller);
                 //$cg->addMethod('init');
                 if (isset($action) && $action <> '') {
-                    $actionBody = sprintf('$form = new %s();' . "\n" . '$this->view->form = $form;', ucfirst($action));
-                    $viewBody = 'echo $this->form->render();';
-                    $cg->addAction($action, array(), TRUE, $actionBody, null, $viewBody);
+                    $cg->addAction($action);
+                    $cg->createView($action);
                 }
                 $cg->write();
+            }
+        } else {
+            $result[] = 'Unknown uri field';
+        }
+
+        if (!$compositePart) {
+            $this->_setActionState();
+        }
+        return $result;
+    }
+
+    /**
+     * Akcja tworząca kontroler i akcję zawartą w podanym adresie uri
+     * 
+     * @param array $params
+     * @param bool $compositePart
+     * @return array
+     */
+    public function createDataSetAction($params = array(), $compositePart = false) {
+        $result = array();
+        $cur = $this->getCurrent();
+        if (array_key_exists(self::COL_RESOURCE, $cur)) {
+            $name = $cur[self::COL_RESOURCE];
+
+            if (isset($name) && $name <> '') {
+                $cg = new \ZendY\Code\Generator\Php\Zend\DataSet($name);
+                $cg->write();
+            }
+        } else {
+            $result[] = 'Unknown resource field';
+        }
+
+        if (!$compositePart) {
+            $this->_setActionState();
+        }
+        return $result;
+    }
+
+    /**
+     * Akcja tworząca formularz bazodanowy
+     * 
+     * @param array $params
+     * @param bool $compositePart
+     * @return array
+     */
+    public function createDataFormAction($params = array(), $compositePart = false) {
+        $result = array();
+        $cur = $this->getCurrent();
+        if (array_key_exists($this->_uriField, $cur)) {
+            $uri = $cur[$this->_uriField];
+            //wyłuskanie nazwy kontrolera i akcji
+            $request = new \Zend_Controller_Request_Http();
+            $request->setRequestUri($uri);
+            \Zend_Controller_Front::getInstance()->getRouter()->route($request);
+            $controller = $request->getControllerName();
+            $action = $request->getActionName();
+
+            if (isset($controller) && $controller <> '' && $controller <> '#') {
+                if (isset($action) && $action <> '') {
+                    if ($action == 'index') {
+                        $formName = $controller;
+                    } else {
+                        $formName = $action;
+                    }
+                    $cg = new \ZendY\Code\Generator\Php\Zend\DataForm($formName, array(
+                                'patternFile' => 'C:/xampp/htdocs/pattern/library/ZendY/Db/Form/Pattern1.php'
+                            ));
+                    $cg->write();
+                }
             }
         } else {
             $result[] = 'Unknown uri field';
@@ -227,7 +314,11 @@ class Page extends NestedTree {
     protected function _setActionState($params = array()) {
         parent::_setActionState($params);
         $cur = $this->getCurrent();
-        $this->_navigator[self::ACTION_CREATEPAGE] = ($this->_state == self::STATE_VIEW || $this->_state == self::STATE_EDIT);
+        $this->_navigator[self::ACTION_CREATEPAGE] = (
+                $this->_state == self::STATE_VIEW
+                || $this->_state == self::STATE_EDIT);
+        $this->_navigator[self::ACTION_CREATEDATASET] = $this->_navigator[self::ACTION_CREATEPAGE];
+        $this->_navigator[self::ACTION_CREATEDATAFORM] = $this->_navigator[self::ACTION_CREATEPAGE];
         return $this;
     }
 
@@ -241,7 +332,7 @@ class Page extends NestedTree {
             array(
                 self::COL_ID => 1,
                 self::COL_LABEL => 'Root',
-                self::COL_URI => '/',
+                self::COL_URI => '/index/index',
                 self::COL_RESOURCE => 'index',
                 self::COL_PRIVILEGE => 'index',
                 self::COL_CLASS => 'ui-icon-home',

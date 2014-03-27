@@ -97,7 +97,7 @@ class User extends Table {
                 'length' => 1,
                 'null' => false,
                 'default' => 0
-            ),            
+            ),
             array(
                 'name' => self::COL_EMAIL,
                 'type' => Mysql::FIELD_TYPE_VARCHAR,
@@ -163,6 +163,7 @@ class User extends Table {
                 self::COL_ACTIVE => 1,
                 self::COL_FIRSTNAME => 'Administrator',
                 self::COL_SURNAME => '',
+                self::COL_SEX => 0,
                 self::COL_EMAIL => '',
                 self::COL_ADDITION_TIME => null,
                 self::COL_PHOTO => null

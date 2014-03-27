@@ -9,7 +9,6 @@
 namespace ZendY\Db\Form\Element;
 
 use ZendY\Db\Filter;
-use ZendY\Db\Form\Element\ColumnInterface;
 use ZendY\Exception;
 
 /**
@@ -17,9 +16,9 @@ use ZendY\Exception;
  *
  * @author Piotr Zając
  */
-abstract class ListMap extends \ZendY\Form\Element\ListMap implements ColumnInterface {
+abstract class ListMap extends \ZendY\Form\Element\ListMap implements ListInterface {
 
-    use ColumnTrait;
+    use ListTrait;
 
     /**
      * Właściwości komponentu
@@ -117,22 +116,16 @@ abstract class ListMap extends \ZendY\Form\Element\ListMap implements ColumnInte
     /**
      * Zwraca tablicę parametrów nawigacyjnych przekazywanych do przeglądarki
      * 
+     * @param string $list
      * @return array
      */
-    public function getFrontNaviParams() {
-        $this->setFrontNaviParam('keyField', $this->getKeyField());
-        $this->setFrontNaviParam('listField', $this->getListField());
+    public function getFrontNaviParams($list = 'standard') {
+        if ($list == 'standard') {
+            $this->setFrontNaviParam('keyField', $this->getKeyField());
+            $this->setFrontNaviParam('listField', $this->getListField());
+        }
         $this->setFrontNaviParam('staticRender', $this->getStaticRender());
         return $this->_frontNaviParams;
-    }
-
-    /**
-     * Zwraca pola ze zbioru danych potrzebne do wyrenderowania kontrolki
-     *  
-     * @return array
-     */
-    public function getFields() {
-        return array_merge($this->getKeyField(), $this->getListField());
     }
 
     /**
@@ -175,8 +168,8 @@ abstract class ListMap extends \ZendY\Form\Element\ListMap implements ColumnInte
      * @throws Exception
      */
     protected function _performList() {
-        if (isset($this->_listSource))
-            $results = $this->_listSource->getItems();
+        if ($this->hasListSource())
+            $results = $this->getListSource()->getItems();
         else {
             $results = array();
         }
@@ -192,7 +185,7 @@ abstract class ListMap extends \ZendY\Form\Element\ListMap implements ColumnInte
             if (is_object($r))
                 $r = $r->toArray();
 
-            foreach ($this->_keyField as $keyField) {
+            foreach ($this->getKeyField() as $keyField) {
                 if (!array_key_exists($keyField, $r)) {
                     throw new Exception(
                             'Kolumna klucza ' . $keyField . ' nie jest obecna w wyniku zapytania');
@@ -204,7 +197,7 @@ abstract class ListMap extends \ZendY\Form\Element\ListMap implements ColumnInte
 
             $option = '';
             $c = 0;
-            foreach ($this->_listField as $field) {
+            foreach ($this->getListField() as $field) {
                 if (!array_key_exists($field, $r)) {
                     throw new Exception(
                             'Kolumna wyświetlana ' . $field . ' nie jest obecna w wyniku zapytania');

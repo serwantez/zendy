@@ -8,7 +8,6 @@
 
 namespace ZendY\Db\Form\Element;
 
-use ZendY\Db\Form\Element\ColumnInterface;
 use ZendY\Exception;
 use ZendY\Form\Element\Grid\Column;
 
@@ -17,9 +16,9 @@ use ZendY\Form\Element\Grid\Column;
  *
  * @author Piotr Zając
  */
-class Grid extends \ZendY\Form\Element\Grid implements ColumnInterface {
+class Grid extends \ZendY\Form\Element\Grid implements ListInterface {
 
-    use ColumnTrait;
+    use ListTrait;
 
     /**
      * Właściwości komponentu
@@ -86,7 +85,7 @@ class Grid extends \ZendY\Form\Element\Grid implements ColumnInterface {
      */
     public function addColumn(Column $column) {
         parent::addColumn($column);
-        $this->_listField[] = $column->getName();
+        $this->addListField($column->getName());
         return $this;
     }
 
@@ -119,7 +118,7 @@ class Grid extends \ZendY\Form\Element\Grid implements ColumnInterface {
      */
     public function setRecordPerPage($rpp) {
         if ($this->hasListSource())
-            $this->_listSource->getDataSet()->setRecordPerPage($rpp);
+            $this->getListSource()->getDataSet()->setRecordPerPage($rpp);
         return $this;
     }
 
@@ -130,7 +129,7 @@ class Grid extends \ZendY\Form\Element\Grid implements ColumnInterface {
      */
     public function getRecordPerPage() {
         if ($this->hasListSource())
-            return $this->_listSource->getDataSet()->getRecordPerPage();
+            return $this->getListSource()->getDataSet()->getRecordPerPage();
         else
             return self::DEFAULT_RECORDPERPAGE;
     }
@@ -138,15 +137,18 @@ class Grid extends \ZendY\Form\Element\Grid implements ColumnInterface {
     /**
      * Zwraca tablicę parametrów nawigacyjnych przekazywanych do przeglądarki
      * 
+     * @param string $list
      * @return array
      */
-    public function getFrontNaviParams() {
+    public function getFrontNaviParams($list = 'standard') {
         $this->setFrontNaviParam('type', 'gr');
-        $this->setFrontNaviParam('keyField', $this->getKeyField());
-        $this->setFrontNaviParam('listField', $this->getListField());
-        $this->setFrontNaviParam('columnsOptions', $this->getColumnsOptions());
+        if ($list == 'standard') {
+            $this->setFrontNaviParam('keyField', $this->getKeyField());
+            $this->setFrontNaviParam('listField', $this->getListField());
+            $this->setFrontNaviParam('columnsOptions', $this->getColumnsOptions());
+        }
         $this->setFrontNaviParam('staticRender', $this->getStaticRender());
-        return parent::getFrontNaviParams();
+        return parent::getFrontNaviParams($list);
     }
 
     /**
@@ -161,18 +163,6 @@ class Grid extends \ZendY\Form\Element\Grid implements ColumnInterface {
     }
 
     /**
-     * Zwraca pola ze zbioru danych potrzebne do wyrenderowania kontrolki
-     *  
-     * @return array
-     */
-    public function getFields() {
-        return array_unique(array_merge(
-                                $this->getKeyField()
-                                , $this->getListField()
-                        ));
-    }
-
-    /**
      * Tworzy tablicę wartości dla statycznego renderowania listy
      * 
      * @return void
@@ -180,7 +170,7 @@ class Grid extends \ZendY\Form\Element\Grid implements ColumnInterface {
      */
     protected function _performList() {
         if ($this->hasListSource())
-            $results = $this->_listSource->getDataSet()->getItems();
+            $results = $this->getListSource()->getDataSet()->getItems();
         else {
             $results = array();
         }
@@ -196,7 +186,7 @@ class Grid extends \ZendY\Form\Element\Grid implements ColumnInterface {
             if (is_object($r))
                 $r = $r->toArray();
 
-            foreach ($this->_keyField as $keyField) {
+            foreach ($this->getKeyField() as $keyField) {
                 if (!array_key_exists($keyField, $r)) {
                     throw new Exception(
                             'Kolumna klucza ' . $keyField . ' nie jest obecna w wyniku zapytania');
@@ -206,7 +196,7 @@ class Grid extends \ZendY\Form\Element\Grid implements ColumnInterface {
 
             $keyValueString = implode(';', $keyValueArray);
 
-            foreach ($this->_listField as $field) {
+            foreach ($this->getListField() as $field) {
                 if (!array_key_exists($field, $r)) {
                     throw new Exception(
                             'Kolumna wyświetlana ' . $field . ' nie jest obecna w wyniku zapytania');
